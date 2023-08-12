@@ -1,22 +1,24 @@
-enum MenuTitles {
+import 'package:flutter/material.dart';
+
+enum MenuColors {
   home,
   settings,
   calendar,
   allTasks,
   dbtc;
 
-  String get getMenuHeroTag {
+  Color get getMenuTag {
     switch (this) {
-      case MenuTitles.home:
-        return "Home";
-      case MenuTitles.settings:
-        return "Settings";
-      case MenuTitles.calendar:
-        return "Calendar";
-      case MenuTitles.allTasks:
-        return "AllTasks";
-      case MenuTitles.dbtc:
-        return "DBTC";
+      case MenuColors.home:
+        return const Color.fromARGB(255, 48, 213, 200);
+      case MenuColors.settings:
+        return Colors.red;
+      case MenuColors.calendar:
+        return Colors.yellow;
+      case MenuColors.allTasks:
+        return Colors.green;
+      case MenuColors.dbtc:
+        return Colors.purple;
     }
   }
 }

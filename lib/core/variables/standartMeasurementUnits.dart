@@ -14,6 +14,7 @@ class StandartMeasurementUnits {
   static double get normalPadding => Get.height * 0.015;
   static double get highPadding => Get.height * 0.02;
   static double get extraHighPadding => Get.height * 0.025;
+  static double get ultraPadding => Get.height * 0.03;
 
   //Radius
   static double get extraLowRadius => Get.height * 0.01;

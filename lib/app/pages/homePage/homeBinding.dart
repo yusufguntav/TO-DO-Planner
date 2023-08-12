@@ -2,7 +2,7 @@
 
 import 'package:get/get.dart';
 
-import 'homePageController.dart';
+import 'homeController.dart';
 
 class HomePageBinding implements Bindings {
   @override
