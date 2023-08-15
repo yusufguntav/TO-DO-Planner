@@ -42,6 +42,7 @@ class HomeView extends GetView<HomeController> {
     return Obx(
       () => controller.centerMenuButton
           ? InkWell(
+              highlightColor: Colors.white,
               onTap: () => controller.centerMenuButton = !controller.centerMenuButton,
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),

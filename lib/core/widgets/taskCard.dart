@@ -19,6 +19,8 @@ class TaskCard extends StatelessWidget {
       children: [
         Expanded(
           child: InkWell(
+            borderRadius: BorderRadius.circular(StandartMeasurementUnits.extraHighRadius),
+            onTap: () => Get.dialog(taskEditDialog()),
             child: ConstrainedBox(
               constraints: BoxConstraints(maxHeight: Get.height * .11, minHeight: Get.height * .1),
               child: DecoratedBox(
@@ -39,6 +41,7 @@ class TaskCard extends StatelessWidget {
         ),
         CustomLine(successStatus: task.successStatus),
         InkWell(
+          customBorder: const CircleBorder(),
           onTap: onTapFunct != null ? () => onTapFunct!(task) : () {},
           child: DecoratedBox(
             decoration: BoxDecoration(
@@ -54,6 +57,34 @@ class TaskCard extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Dialog taskEditDialog() {
+    return Dialog(
+      child: DecoratedBox(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(StandartMeasurementUnits.extraHighRadius)),
+        child: Padding(
+          padding: EdgeInsets.all(StandartMeasurementUnits.highPadding),
+          child: SizedBox(
+            height: Get.height * .5,
+            child: Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Flexible(
+                  child: TextField(
+                    maxLines: 30,
+                    controller: TextEditingController(text: task.task),
+                  ),
+                ),
+                ElevatedButton(onPressed: () {}, child: const Text('Save'))
+              ],
+            )),
+          ),
+        ),
+      ),
     );
   }
 }
