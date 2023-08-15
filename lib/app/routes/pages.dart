@@ -1,18 +1,16 @@
 import 'package:get/get.dart';
-import 'package:to_do_app/app/pages/allTasksPage/allTasksPageBinding.dart';
-import 'package:to_do_app/app/pages/allTasksPage/allTasksPageView.dart';
 import 'package:to_do_app/app/pages/splashScreen/splashScreenBinding.dart';
 import 'package:to_do_app/app/pages/splashScreen/splashScreenView.dart';
-import '../pages/homePage/homeBinding.dart';
-import '../pages/homePage/homePageView.dart';
+import '../pages/home/homeBinding.dart';
+import '../pages/home/homeView.dart';
 import 'pageRoutes.dart';
 
 class Pages {
   static final pages = [
     GetPage(
-      binding: HomePageBinding(),
-      name: PageRoutes.home,
-      page: () => const HomePageView(),
+      binding: HomeBinding(),
+      name: PageRoutes.today,
+      page: () => const HomeView(),
       transition: Transition.fadeIn,
     ),
     GetPage(
@@ -20,12 +18,6 @@ class Pages {
       name: PageRoutes.splash,
       page: () => const SplashScreenView(),
       transition: Transition.noTransition,
-    ),
-    GetPage(
-      binding: AllTaskBinding(),
-      name: PageRoutes.allTasks,
-      page: () => const AllTaskView(),
-      transition: Transition.fadeIn,
     ),
   ];
 }

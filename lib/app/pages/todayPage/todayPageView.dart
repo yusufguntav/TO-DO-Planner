@@ -1,23 +1,25 @@
 // ignore_for_file: file_names
 
+import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:to_do_app/app/pages/todayPage/todayPageController.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
 import 'package:to_do_app/core/widgets/texts/title.dart';
 
-import 'homeController.dart';
-
-class HomePageView extends GetView<HomePageController> {
-  const HomePageView({super.key});
+class TodayPageView extends GetView<TodayPageController> {
+  const TodayPageView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CustomTitle(titleText: "TODAY", titleColor: MenuColors.home.getMenuTag),
+          CustomTitle(titleText: "TODAY", titleColor: Pages.today.getPageColor),
+          SizedBox(height: StandartMeasurementUnits.highPadding),
           content(),
           inputTaskField(),
         ],
@@ -42,11 +44,13 @@ class HomePageView extends GetView<HomePageController> {
 
   SizedBox content() {
     return SizedBox(
-      height: Get.height * .8,
-      child: ListView.builder(
-        itemBuilder: (context, i) => const Text('data'),
-        itemCount: 100,
-      ),
+      height: Get.height * .75,
+      //  TODO Obx i daha iyi bir yere koyabilir miyiz ?
+      child: Obx(() => DragAndDropLists(
+            children: controller.contents,
+            onItemReorder: controller.onItemReorder,
+            onListReorder: controller.onListReorder,
+          )),
     );
   }
 

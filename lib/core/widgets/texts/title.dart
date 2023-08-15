@@ -11,11 +11,13 @@ class CustomTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomText.extraHigh(
-      titleText,
-      textColor: titleColor ?? ColorTable.getTitleColor,
-      bold: true,
-      letterSpacing: StandartMeasurementUnits.extraLowPadding,
+    return Center(
+      child: CustomText.extraHigh(
+        titleText,
+        textColor: titleColor ?? ColorTable.getTitleColor,
+        bold: true,
+        letterSpacing: StandartMeasurementUnits.extraLowPadding,
+      ),
     );
   }
 }

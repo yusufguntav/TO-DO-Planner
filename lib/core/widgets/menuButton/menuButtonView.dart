@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/core/widgets/menuButton/menuButtonController.dart';
@@ -11,23 +13,20 @@ class MenuButtonView extends GetView<MenuButtonController> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => controller.showMenuButton
-          ? Stack(
-              children: [
-                //TODO: NASIL YAPILABİLİR ?
-                for (int i = 0; i < controller.menuButtons.length; i++) ...[
-                  menuButton(controller.menuButtons[i]),
-                ],
-              ],
-            )
-          : const SizedBox(),
+      () => Stack(
+        children: [
+          for (int i = 0; i < controller.menuButtons.length; i++) ...[
+            menuButton(controller.menuButtons[i]),
+          ],
+        ],
+      ),
     );
   }
 
   AnimatedPositioned menuButton(MenuButtonModel menutButtonModel) {
     return AnimatedPositioned(
-      bottom: !controller.centerMenuButton ? StandartMeasurementUnits.ultraPadding : menutButtonModel.bottomPosition,
-      left: !controller.centerMenuButton ? StandartMeasurementUnits.normalPadding : menutButtonModel.leftPosition,
+      bottom: controller.centerMenuButton ? menutButtonModel.bottomPosition : StandartMeasurementUnits.ultraPadding,
+      left: controller.centerMenuButton ? menutButtonModel.leftPosition : StandartMeasurementUnits.lowPadding,
       duration: const Duration(milliseconds: 250),
       onEnd: () => controller.showOtherMenuButtons = !controller.showOtherMenuButtons,
       child: SizedBox(
@@ -37,9 +36,9 @@ class MenuButtonView extends GetView<MenuButtonController> {
           backgroundColor: menutButtonModel.color,
           heroTag: menutButtonModel.herotag,
           onPressed: () {
-            controller.centerMenuButton ? Get.offAndToNamed(menutButtonModel.herotag) : null;
+            Get.lazyPut(() => menutButtonModel.controller);
             controller.centerMenuButton = !controller.centerMenuButton;
-            controller.selectedMenuTag = menutButtonModel.herotag;
+            controller.selectedPage = menutButtonModel.selectedPageNumber;
             controller.sortMenuButtonModels();
           },
           child: Icon(menutButtonModel.icon),
