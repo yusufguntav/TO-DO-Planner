@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/allTasksPage/allTasksPageController.dart';
-import 'package:to_do_app/app/pages/allTasksPage/allTasksPageView.dart';
+import 'package:to_do_app/app/pages/settingsPage/settingsPageController.dart';
 import 'package:to_do_app/app/pages/todayPage/todayPageController.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 
@@ -14,8 +14,8 @@ class MenuButtonController extends GetxController {
   @override
   void onReady() {
     menuButtons = <MenuButtonModel>[
-      MenuButtonModel(
-          'settings', null, Pages.settings.getPageNumber, Icons.settings, Pages.settings.getPageColor, (Get.height + 56) * .5, (Get.width + 56) * .5),
+      MenuButtonModel('settings', SettingsPageController(), Pages.settings.getPageNumber, Icons.settings, Pages.settings.getPageColor,
+          (Get.height + 56) * .5, (Get.width + 56) * .5),
       MenuButtonModel('calendar', null, Pages.calendar.getPageNumber, Icons.weekend, Pages.calendar.getPageColor, (Get.height - 56 * 3) * .5,
           (Get.width - 56 * 3) * .5),
       MenuButtonModel(

@@ -14,43 +14,25 @@ class TodayPageView extends GetView<TodayPageController> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CustomTitle(titleText: "TODAY", titleColor: Pages.today.getPageColor),
-          SizedBox(height: StandartMeasurementUnits.highPadding),
-          content(),
-          inputTaskField(),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        CustomTitle(titleText: "TODAY", titleColor: Pages.today.getPageColor),
+        SizedBox(height: StandartMeasurementUnits.highPadding),
+        content(),
+      ],
     );
   }
 
-  SizedBox inputTaskField() {
-    return SizedBox(
-      height: Get.height * .1,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(width: (StandartMeasurementUnits.extraHighPadding * 1.5) + 56),
-          Expanded(child: inputTask()),
-          SizedBox(width: StandartMeasurementUnits.extraHighPadding),
-        ],
+  Expanded content() {
+    return Expanded(
+      child: Obx(
+        () => DragAndDropLists(
+          children: controller.contents,
+          onItemReorder: controller.onItemReorder,
+          onListReorder: controller.onListReorder,
+        ),
       ),
-    );
-  }
-
-  SizedBox content() {
-    return SizedBox(
-      height: Get.height * .75,
-      //  TODO Obx i daha iyi bir yere koyabilir miyiz ?
-      child: Obx(() => DragAndDropLists(
-            children: controller.contents,
-            onItemReorder: controller.onItemReorder,
-            onListReorder: controller.onListReorder,
-          )),
     );
   }
 

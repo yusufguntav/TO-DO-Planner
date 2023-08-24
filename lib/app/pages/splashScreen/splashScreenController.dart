@@ -7,7 +7,7 @@ class SplashScreenController extends GetxService {
   @override
   void onReady() {
     Future.delayed(const Duration(seconds: 1)).then((value) async {
-      await Get.offAndToNamed(PageRoutes.today);
+      await Get.offAndToNamed(PageRoutes.welcomePage);
     });
     super.onReady();
   }

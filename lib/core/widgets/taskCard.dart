@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/core/models/task.dart';
+import 'package:to_do_app/core/variables/colorTable.dart';
 
 import '../variables/enums.dart';
 import '../variables/standartMeasurementUnits.dart';
@@ -22,7 +23,7 @@ class TaskCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(StandartMeasurementUnits.extraHighRadius),
             onTap: () => Get.dialog(taskEditDialog()),
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: Get.height * .11, minHeight: Get.height * .1),
+              constraints: BoxConstraints(maxHeight: Get.height * .1),
               child: DecoratedBox(
                 decoration: BoxDecoration(
                     border: Border.all(color: task.successStatus!.getSuccessStatusColor),
@@ -79,7 +80,25 @@ class TaskCard extends StatelessWidget {
                     controller: TextEditingController(text: task.task),
                   ),
                 ),
-                ElevatedButton(onPressed: () {}, child: const Text('Save'))
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text('Save'),
+                      ),
+                    ),
+                    SizedBox(width: StandartMeasurementUnits.normalPadding),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: ColorTable.getNegativeButtonColor),
+                        onPressed: () {},
+                        child: const Icon(Icons.delete),
+                      ),
+                    )
+                  ],
+                )
               ],
             )),
           ),

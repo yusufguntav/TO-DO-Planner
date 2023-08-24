@@ -48,7 +48,26 @@ class TodayPageController extends GetxController {
     TaskModel("Alışveriş için dışarı çık. Şemşiyeni unutma!Alışveriş için dışarı çık. Şemşiyeni unutma!Alışveriş için dışarı çık. Şemşiyeni unutma!",
             SuccessStatus.successful)
         .obs,
-    TaskModel("Baldur geçidine doğru yola çık. Büyülü asanı unutma!", SuccessStatus.neutral).obs,
+    TaskModel(
+            "Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur gBaldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!eçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!",
+            SuccessStatus.neutral)
+        .obs,
+    TaskModel("Alışveriş için dışarı çık. Şemşiyeni unutma!", SuccessStatus.fail).obs,
+    TaskModel("Alışveriş için dışarı çık. Şemşiyeni unutma!Alışveriş için dışarı çık. Şemşiyeni unutma!Alışveriş için dışarı çık. Şemşiyeni unutma!",
+            SuccessStatus.successful)
+        .obs,
+    TaskModel(
+            "Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur gBaldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!eçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!",
+            SuccessStatus.neutral)
+        .obs,
+    TaskModel("Alışveriş için dışarı çık. Şemşiyeni unutma!", SuccessStatus.fail).obs,
+    TaskModel("Alışveriş için dışarı çık. Şemşiyeni unutma!Alışveriş için dışarı çık. Şemşiyeni unutma!Alışveriş için dışarı çık. Şemşiyeni unutma!",
+            SuccessStatus.successful)
+        .obs,
+    TaskModel(
+            "Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur gBaldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!eçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!",
+            SuccessStatus.neutral)
+        .obs,
     TaskModel("Alışveriş için dışarı çık. Şemşiyeni unutma!", SuccessStatus.fail).obs,
     TaskModel(
             "Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!",
