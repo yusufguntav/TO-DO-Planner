@@ -17,7 +17,7 @@ class TodayPageView extends GetView<TodayPageController> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        CustomTitle(titleText: "TODAY", titleColor: Pages.today.getPageColor),
+        CustomTitle(titleText: "TODAY", titleColor: MainPages.today.getPageColor),
         SizedBox(height: StandartMeasurementUnits.highPadding),
         content(),
       ],

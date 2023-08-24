@@ -14,15 +14,15 @@ class MenuButtonController extends GetxController {
   @override
   void onReady() {
     menuButtons = <MenuButtonModel>[
-      MenuButtonModel('settings', SettingsPageController(), Pages.settings.getPageNumber, Icons.settings, Pages.settings.getPageColor,
+      MenuButtonModel('settings', SettingsPageController(), MainPages.settings.getPageNumber, Icons.settings, MainPages.settings.getPageColor,
           (Get.height + 56) * .5, (Get.width + 56) * .5),
-      MenuButtonModel('calendar', null, Pages.calendar.getPageNumber, Icons.weekend, Pages.calendar.getPageColor, (Get.height - 56 * 3) * .5,
+      MenuButtonModel('calendar', null, MainPages.calendar.getPageNumber, Icons.weekend, MainPages.calendar.getPageColor, (Get.height - 56 * 3) * .5,
           (Get.width - 56 * 3) * .5),
-      MenuButtonModel(
-          'dbtc', null, Pages.dbtc.getPageNumber, Icons.line_axis, Pages.dbtc.getPageColor, (Get.height - 56 * 3) * .5, (Get.width + 56) * .5),
-      MenuButtonModel(PageRoutes.allTasks, AllTaskController(), Pages.allTasks.getPageNumber, Icons.task, Pages.allTasks.getPageColor,
+      MenuButtonModel('dbtc', null, MainPages.dbtc.getPageNumber, Icons.line_axis, MainPages.dbtc.getPageColor, (Get.height - 56 * 3) * .5,
+          (Get.width + 56) * .5),
+      MenuButtonModel(PageRoutes.allTasks, AllTaskController(), MainPages.allTasks.getPageNumber, Icons.task, MainPages.allTasks.getPageColor,
           (Get.height + 56) * .5, (Get.width - 56 * 3) * .5),
-      MenuButtonModel(PageRoutes.today, TodayPageController(), Pages.today.getPageNumber, Icons.today, Pages.today.getPageColor,
+      MenuButtonModel(PageRoutes.today, TodayPageController(), MainPages.today.getPageNumber, Icons.today, MainPages.today.getPageColor,
           (Get.height - 56) * .5, (Get.width - 56) * .5),
     ];
     super.onReady();
@@ -42,7 +42,7 @@ class MenuButtonController extends GetxController {
   set showOtherMenuButtons(bool newValue) => _showOtherMenuButtons.value = newValue;
 
   // Selected page
-  final Rx<int> _selectedPage = Pages.today.getPageNumber.obs;
+  final Rx<int> _selectedPage = MainPages.today.getPageNumber.obs;
   int get selectedPage => _selectedPage.value;
   set selectedPage(int newValue) => _selectedPage.value = newValue;
 

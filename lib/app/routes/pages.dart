@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/splashScreen/splashScreenBinding.dart';
 import 'package:to_do_app/app/pages/splashScreen/splashScreenView.dart';
-import 'package:to_do_app/app/pages/welcomePage/welcomePageBinding.dart';
-import 'package:to_do_app/app/pages/welcomePage/welcomePageView.dart';
+import 'package:to_do_app/app/pages/welcomeScreens/welcomeHomeBinding.dart';
+import 'package:to_do_app/app/pages/welcomeScreens/welcomeHomeView.dart';
 import '../pages/home/homeBinding.dart';
 import '../pages/home/homeView.dart';
 import 'pageRoutes.dart';
@@ -10,9 +10,9 @@ import 'pageRoutes.dart';
 class Pages {
   static final pages = [
     GetPage(
-      binding: WelcomePageBinding(),
+      binding: WelcomeHomeBinding(),
       name: PageRoutes.welcomePage,
-      page: () => const WelcomePage(),
+      page: () => const WelcomeHome(),
       transition: Transition.fadeIn,
     ),
     GetPage(

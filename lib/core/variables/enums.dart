@@ -1,7 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
 
-enum Pages {
+enum WelcomePages {
+  welcomePage,
+  signIn,
+  signUp;
+
+  int get getPageNumber {
+    switch (this) {
+      case WelcomePages.welcomePage:
+        return 0;
+      case WelcomePages.signIn:
+        return 1;
+      case WelcomePages.signUp:
+        return 2;
+    }
+  }
+}
+
+enum MainPages {
   today,
   settings,
   calendar,
@@ -10,30 +27,32 @@ enum Pages {
 
   Color get getPageColor {
     switch (this) {
-      case Pages.today:
+      case MainPages.today:
         return const Color.fromARGB(255, 48, 213, 200);
-      case Pages.settings:
+      case MainPages.settings:
         return Colors.red;
-      case Pages.calendar:
+      case MainPages.calendar:
         return Colors.yellow;
-      case Pages.allTasks:
+      case MainPages.allTasks:
         return Colors.green;
-      case Pages.dbtc:
+      case MainPages.dbtc:
         return Colors.purple;
+      default:
+        return const Color.fromARGB(255, 48, 213, 200);
     }
   }
 
   int get getPageNumber {
     switch (this) {
-      case Pages.today:
+      case MainPages.today:
         return 0;
-      case Pages.allTasks:
+      case MainPages.allTasks:
         return 1;
-      case Pages.settings:
+      case MainPages.settings:
         return 2;
-      case Pages.calendar:
+      case MainPages.calendar:
         return 3;
-      case Pages.dbtc:
+      case MainPages.dbtc:
         return 4;
     }
   }

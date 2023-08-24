@@ -19,16 +19,16 @@ class AllTaskView extends GetView<AllTaskController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        CustomTitle(titleText: 'ALL TASKS', titleColor: Pages.allTasks.getPageColor),
+        CustomTitle(titleText: 'ALL TASKS', titleColor: MainPages.allTasks.getPageColor),
         SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-        CustomText.high('Special Lists', textColor: Pages.allTasks.getPageColor, bold: true),
+        CustomText.high('Special Lists', textColor: MainPages.allTasks.getPageColor, bold: true),
         specialListItem(),
         SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-        CustomText.high('Categories', textColor: Pages.allTasks.getPageColor, bold: true),
+        CustomText.high('Categories', textColor: MainPages.allTasks.getPageColor, bold: true),
         categoryItems(),
         categoryItems2(),
         SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-        CustomText.high('DBTC!', textColor: Pages.allTasks.getPageColor, bold: true),
+        CustomText.high('DBTC!', textColor: MainPages.allTasks.getPageColor, bold: true),
         dbtcItems()
       ],
     );
@@ -63,18 +63,18 @@ class AllTaskView extends GetView<AllTaskController> {
   }
 
   CustomListTileButton specialListItem() =>
-      CustomListTileButton(borderColor: Pages.allTasks.getPageColor, topPadding: StandartMeasurementUnits.highPadding);
+      CustomListTileButton(borderColor: MainPages.allTasks.getPageColor, topPadding: StandartMeasurementUnits.highPadding);
 
   Row categoryItems2() {
     return Row(
       children: [
         Expanded(
-          child:
-              CustomListTileButton(borderColor: Pages.allTasks.getPageColor, topPadding: StandartMeasurementUnits.highPadding, title: 'Side Project'),
+          child: CustomListTileButton(
+              borderColor: MainPages.allTasks.getPageColor, topPadding: StandartMeasurementUnits.highPadding, title: 'Side Project'),
         ),
         SizedBox(width: StandartMeasurementUnits.highPadding),
         Expanded(
-          child: CustomListTileButton(borderColor: Pages.allTasks.getPageColor, topPadding: StandartMeasurementUnits.highPadding),
+          child: CustomListTileButton(borderColor: MainPages.allTasks.getPageColor, topPadding: StandartMeasurementUnits.highPadding),
         ),
       ],
     );
@@ -84,11 +84,12 @@ class AllTaskView extends GetView<AllTaskController> {
     return Row(
       children: [
         Expanded(
-          child: CustomListTileButton(borderColor: Pages.allTasks.getPageColor, topPadding: StandartMeasurementUnits.highPadding, title: 'Housework'),
+          child: CustomListTileButton(
+              borderColor: MainPages.allTasks.getPageColor, topPadding: StandartMeasurementUnits.highPadding, title: 'Housework'),
         ),
         SizedBox(width: StandartMeasurementUnits.highPadding),
         Expanded(
-          child: CustomListTileButton(borderColor: Pages.allTasks.getPageColor, topPadding: StandartMeasurementUnits.highPadding, title: 'Work'),
+          child: CustomListTileButton(borderColor: MainPages.allTasks.getPageColor, topPadding: StandartMeasurementUnits.highPadding, title: 'Work'),
         ),
       ],
     );

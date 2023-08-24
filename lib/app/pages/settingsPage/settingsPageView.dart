@@ -14,7 +14,7 @@ class SettingsPage extends GetView<SettingsPageController> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        CustomTitle(titleText: "SETTINGS", titleColor: Pages.settings.getPageColor),
+        CustomTitle(titleText: "SETTINGS", titleColor: MainPages.settings.getPageColor),
         SizedBox(height: StandartMeasurementUnits.highPadding),
       ],
     );
