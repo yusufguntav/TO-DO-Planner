@@ -1,6 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
 
+enum StatusCodes {
+  informational,
+  successful,
+  redirection,
+  clientError,
+  serverError;
+
+  bool checkStatusCode(int statusCode) {
+    switch (this) {
+      case StatusCodes.informational:
+        return (100 <= statusCode && statusCode <= 199) ? true : false;
+      case StatusCodes.successful:
+        return (200 <= statusCode && statusCode <= 299) ? true : false;
+      case StatusCodes.redirection:
+        return (300 <= statusCode && statusCode <= 399) ? true : false;
+      case StatusCodes.clientError:
+        return (400 <= statusCode && statusCode <= 499) ? true : false;
+      case StatusCodes.serverError:
+        return (500 <= statusCode && statusCode <= 599) ? true : false;
+      default:
+        return false;
+    }
+  }
+}
+
+enum Endpoints {
+  signUp,
+  signIn;
+
+  String get path {
+    switch (this) {
+      case Endpoints.signIn:
+        return '/user/signIn';
+      case Endpoints.signUp:
+        return '/user/signUp';
+    }
+  }
+}
+
 enum WelcomePages {
   welcomePage,
   signIn,

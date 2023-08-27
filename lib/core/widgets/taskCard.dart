@@ -23,24 +23,22 @@ class TaskCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(StandartMeasurementUnits.extraHighRadius),
             onTap: () => Get.dialog(taskEditDialog()),
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: Get.height * .1),
+              constraints: BoxConstraints(maxHeight: Get.height * .08),
               child: DecoratedBox(
                 decoration: BoxDecoration(
                     border: Border.all(color: task.successStatus!.getSuccessStatusColor),
                     borderRadius: BorderRadius.circular(StandartMeasurementUnits.extraHighRadius)),
                 child: Center(
                   child: Padding(
-                    padding: EdgeInsets.all(StandartMeasurementUnits.normalPadding),
-                    child: SingleChildScrollView(
-                      child: CustomText(task.task, centerText: true),
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: StandartMeasurementUnits.lowPadding),
+                    child: CustomText(task.task, centerText: true, textOverflow: TextOverflow.ellipsis),
                   ),
                 ),
               ),
             ),
           ),
         ),
-        CustomLine(successStatus: task.successStatus),
+        CustomLine(successStatus: task.successStatus, lineBoxHeight: Get.height * .08, lineBoxWidth: Get.width * .08),
         InkWell(
           customBorder: const CircleBorder(),
           onTap: onTapFunct != null ? () => onTapFunct!(task) : () {},
@@ -51,8 +49,8 @@ class TaskCard extends StatelessWidget {
               border: Border.all(color: task.successStatus!.getSuccessStatusColor),
             ),
             child: SizedBox(
-              height: Get.height * .1,
-              width: Get.width * .15,
+              height: Get.height * .08,
+              width: Get.width * .12,
               child: Icon(task.successStatus!.getIcon, color: Colors.white),
             ),
           ),

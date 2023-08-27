@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:to_do_app/app/pages/welcomeScreens/components/signUpPage/signUpController.dart';
+import 'package:to_do_app/app/pages/welcomeScreens/components/signUpPage/signUpService.dart';
 import 'package:to_do_app/app/pages/welcomeScreens/welcomeHomeController.dart';
 import 'package:to_do_app/core/widgets/buttons/customButton.dart';
 
 import '../../../../core/variables/enums.dart';
 import '../../../../core/variables/standartMeasurementUnits.dart';
 import '../../../../core/widgets/texts/customText.dart';
+import 'signInPage/signInController.dart';
+import 'signInPage/signInService.dart';
 
 class WelcomPageView extends StatelessWidget {
   const WelcomPageView({super.key});
@@ -21,10 +25,20 @@ class WelcomPageView extends StatelessWidget {
         CustomButton(
           buttonText: 'Sign In',
           backgroundColor: MainPages.today.getPageColor,
-          onPress: () => controller.changeSelectedPageIndex(WelcomePages.signIn),
+          onPress: () {
+            Get.put(SignInService());
+            Get.put(SignInPageController());
+            controller.changeSelectedPageIndex(WelcomePages.signIn);
+          },
         ),
         SizedBox(height: StandartMeasurementUnits.lowPadding),
-        InkWell(onTap: () => controller.changeSelectedPageIndex(WelcomePages.signUp), child: CustomText('or sign up')),
+        InkWell(
+            onTap: () {
+              Get.put(SignUpService());
+              Get.put(SignUpPageController());
+              controller.changeSelectedPageIndex(WelcomePages.signUp);
+            },
+            child: CustomText('or sign up')),
       ],
     );
   }

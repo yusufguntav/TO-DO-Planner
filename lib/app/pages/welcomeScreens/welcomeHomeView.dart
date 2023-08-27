@@ -20,10 +20,7 @@ class WelcomeHome extends GetView<WelcomeHomeController> {
             children: [
               wave(),
               giveFeedback(),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: StandartMeasurementUnits.extraHighPadding),
-                child: Obx(() => controller.getPage()),
-              ),
+              Obx(() => controller.getPage()),
             ],
           ),
         ),
@@ -35,8 +32,9 @@ class WelcomeHome extends GetView<WelcomeHomeController> {
     return Positioned(
       bottom: 0,
       child: DecoratedBox(
-        decoration: const BoxDecoration(
-          border: Border(
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          border: const Border(
             top: BorderSide(color: Colors.black),
           ),
         ),

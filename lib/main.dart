@@ -5,6 +5,7 @@ import 'package:to_do_app/core/theme/appTheme.dart';
 import 'app/pages/todayPage/todayPageController.dart';
 import 'app/routes/pageRoutes.dart';
 import 'app/routes/pages.dart';
+import 'core/network/baseNetworkService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +14,7 @@ void main() async {
 
 Future<void> initApp() async {
   Get.lazyPut(() => TodayPageController());
-
+  Get.put(BaseNetworkService());
   runApp(const MyApp());
 }
 
