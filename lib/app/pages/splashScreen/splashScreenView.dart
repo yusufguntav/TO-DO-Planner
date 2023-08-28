@@ -13,9 +13,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
-        child: Center(child: SpinKitFoldingCube(color: MainPages.today.getPageColor)),
-      ),
+      body: Center(child: SpinKitFoldingCube(color: MainPages.today.getPageColor)),
     );
   }
 }

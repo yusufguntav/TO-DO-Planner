@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
 
+enum PageStates {
+  initial,
+  busy,
+  loaded,
+  error,
+}
+
 enum StatusCodes {
   informational,
   successful,

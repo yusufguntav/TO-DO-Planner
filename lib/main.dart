@@ -7,12 +7,14 @@ import 'app/routes/pageRoutes.dart';
 import 'app/routes/pages.dart';
 import 'core/network/baseNetworkService.dart';
 
+//TODO: Proje sonunda fix all import at
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initApp();
 }
 
 Future<void> initApp() async {
+  //TODO: Today page direkt get.offtonamed kullanabilirsin
   Get.lazyPut(() => TodayPageController());
   Get.put(BaseNetworkService());
   runApp(const MyApp());

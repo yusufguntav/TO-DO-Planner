@@ -7,8 +7,6 @@ import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
 import 'package:to_do_app/core/widgets/buttons/customButton.dart';
 import 'package:to_do_app/core/widgets/texts/customText.dart';
 
-import '../../../../../core/widgets/circularProgressWhileProcess.dart';
-
 class SignInPage extends GetView<SignInPageController> {
   const SignInPage({super.key});
 
@@ -16,39 +14,33 @@ class SignInPage extends GetView<SignInPageController> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => Get.find<WelcomeHomeController>().changeSelectedPageIndex(WelcomePages.welcomePage),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: StandartMeasurementUnits.highPadding),
-              child: Form(
-                key: controller.getFormKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    backButton(),
-                    SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-                    TextFormField(
-                        controller: controller.getControllers[SignInFields.email],
-                        validator: (val) => controller.isValidEmail(val),
-                        decoration: InputDecoration(label: CustomText('E-mail'))),
-                    SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-                    TextFormField(
-                        controller: controller.getControllers[SignInFields.password],
-                        validator: (val) => controller.isValidPassword(val),
-                        decoration: InputDecoration(label: CustomText('Password'))),
-                    SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-                    signInButton(),
-                    SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-                    CustomText('forgot your password?'),
-                  ],
-                ),
-              ),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: StandartMeasurementUnits.highPadding),
+          child: Form(
+            key: controller.getFormKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                backButton(),
+                SizedBox(height: StandartMeasurementUnits.extraHighPadding),
+                TextFormField(
+                    controller: controller.getControllers[SignInFields.email],
+                    validator: (val) => controller.isValidEmail(val),
+                    decoration: InputDecoration(label: CustomText('E-mail'))),
+                SizedBox(height: StandartMeasurementUnits.extraHighPadding),
+                TextFormField(
+                    controller: controller.getControllers[SignInFields.password],
+                    validator: (val) => controller.isValidPassword(val),
+                    decoration: InputDecoration(label: CustomText('Password'))),
+                SizedBox(height: StandartMeasurementUnits.extraHighPadding),
+                signInButton(),
+                SizedBox(height: StandartMeasurementUnits.extraHighPadding),
+                CustomText('forgot your password?'),
+              ],
             ),
           ),
-          Obx(() => controller.showProgressIndicator.value ? const CircularProgressWhileProcess() : const SizedBox()),
-        ],
+        ),
       ),
     );
   }

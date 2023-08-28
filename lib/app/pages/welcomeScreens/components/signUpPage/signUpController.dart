@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/welcomeScreens/components/signUpPage/signUpService.dart';
 
-import '../../../../../core/network/baseNetworkService.dart';
+import '../../../../../core/network/networkModels/requestResponse.dart';
 import '../../../../../core/variables/enums.dart';
 import '../../../../routes/pageRoutes.dart';
 
@@ -51,7 +51,7 @@ class SignUpPageController extends GetxController {
   Rx<bool> showProgressIndicator = false.obs;
 
   signUp(String email, String password, String displayName) async {
-    RequestResponse? requestResponse = await _signUpPageService.signUp(showProgressIndicator, email, password, displayName);
+    RequestResponse? requestResponse = await _signUpPageService.signUp(email, password, displayName);
     if (requestResponse != null) {
       if (StatusCodes.successful.checkStatusCode(int.parse(requestResponse.status))) {
         Get.offAndToNamed(PageRoutes.welcomePage);

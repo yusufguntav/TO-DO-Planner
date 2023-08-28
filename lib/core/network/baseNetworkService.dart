@@ -5,32 +5,51 @@ import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/widgets/buttons/customButton.dart';
 import 'package:to_do_app/core/widgets/texts/customText.dart';
 
-class RequestResponse {
-  dynamic body;
-  String status;
-  RequestResponse(this.body, this.status);
-}
+import '../widgets/circularProgressWhileProcess.dart';
+import 'networkModels/requestResponse.dart';
 
 class BaseNetworkService extends GetxService {
+  // Page state control
+  final Rx<PageStates> _state = PageStates.loaded.obs;
+  PageStates get state => _state.value;
+  set state(PageStates val) => _state.value = val;
+
+  @override
+  void onInit() {
+    ever(
+      _state,
+      (PageStates value) {
+        switch (value) {
+          case PageStates.busy:
+            Get.dialog(const CircularProgressWhileProcess(), barrierColor: Get.theme.primaryColor.withOpacity(0.1));
+            break;
+          case PageStates.loaded:
+            if (Get.isOverlaysOpen) Get.back();
+            break;
+          case PageStates.error:
+            if (Get.isOverlaysOpen) Get.back();
+            break;
+          case PageStates.initial:
+            if (Get.isOverlaysOpen) Get.back();
+            break;
+        }
+      },
+    );
+    super.onInit();
+  }
+
   final GetConnect _connect = GetConnect();
 
   final _protocolAndIp = 'http://10.0.2.2:3000';
 
-  Future<RequestResponse?> sendPostRequest(
-      // TODO RX li veri alıyoruz başka nasıl olabilir ?
-      Rx<bool> progressIndicator,
-      Endpoints endpoint,
-      Map<String, String> body,
-      Map<String, String>? header) async {
-    // showProgressIndicator ?
-    progressIndicator.value = true;
-    final response = await _connect
-        .post(
-          _protocolAndIp + endpoint.path,
-          body,
-          headers: header,
-        )
-        .whenComplete(() => progressIndicator.value = false);
+  Future<RequestResponse?> sendPostRequest(Endpoints endpoint, Map<String, String> body, Map<String, String>? header) async {
+    state = PageStates.busy;
+    final response = await _connect.post(
+      _protocolAndIp + endpoint.path,
+      body,
+      headers: header,
+    );
+    state = PageStates.loaded;
     RequestResponse requestResponse = RequestResponse(response.body, response.statusCode.toString());
     // Error control
     if (response.statusCode == null) {
@@ -39,10 +58,12 @@ class BaseNetworkService extends GetxService {
       );
       return null;
     } else if (response.hasError) {
-      Get.dialog(AlertDialog(
-        title: CustomText('Error'),
-        content: CustomText.high(response.body['message']),
-      ));
+      Get.dialog(
+        AlertDialog(
+          title: CustomText('Error'),
+          content: CustomText.high(response.body['message']),
+        ),
+      );
       return requestResponse;
     }
     return requestResponse;
