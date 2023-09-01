@@ -35,7 +35,9 @@ enum StatusCodes {
 
 enum Endpoints {
   signUp,
-  signIn;
+  signIn,
+  addCategory,
+  getCategory;
 
   String get path {
     switch (this) {
@@ -43,6 +45,10 @@ enum Endpoints {
         return '/user/signIn';
       case Endpoints.signUp:
         return '/user/signUp';
+      case Endpoints.addCategory:
+        return '/category/addCategory';
+      case Endpoints.getCategory:
+        return '/category';
     }
   }
 }

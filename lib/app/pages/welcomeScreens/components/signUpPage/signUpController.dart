@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/welcomeScreens/components/signUpPage/signUpService.dart';
@@ -46,9 +48,6 @@ class SignUpPageController extends GetxController {
 
   // Network services
   final _signUpPageService = Get.find<SignUpService>();
-
-  // Show ProgressIndicator
-  Rx<bool> showProgressIndicator = false.obs;
 
   signUp(String email, String password, String displayName) async {
     RequestResponse? requestResponse = await _signUpPageService.signUp(email, password, displayName);

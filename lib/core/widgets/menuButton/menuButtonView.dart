@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/core/widgets/menuButton/menuButtonController.dart';
 
@@ -12,14 +13,20 @@ class MenuButtonView extends GetView<MenuButtonController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Stack(
-        children: [
-          for (int i = 0; i < controller.menuButtons.length; i++) ...[
-            menuButton(controller.menuButtons[i]),
-          ],
-        ],
-      ),
+    return KeyboardVisibilityBuilder(
+      builder: (context, keyboardVisibility) {
+        return !keyboardVisibility
+            ? Obx(
+                () => Stack(
+                  children: [
+                    for (int i = 0; i < controller.menuButtons.length; i++) ...[
+                      menuButton(controller.menuButtons[i]),
+                    ],
+                  ],
+                ),
+              )
+            : const SizedBox();
+      },
     );
   }
 
@@ -36,7 +43,6 @@ class MenuButtonView extends GetView<MenuButtonController> {
           backgroundColor: menutButtonModel.color,
           heroTag: menutButtonModel.herotag,
           onPressed: () {
-            Get.lazyPut(() => menutButtonModel.controller);
             controller.centerMenuButton = !controller.centerMenuButton;
             controller.selectedPage = menutButtonModel.selectedPageNumber;
             controller.sortMenuButtonModels();

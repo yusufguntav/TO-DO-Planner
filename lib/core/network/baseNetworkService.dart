@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
@@ -21,7 +23,7 @@ class BaseNetworkService extends GetxService {
       (PageStates value) {
         switch (value) {
           case PageStates.busy:
-            Get.dialog(const CircularProgressWhileProcess(), barrierColor: Get.theme.primaryColor.withOpacity(0.1));
+            Get.dialog(const CircularProgressWhileProcess(), barrierColor: Colors.white.withOpacity(0.6));
             break;
           case PageStates.loaded:
             if (Get.isOverlaysOpen) Get.back();
@@ -42,7 +44,7 @@ class BaseNetworkService extends GetxService {
 
   final _protocolAndIp = 'http://10.0.2.2:3000';
 
-  Future<RequestResponse?> sendPostRequest(Endpoints endpoint, Map<String, String> body, Map<String, String>? header) async {
+  Future<RequestResponse?> sendPostRequest(Endpoints endpoint, Map<String, String> body, Map<String, String>? header, Function? onSuccessFunc) async {
     state = PageStates.busy;
     final response = await _connect.post(
       _protocolAndIp + endpoint.path,
@@ -62,9 +64,49 @@ class BaseNetworkService extends GetxService {
         AlertDialog(
           title: CustomText('Error'),
           content: CustomText.high(response.body['message']),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            CustomButton(buttonText: 'Ok', onPress: () => Get.back()),
+          ],
         ),
       );
       return requestResponse;
+    }
+    if (StatusCodes.successful.checkStatusCode(response.statusCode ?? 404)) {
+      onSuccessFunc != null ? onSuccessFunc() : () {};
+    }
+    return requestResponse;
+  }
+
+  Future<RequestResponse?> sendGetRequest(Endpoints endpoint, Map<String, String>? header, Function? onSuccessFunc) async {
+    state = PageStates.busy;
+    final response = await _connect.get(
+      _protocolAndIp + endpoint.path,
+      headers: header,
+    );
+    state = PageStates.loaded;
+    RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode.toString());
+    // Error control
+    if (response.statusCode == null) {
+      Get.dialog(
+        unexpectedErrorDialog(),
+      );
+      return null;
+    } else if (response.hasError) {
+      Get.dialog(
+        AlertDialog(
+          title: CustomText('Error'),
+          content: CustomText.high(response.body['message']),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            CustomButton(buttonText: 'Ok', onPress: () => Get.back()),
+          ],
+        ),
+      );
+      return requestResponse;
+    }
+    if (StatusCodes.successful.checkStatusCode(response.statusCode ?? 404)) {
+      onSuccessFunc != null ? onSuccessFunc() : () {};
     }
     return requestResponse;
   }

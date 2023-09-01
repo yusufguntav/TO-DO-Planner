@@ -1,7 +1,10 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/welcomeScreens/components/signInPage/signInService.dart';
 import 'package:to_do_app/app/routes/pageRoutes.dart';
+import 'package:to_do_app/core/services/secure_storage.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 
 import '../../../../../core/network/networkModels/requestResponse.dart';
@@ -40,14 +43,13 @@ class SignInPageController extends GetxController {
   // Network services
   final _signInPageService = Get.find<SignInService>();
 
-  // Show ProgressIndicator
-  Rx<bool> showProgressIndicator = false.obs;
-
   login(String email, String password) async {
     RequestResponse? requestResponse = await _signInPageService.login(email, password);
     if (requestResponse != null) {
       if (StatusCodes.successful.checkStatusCode(int.parse(requestResponse.status))) {
-        Get.offAndToNamed(PageRoutes.today);
+        //Token storage
+        await SecureStorage().writeSecureData('token', requestResponse.body['token']);
+        Get.offAndToNamed(PageRoutes.home);
       }
       debugPrint('body: ${requestResponse.body}\n status:${requestResponse.status}');
     }

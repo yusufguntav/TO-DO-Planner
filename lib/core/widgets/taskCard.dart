@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/core/models/task.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
+import 'package:to_do_app/core/widgets/alertDialog/customDialog.dart';
 
 import '../variables/enums.dart';
 import '../variables/standartMeasurementUnits.dart';
@@ -59,48 +60,38 @@ class TaskCard extends StatelessWidget {
     );
   }
 
-  Dialog taskEditDialog() {
-    return Dialog(
-      child: DecoratedBox(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(StandartMeasurementUnits.extraHighRadius)),
-        child: Padding(
-          padding: EdgeInsets.all(StandartMeasurementUnits.highPadding),
-          child: SizedBox(
-            height: Get.height * .5,
-            child: Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Flexible(
-                  child: TextField(
-                    maxLines: 30,
-                    controller: TextEditingController(text: task.task),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Text('Save'),
-                      ),
-                    ),
-                    SizedBox(width: StandartMeasurementUnits.normalPadding),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: ColorTable.getNegativeButtonColor),
-                        onPressed: () {},
-                        child: const Icon(Icons.delete),
-                      ),
-                    )
-                  ],
-                )
-              ],
-            )),
+  CustomDialog taskEditDialog() {
+    return CustomDialog(
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Flexible(
+            child: TextField(
+              maxLines: 30,
+              controller: TextEditingController(text: task.task),
+            ),
           ),
-        ),
+          Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Save'),
+                ),
+              ),
+              SizedBox(width: StandartMeasurementUnits.normalPadding),
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: ColorTable.getNegativeButtonColor),
+                  onPressed: () {},
+                  child: const Icon(Icons.delete),
+                ),
+              )
+            ],
+          )
+        ],
       ),
     );
   }

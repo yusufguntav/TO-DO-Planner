@@ -17,7 +17,7 @@ class Pages {
     ),
     GetPage(
       binding: HomeBinding(),
-      name: PageRoutes.today,
+      name: PageRoutes.home,
       page: () => const HomeView(),
       transition: Transition.fadeIn,
     ),
