@@ -14,7 +14,7 @@ class ColorTable {
   static Color get getReversedTextColor => Get.isDarkMode ? Colors.black : Colors.white;
   static Color get getTitleColor => const Color.fromARGB(255, 48, 213, 200);
   static Color get getHintTextColor => Colors.grey;
-  static Color get getNegativeButtonColor => Colors.red;
-  static Color get getPositiveButtonColor => Colors.green;
-  static Color get getNeutralButtonColor => Colors.grey;
+  static Color get getNegativeColor => Colors.red;
+  static Color get getPositiveColor => Colors.green;
+  static Color get getNeutralColor => Colors.grey;
 }

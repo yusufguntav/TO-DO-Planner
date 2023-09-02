@@ -15,7 +15,7 @@ class CustomListTileButton extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: topPadding ?? 0),
       child: ListTile(
-        onTap: onTapFunction ?? () {},
+        onTap: onTapFunction,
         shape: RoundedRectangleBorder(
           side: BorderSide(color: borderColor),
           borderRadius: BorderRadius.circular(20),

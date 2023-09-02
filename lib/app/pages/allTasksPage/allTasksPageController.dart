@@ -6,19 +6,36 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/allTasksPage/allTaskService.dart';
 import 'package:to_do_app/core/models/category.dart';
+import 'package:to_do_app/core/widgets/dialogs/customSnackbar.dart';
 
 import '../../../core/network/networkModels/requestResponse.dart';
 import '../../../core/services/secure_storage.dart';
-import '../../../core/variables/colorTable.dart';
 import '../../../core/variables/enums.dart';
-import '../../../core/variables/standartMeasurementUnits.dart';
-import '../../../core/widgets/texts/customText.dart';
 
-enum AddCategoryFields {
+enum FormCategoryFields {
   name,
+  description,
 }
 
 class AllTaskController extends GetxController {
+  // Form Key
+  final _getEditCategoryformKey = GlobalKey<FormState>();
+  GlobalKey<FormState> get getEditCategoryFormKey => _getEditCategoryformKey;
+
+  // Validation control
+  // isValidPassword(String? val) {
+  //   if ((val ?? '').length < 6) {
+  //     return 'Password must be longer than 6 characters';
+  //   }
+  // }
+
+  // Edit Name and Description Controller
+  final Map<FormCategoryFields, TextEditingController> _editCategoryControllers = {
+    FormCategoryFields.name: TextEditingController(),
+    FormCategoryFields.description: TextEditingController(),
+  };
+  Map<FormCategoryFields, TextEditingController> get getEditCategoryControllers => _editCategoryControllers;
+
   //Category control
   final RxList<CategoryModel> categories = <CategoryModel>[].obs;
 
@@ -27,10 +44,11 @@ class AllTaskController extends GetxController {
   GlobalKey<FormState> get getAddCategoryFormKey => _addCategoryformKey;
 
   // Category Controller
-  final Map<AddCategoryFields, TextEditingController> _addCategoryControllerList = {
-    AddCategoryFields.name: TextEditingController(text: 'TestKategori'),
+  final Map<FormCategoryFields, TextEditingController> _addCategoryControllerList = {
+    FormCategoryFields.name: TextEditingController(text: 'TestKategori'),
+    FormCategoryFields.description: TextEditingController(text: 'Description'),
   };
-  Map<AddCategoryFields, TextEditingController> get getAddCategoryControllers => _addCategoryControllerList;
+  Map<FormCategoryFields, TextEditingController> get getAddCategoryControllers => _addCategoryControllerList;
 
   isValidCategoryName(String? val) {
     if ((val ?? '').isEmpty) {
@@ -48,25 +66,33 @@ class AllTaskController extends GetxController {
     super.onInit();
   }
 
-  Future addCategory(String name) async {
+  Future addCategory(String name, String description) async {
     //TODO Hata kontrolü konulacak
-    await _allTaskService.addCategory(name, await SecureStorage().readSecureData('token'), () async {
-      await addCategoryToCategories();
-      Get.showSnackbar(GetSnackBar(
-        snackPosition: SnackPosition.TOP,
-        snackStyle: SnackStyle.FLOATING,
-        borderRadius: StandartMeasurementUnits.highRadius,
-        backgroundColor: ColorTable.getPositiveButtonColor.withOpacity(.9),
-        maxWidth: Get.width * .8,
-        duration: const Duration(seconds: 2),
-        margin: EdgeInsets.symmetric(vertical: StandartMeasurementUnits.highPadding),
-        messageText: CustomText(
-          'Category created',
-          textColor: Colors.white,
-          centerText: true,
-        ),
-      ));
-    });
+    await _allTaskService.addCategory(
+      name,
+      description,
+      await SecureStorage().readSecureData('token'),
+      () async {
+        Get.back();
+        await addCategoryToCategories();
+        Get.showSnackbar(const CustomSnackbar(snackbarText: 'Category created', dialogType: DialogType.success).getSnackbar());
+      },
+    );
+  }
+
+  Future updateCategory(String name, String oldName, String description) async {
+    //TODO Hata kontrolü konulacak
+    await _allTaskService.updateCategory(
+      name,
+      oldName,
+      description,
+      await SecureStorage().readSecureData('token'),
+      () async {
+        Get.back();
+        await addCategoryToCategories();
+        Get.showSnackbar(const CustomSnackbar(snackbarText: 'Category updated', dialogType: DialogType.success).getSnackbar());
+      },
+    );
   }
 
   Future<RequestResponse?> getCategoryReq() async {
@@ -80,11 +106,20 @@ class AllTaskController extends GetxController {
     return null;
   }
 
+  Future deleteCategory(String name) async {
+    //TODO Hata kontrolü konulacak
+    await _allTaskService.deleteCategory(await SecureStorage().readSecureData('token'), name, () async {
+      Get.back();
+      await addCategoryToCategories();
+      Get.showSnackbar(const CustomSnackbar(snackbarText: 'Category deleted', dialogType: DialogType.success).getSnackbar());
+    });
+  }
+
   Future addCategoryToCategories() async {
     categories.clear();
     dynamic json = jsonDecode((await getCategoryReq())!.body);
     for (var i = 0; i < json.length; i++) {
-      categories.add(CategoryModel(json[i]['name']));
+      categories.add(CategoryModel(json[i]['name'], json[i]['description']));
     }
     categories.refresh();
   }

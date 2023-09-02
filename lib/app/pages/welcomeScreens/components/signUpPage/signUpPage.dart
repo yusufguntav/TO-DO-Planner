@@ -7,7 +7,8 @@ import 'package:to_do_app/app/pages/welcomeScreens/welcomeHomeController.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
 import 'package:to_do_app/core/widgets/buttons/customButton.dart';
-import 'package:to_do_app/core/widgets/texts/customText.dart';
+
+import '../../../../../core/widgets/texts/customTextFormField.dart';
 
 class SignUpPage extends GetView<SignUpPageController> {
   const SignUpPage({super.key});
@@ -26,20 +27,26 @@ class SignUpPage extends GetView<SignUpPageController> {
               children: [
                 backButton(),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-                TextFormField(
-                    validator: (val) => controller.isValidDisplayName(val),
-                    controller: controller.getControllers[SignUpFields.displayName],
-                    decoration: InputDecoration(label: CustomText('Display Name'))),
+                CustomTextFormField(
+                  isValidController: controller.isValidDisplayName,
+                  controller: controller.getControllers[SignUpFields.displayName],
+                  color: MainPages.today.getPageColor,
+                  label: 'Display Name',
+                ),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-                TextFormField(
-                    validator: (val) => controller.isValidEmail(val),
-                    controller: controller.getControllers[SignUpFields.email],
-                    decoration: InputDecoration(label: CustomText('E-mail'))),
+                CustomTextFormField(
+                  isValidController: controller.isValidEmail,
+                  controller: controller.getControllers[SignUpFields.email],
+                  color: MainPages.today.getPageColor,
+                  label: 'E-mail',
+                ),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-                TextFormField(
-                    validator: (val) => controller.isValidPassword(val),
-                    controller: controller.getControllers[SignUpFields.password],
-                    decoration: InputDecoration(label: CustomText('Password'))),
+                CustomTextFormField(
+                  controller: controller.getControllers[SignUpFields.password],
+                  isValidController: controller.isValidPassword,
+                  color: MainPages.today.getPageColor,
+                  label: 'Password',
+                ),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
                 signUpButton(),
               ],

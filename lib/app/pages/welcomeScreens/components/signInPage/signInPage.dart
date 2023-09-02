@@ -8,6 +8,7 @@ import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
 import 'package:to_do_app/core/widgets/buttons/customButton.dart';
 import 'package:to_do_app/core/widgets/texts/customText.dart';
+import 'package:to_do_app/core/widgets/texts/customTextFormField.dart';
 
 class SignInPage extends GetView<SignInPageController> {
   const SignInPage({super.key});
@@ -26,15 +27,19 @@ class SignInPage extends GetView<SignInPageController> {
               children: [
                 backButton(),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-                TextFormField(
-                    controller: controller.getControllers[SignInFields.email],
-                    validator: (val) => controller.isValidEmail(val),
-                    decoration: InputDecoration(label: CustomText('E-mail'))),
+                CustomTextFormField(
+                  controller: controller.getControllers[SignInFields.email],
+                  isValidController: controller.isValidEmail,
+                  color: MainPages.today.getPageColor,
+                  label: 'E-mail',
+                ),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-                TextFormField(
-                    controller: controller.getControllers[SignInFields.password],
-                    validator: (val) => controller.isValidPassword(val),
-                    decoration: InputDecoration(label: CustomText('Password'))),
+                CustomTextFormField(
+                  controller: controller.getControllers[SignInFields.password],
+                  isValidController: controller.isValidPassword,
+                  color: MainPages.today.getPageColor,
+                  label: 'Password',
+                ),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
                 signInButton(),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),

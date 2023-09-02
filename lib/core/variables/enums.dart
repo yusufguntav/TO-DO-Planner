@@ -8,6 +8,23 @@ enum PageStates {
   error,
 }
 
+enum DialogType {
+  success,
+  fail,
+  warning;
+
+  Color get getPageColor {
+    switch (this) {
+      case DialogType.success:
+        return ColorTable.getPositiveColor.withOpacity(.9);
+      case DialogType.fail:
+        return ColorTable.getNegativeColor.withOpacity(.9);
+      case DialogType.warning:
+        return Colors.orange.withOpacity(.9);
+    }
+  }
+}
+
 enum StatusCodes {
   informational,
   successful,
@@ -37,18 +54,24 @@ enum Endpoints {
   signUp,
   signIn,
   addCategory,
-  getCategory;
+  getCategory,
+  deleteCategory,
+  updateCategory;
 
   String get path {
     switch (this) {
       case Endpoints.signIn:
-        return '/user/signIn';
+        return '/user/signIn/';
       case Endpoints.signUp:
-        return '/user/signUp';
+        return '/user/signUp/';
       case Endpoints.addCategory:
-        return '/category/addCategory';
+        return '/category/addCategory/';
       case Endpoints.getCategory:
-        return '/category';
+        return '/category/';
+      case Endpoints.deleteCategory:
+        return '/category/';
+      case Endpoints.updateCategory:
+        return '/category/updateCategory/';
     }
   }
 }
@@ -132,11 +155,11 @@ enum SuccessStatus {
       case SuccessStatus.today:
         return ColorTable.primaryColor;
       case SuccessStatus.successful:
-        return ColorTable.getPositiveButtonColor;
+        return ColorTable.getPositiveColor;
       case SuccessStatus.neutral:
-        return ColorTable.getNeutralButtonColor;
+        return ColorTable.getNeutralColor;
       case SuccessStatus.fail:
-        return ColorTable.getNegativeButtonColor;
+        return ColorTable.getNegativeColor;
     }
   }
 }

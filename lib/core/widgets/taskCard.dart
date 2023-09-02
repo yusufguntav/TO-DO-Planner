@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/core/models/task.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
-import 'package:to_do_app/core/widgets/alertDialog/customDialog.dart';
+import 'package:to_do_app/core/widgets/dialogs/customDialog.dart';
 
 import '../variables/enums.dart';
 import '../variables/standartMeasurementUnits.dart';
@@ -84,7 +84,7 @@ class TaskCard extends StatelessWidget {
               SizedBox(width: StandartMeasurementUnits.normalPadding),
               Expanded(
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: ColorTable.getNegativeButtonColor),
+                  style: ElevatedButton.styleFrom(backgroundColor: ColorTable.getNegativeColor),
                   onPressed: () {},
                   child: const Icon(Icons.delete),
                 ),

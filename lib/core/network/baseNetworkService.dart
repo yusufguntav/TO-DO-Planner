@@ -1,5 +1,3 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
@@ -45,6 +43,7 @@ class BaseNetworkService extends GetxService {
   final _protocolAndIp = 'http://10.0.2.2:3000';
 
   Future<RequestResponse?> sendPostRequest(Endpoints endpoint, Map<String, String> body, Map<String, String>? header, Function? onSuccessFunc) async {
+    await Get.closeCurrentSnackbar();
     state = PageStates.busy;
     final response = await _connect.post(
       _protocolAndIp + endpoint.path,
@@ -53,32 +52,11 @@ class BaseNetworkService extends GetxService {
     );
     state = PageStates.loaded;
     RequestResponse requestResponse = RequestResponse(response.body, response.statusCode.toString());
-    // Error control
-    if (response.statusCode == null) {
-      Get.dialog(
-        unexpectedErrorDialog(),
-      );
-      return null;
-    } else if (response.hasError) {
-      Get.dialog(
-        AlertDialog(
-          title: CustomText('Error'),
-          content: CustomText.high(response.body['message']),
-          actionsAlignment: MainAxisAlignment.center,
-          actions: [
-            CustomButton(buttonText: 'Ok', onPress: () => Get.back()),
-          ],
-        ),
-      );
-      return requestResponse;
-    }
-    if (StatusCodes.successful.checkStatusCode(response.statusCode ?? 404)) {
-      onSuccessFunc != null ? onSuccessFunc() : () {};
-    }
-    return requestResponse;
+    return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
   }
 
   Future<RequestResponse?> sendGetRequest(Endpoints endpoint, Map<String, String>? header, Function? onSuccessFunc) async {
+    await Get.closeCurrentSnackbar();
     state = PageStates.busy;
     final response = await _connect.get(
       _protocolAndIp + endpoint.path,
@@ -86,29 +64,34 @@ class BaseNetworkService extends GetxService {
     );
     state = PageStates.loaded;
     RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode.toString());
-    // Error control
-    if (response.statusCode == null) {
-      Get.dialog(
-        unexpectedErrorDialog(),
-      );
-      return null;
-    } else if (response.hasError) {
-      Get.dialog(
-        AlertDialog(
-          title: CustomText('Error'),
-          content: CustomText.high(response.body['message']),
-          actionsAlignment: MainAxisAlignment.center,
-          actions: [
-            CustomButton(buttonText: 'Ok', onPress: () => Get.back()),
-          ],
-        ),
-      );
-      return requestResponse;
-    }
-    if (StatusCodes.successful.checkStatusCode(response.statusCode ?? 404)) {
-      onSuccessFunc != null ? onSuccessFunc() : () {};
-    }
-    return requestResponse;
+    return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
+  }
+
+  Future<RequestResponse?> sendDeleteRequest(Endpoints endpoint, String idForPath, Map<String, String>? header, Function? onSuccessFunc) async {
+    await Get.closeCurrentSnackbar();
+    state = PageStates.busy;
+    final response = await _connect.delete(
+      // TODO Burayı sor idForPath sona eklemek mantıklı mı ?
+      _protocolAndIp + endpoint.path + idForPath,
+      headers: header,
+    );
+    state = PageStates.loaded;
+    RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode.toString());
+    return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
+  }
+
+  Future<RequestResponse?> sendUpdateRequest(
+      Endpoints endpoint, Map<String, String>? body, Map<String, String>? header, Function? onSuccessFunc) async {
+    await Get.closeCurrentSnackbar();
+    state = PageStates.busy;
+    final response = await _connect.patch(
+      _protocolAndIp + endpoint.path,
+      body,
+      headers: header,
+    );
+    state = PageStates.loaded;
+    RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode.toString());
+    return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
   }
 
   AlertDialog unexpectedErrorDialog() {
@@ -132,5 +115,31 @@ class BaseNetworkService extends GetxService {
         CustomButton(buttonText: 'Ok', onPress: () => Get.back()),
       ],
     );
+  }
+
+  RequestResponse? errorControlAndOnSuccessFunc(Response response, RequestResponse requestResponse, Function? onSuccessFunc) {
+    // Error control
+    if (response.statusCode == null) {
+      Get.dialog(
+        unexpectedErrorDialog(),
+      );
+      return null;
+    } else if (response.hasError) {
+      Get.dialog(
+        AlertDialog(
+          title: CustomText('Error'),
+          content: CustomText.high(response.body['error'].toString()),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            CustomButton(buttonText: 'Ok', onPress: () => Get.back()),
+          ],
+        ),
+      );
+      return requestResponse;
+    }
+    if (StatusCodes.successful.checkStatusCode(response.statusCode ?? 404)) {
+      onSuccessFunc != null ? onSuccessFunc() : () {};
+    }
+    return requestResponse;
   }
 }

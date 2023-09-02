@@ -1,4 +1,5 @@
 class CategoryModel {
-  String name;
-  CategoryModel(this.name);
+  String? name;
+  String? description;
+  CategoryModel(this.name, this.description);
 }

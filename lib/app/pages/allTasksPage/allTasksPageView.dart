@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/allTasksPage/allTaskService.dart';
 import 'package:to_do_app/app/pages/allTasksPage/allTasksPageController.dart';
+import 'package:to_do_app/app/pages/allTasksPage/components/editCategoryFormDialog.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
 import 'package:to_do_app/core/widgets/buttons/customListTileButton.dart';
-import 'package:to_do_app/core/widgets/categoryGrill.dart';
+import 'package:to_do_app/core/widgets/customTileButtonGrill.dart';
 import 'package:to_do_app/core/widgets/customLine.dart';
 import 'package:to_do_app/core/widgets/dateCircle.dart';
 import 'package:to_do_app/core/widgets/texts/customText.dart';
@@ -56,11 +57,10 @@ class _AllTaskViewState extends State<AllTaskView> {
             SizedBox(height: StandartMeasurementUnits.extraHighPadding),
             CustomText.high('Categories', textColor: MainPages.allTasks.getPageColor, bold: true),
             SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-            Obx(() => CategoryGrill(categoryButtons: createButtons(controller.categories.value))),
+            Obx(() => CustomTileButtonGrill(customTileButtons: createButtons(controller.categories.value))),
             SizedBox(height: StandartMeasurementUnits.extraHighPadding),
             CustomText.high('DBTC!', textColor: MainPages.allTasks.getPageColor, bold: true),
             dbtcItems(),
-            ElevatedButton(onPressed: () {}, child: const Text('data'))
           ],
         ),
       ),
@@ -98,17 +98,22 @@ class _AllTaskViewState extends State<AllTaskView> {
   List<CustomListTileButton> createButtons(List<CategoryModel> categories) {
     List<CustomListTileButton> categoryButtons = [];
     for (var category in categories) {
-      categoryButtons.add(CustomListTileButton(
-        borderColor: MainPages.allTasks.getPageColor,
-        title: category.name,
-      ));
+      categoryButtons.add(
+        CustomListTileButton(
+          borderColor: MainPages.allTasks.getPageColor,
+          title: category.name,
+          onTapFunction: () => Get.dialog(EditCategoryFormDialog(title: category.name ?? '', description: category.description ?? '')),
+        ),
+      );
     }
-    categoryButtons.add(CustomListTileButton(
-      borderColor: MainPages.allTasks.getPageColor,
-      onTapFunction: () {
-        Get.dialog(const AddCategoryFormDialog());
-      },
-    ));
+    categoryButtons.add(
+      CustomListTileButton(
+        borderColor: MainPages.allTasks.getPageColor,
+        onTapFunction: () {
+          Get.dialog(const AddCategoryFormDialog());
+        },
+      ),
+    );
     return categoryButtons;
   }
 
