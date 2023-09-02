@@ -75,7 +75,8 @@ class AllTaskController extends GetxController {
       () async {
         Get.back();
         await addCategoryToCategories();
-        Get.showSnackbar(const CustomSnackbar(snackbarText: 'Category created', dialogType: DialogType.success).getSnackbar());
+        Get.showSnackbar(
+            CustomSnackbar(snackbarText: 'Category created', backgrundColor: MainPages.allTasks.getPageColor.withOpacity(.9)).getSnackbar());
       },
     );
   }
@@ -90,7 +91,8 @@ class AllTaskController extends GetxController {
       () async {
         Get.back();
         await addCategoryToCategories();
-        Get.showSnackbar(const CustomSnackbar(snackbarText: 'Category updated', dialogType: DialogType.success).getSnackbar());
+        Get.showSnackbar(
+            CustomSnackbar(snackbarText: 'Category updated', backgrundColor: MainPages.allTasks.getPageColor.withOpacity(.9)).getSnackbar());
       },
     );
   }
@@ -111,7 +113,8 @@ class AllTaskController extends GetxController {
     await _allTaskService.deleteCategory(await SecureStorage().readSecureData('token'), name, () async {
       Get.back();
       await addCategoryToCategories();
-      Get.showSnackbar(const CustomSnackbar(snackbarText: 'Category deleted', dialogType: DialogType.success).getSnackbar());
+      Get.showSnackbar(
+          CustomSnackbar(snackbarText: 'Category deleted', backgrundColor: MainPages.allTasks.getPageColor.withOpacity(.9)).getSnackbar());
     });
   }
 

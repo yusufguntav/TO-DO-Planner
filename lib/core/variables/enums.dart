@@ -8,23 +8,6 @@ enum PageStates {
   error,
 }
 
-enum DialogType {
-  success,
-  fail,
-  warning;
-
-  Color get getPageColor {
-    switch (this) {
-      case DialogType.success:
-        return ColorTable.getPositiveColor.withOpacity(.9);
-      case DialogType.fail:
-        return ColorTable.getNegativeColor.withOpacity(.9);
-      case DialogType.warning:
-        return Colors.orange.withOpacity(.9);
-    }
-  }
-}
-
 enum StatusCodes {
   informational,
   successful,

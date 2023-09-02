@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/welcomeScreens/components/signUpPage/signUpController.dart';
+import 'package:to_do_app/app/pages/welcomeScreens/components/signUpPage/signUpService.dart';
 import 'package:to_do_app/app/pages/welcomeScreens/welcomeHomeController.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
@@ -10,8 +11,29 @@ import 'package:to_do_app/core/widgets/buttons/customButton.dart';
 
 import '../../../../../core/widgets/texts/customTextFormField.dart';
 
-class SignUpPage extends GetView<SignUpPageController> {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
+
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  late SignUpPageController controller;
+
+  @override
+  void initState() {
+    Get.put(SignUpService());
+    controller = Get.put(SignUpPageController());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    Get.delete<SignUpService>();
+    Get.delete<SignUpPageController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

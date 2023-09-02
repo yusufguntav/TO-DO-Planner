@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/welcomeScreens/components/signInPage/signInController.dart';
+import 'package:to_do_app/app/pages/welcomeScreens/components/signInPage/signInService.dart';
 import 'package:to_do_app/app/pages/welcomeScreens/welcomeHomeController.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
@@ -10,8 +11,29 @@ import 'package:to_do_app/core/widgets/buttons/customButton.dart';
 import 'package:to_do_app/core/widgets/texts/customText.dart';
 import 'package:to_do_app/core/widgets/texts/customTextFormField.dart';
 
-class SignInPage extends GetView<SignInPageController> {
+class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
+
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  late SignInPageController controller;
+
+  @override
+  void initState() {
+    Get.put(SignInService());
+    controller = Get.put(SignInPageController());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    Get.delete<SignInService>();
+    Get.delete<SignInPageController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

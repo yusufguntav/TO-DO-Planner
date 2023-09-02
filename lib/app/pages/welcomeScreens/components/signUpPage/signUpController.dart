@@ -6,7 +6,8 @@ import 'package:to_do_app/app/pages/welcomeScreens/components/signUpPage/signUpS
 
 import '../../../../../core/network/networkModels/requestResponse.dart';
 import '../../../../../core/variables/enums.dart';
-import '../../../../routes/pageRoutes.dart';
+import '../../../../../core/widgets/dialogs/customSnackbar.dart';
+import '../../welcomeHomeController.dart';
 
 enum SignUpFields {
   email,
@@ -50,10 +51,16 @@ class SignUpPageController extends GetxController {
   final _signUpPageService = Get.find<SignUpService>();
 
   signUp(String email, String password, String displayName) async {
-    RequestResponse? requestResponse = await _signUpPageService.signUp(email, password, displayName);
+    RequestResponse? requestResponse = await _signUpPageService.signUp(
+        email,
+        password,
+        displayName,
+        () => Get.showSnackbar(
+            CustomSnackbar(snackbarText: 'Account created', backgrundColor: MainPages.today.getPageColor.withOpacity(.9), showFromTop: false)
+                .getSnackbar()));
     if (requestResponse != null) {
       if (StatusCodes.successful.checkStatusCode(int.parse(requestResponse.status))) {
-        Get.offAndToNamed(PageRoutes.welcomePage);
+        Get.find<WelcomeHomeController>().changeSelectedPageIndex(WelcomePages.signIn);
       }
       debugPrint('body: ${requestResponse.body}\n status:${requestResponse.status}');
     }
