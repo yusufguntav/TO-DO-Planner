@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 
-import '../../../app/routes/pageRoutes.dart';
 import '../../models/menuButton.dart';
 
 class MenuButtonController extends GetxController {
@@ -17,7 +16,7 @@ class MenuButtonController extends GetxController {
           (Get.width - 56 * 3) * .5),
       MenuButtonModel(
           'dbtc', MainPages.dbtc.getPageNumber, Icons.line_axis, MainPages.dbtc.getPageColor, (Get.height - 56 * 3) * .5, (Get.width + 56) * .5),
-      MenuButtonModel(PageRoutes.allTasks, MainPages.allTasks.getPageNumber, Icons.task, MainPages.allTasks.getPageColor, (Get.height + 56) * .5,
+      MenuButtonModel('planning', MainPages.planning.getPageNumber, Icons.task, MainPages.planning.getPageColor, (Get.height + 56) * .5,
           (Get.width - 56 * 3) * .5),
       MenuButtonModel(
           'today', MainPages.today.getPageNumber, Icons.today, MainPages.today.getPageColor, (Get.height - 56) * .5, (Get.width - 56) * .5),

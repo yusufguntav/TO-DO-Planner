@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:to_do_app/app/pages/allTasksPage/allTasksPageController.dart';
+import 'package:to_do_app/app/pages/planningPage/planningPageController.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/widgets/dialogs/customDialog.dart';
 import 'package:to_do_app/core/widgets/buttons/customButton.dart';
 import 'package:to_do_app/core/widgets/texts/customTextFormField.dart';
 
-import '../../../../core/variables/standartMeasurementUnits.dart';
+import '../../../../../core/variables/standartMeasurementUnits.dart';
 
-class AddCategoryFormDialog extends GetView<AllTaskController> {
+class AddCategoryFormDialog extends GetView<PlanningPageController> {
   const AddCategoryFormDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
-      closeButtonColor: MainPages.allTasks.getPageColor,
+      closeButtonColor: MainPages.planning.getPageColor,
       showCloseButton: true,
       content: Form(
-        key: controller.getAddCategoryFormKey,
+        key: controller.addCategoryFormKey,
         child: Padding(
           padding: EdgeInsets.all(StandartMeasurementUnits.normalPadding),
           child: Column(
@@ -29,16 +29,7 @@ class AddCategoryFormDialog extends GetView<AllTaskController> {
               SizedBox(height: StandartMeasurementUnits.extraHighPadding),
               categoryDescriptionInput(),
               SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-              CustomButton(
-                buttonText: 'Add Category',
-                backgroundColor: MainPages.allTasks.getPageColor,
-                onPress: () async {
-                  if (controller.getAddCategoryFormKey.currentState!.validate()) {
-                    await controller.addCategory(controller.getAddCategoryControllers[FormCategoryFields.name]!.text,
-                        controller.getAddCategoryControllers[FormCategoryFields.description]!.text);
-                  }
-                },
-              )
+              addCategoryButton()
             ],
           ),
         ),
@@ -46,21 +37,34 @@ class AddCategoryFormDialog extends GetView<AllTaskController> {
     );
   }
 
+  CustomButton addCategoryButton() {
+    return CustomButton(
+      buttonText: 'Add Category',
+      backgroundColor: MainPages.planning.getPageColor,
+      onPress: () async {
+        if (controller.addCategoryFormKey.currentState!.validate()) {
+          await controller.addCategory((controller.formControlers[FormFields.addCategoryName] ?? TextEditingController()).text,
+              (controller.formControlers[FormFields.addCategoryDescription] ?? TextEditingController()).text);
+        }
+      },
+    );
+  }
+
   CustomTextFormField categoryDescriptionInput() {
     return CustomTextFormField(
       label: 'Description',
-      controller: controller.getAddCategoryControllers[FormCategoryFields.description],
-      color: MainPages.allTasks.getPageColor,
+      controller: controller.formControlers[FormFields.addCategoryDescription],
+      color: MainPages.planning.getPageColor,
     );
   }
 
   CustomTextFormField categoryNameInput() {
     return CustomTextFormField(
       required: true,
-      isValidController: controller.isValidCategoryName,
+      isValidController: controller.isValidName,
       label: 'Category Name',
-      controller: controller.getAddCategoryControllers[FormCategoryFields.name],
-      color: MainPages.allTasks.getPageColor,
+      controller: controller.formControlers[FormFields.addCategoryName],
+      color: MainPages.planning.getPageColor,
     );
   }
 }

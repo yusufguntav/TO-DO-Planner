@@ -39,7 +39,11 @@ enum Endpoints {
   addCategory,
   getCategory,
   deleteCategory,
-  updateCategory;
+  updateCategory,
+  addSpecialList,
+  getSpeciaLists,
+  updateSpecialList,
+  deleteSpecialList;
 
   String get path {
     switch (this) {
@@ -55,6 +59,14 @@ enum Endpoints {
         return '/category/';
       case Endpoints.updateCategory:
         return '/category/updateCategory/';
+      case Endpoints.addSpecialList:
+        return '/specialList/addSpecialList/';
+      case Endpoints.getSpeciaLists:
+        return '/specialList/';
+      case Endpoints.updateSpecialList:
+        return '/specialList/updateSpecialList/';
+      case Endpoints.deleteSpecialList:
+        return '/specialList/';
     }
   }
 }
@@ -80,7 +92,7 @@ enum MainPages {
   today,
   settings,
   calendar,
-  allTasks,
+  planning,
   dbtc;
 
   Color get getPageColor {
@@ -91,7 +103,7 @@ enum MainPages {
         return Colors.red;
       case MainPages.calendar:
         return Colors.yellow;
-      case MainPages.allTasks:
+      case MainPages.planning:
         return Colors.green;
       case MainPages.dbtc:
         return Colors.purple;
@@ -104,7 +116,7 @@ enum MainPages {
     switch (this) {
       case MainPages.today:
         return 0;
-      case MainPages.allTasks:
+      case MainPages.planning:
         return 1;
       case MainPages.settings:
         return 2;

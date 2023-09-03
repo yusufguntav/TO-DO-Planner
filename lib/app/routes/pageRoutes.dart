@@ -4,5 +4,4 @@ class PageRoutes {
   static String welcomePage = '/welcomePage';
   static String home = '/home';
   static String splash = '/splash';
-  static String allTasks = '/allTasks';
 }
