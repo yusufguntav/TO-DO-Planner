@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
@@ -5,6 +7,7 @@ import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/widgets/buttons/customButton.dart';
 import 'package:to_do_app/core/widgets/texts/customText.dart';
 
+import '../services/secure_storage.dart';
 import '../widgets/circularProgressWhileProcess.dart';
 import 'networkModels/requestResponse.dart';
 
@@ -13,9 +16,12 @@ class BaseNetworkService extends GetxService {
   final Rx<PageStates> _state = PageStates.loaded.obs;
   PageStates get state => _state.value;
   set state(PageStates val) => _state.value = val;
-
+  //TODO header ile ilgili bug var düzenlenecek
+  late Map<String, String> header;
   @override
-  void onInit() {
+  void onInit() async {
+    _connect.baseUrl = _protocolAndIp;
+    header = {"Authorization": "Bearer ${await SecureStorage().readSecureData('token')}"};
     ever(
       _state,
       (PageStates value) {
@@ -42,55 +48,53 @@ class BaseNetworkService extends GetxService {
 
   final _protocolAndIp = 'http://10.0.2.2:3000';
 
-  Future<RequestResponse?> sendPostRequest(Endpoints endpoint, Map<String, String> body, Map<String, String>? header, Function? onSuccessFunc) async {
+  Future<RequestResponse?> sendPostRequest(String endpoint, Map<String, String> body, {Function? onSuccessFunc}) async {
     await Get.closeCurrentSnackbar();
     state = PageStates.busy;
     final response = await _connect.post(
-      _protocolAndIp + endpoint.path,
+      endpoint,
       body,
       headers: header,
     );
     state = PageStates.loaded;
-    RequestResponse requestResponse = RequestResponse(response.body, response.statusCode.toString());
+    RequestResponse requestResponse = RequestResponse(response.body, response.statusCode ?? 404);
     return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
   }
 
-  Future<RequestResponse?> sendGetRequest(Endpoints endpoint, Map<String, String>? header, Function? onSuccessFunc) async {
+  Future<RequestResponse?> sendGetRequest(String endpoint, {Function? onSuccessFunc}) async {
     await Get.closeCurrentSnackbar();
     state = PageStates.busy;
     final response = await _connect.get(
-      _protocolAndIp + endpoint.path,
+      endpoint,
       headers: header,
     );
     state = PageStates.loaded;
-    RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode.toString());
+    RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode ?? 404);
     return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
   }
 
-  Future<RequestResponse?> sendDeleteRequest(Endpoints endpoint, String idForPath, Map<String, String>? header, Function? onSuccessFunc) async {
+  Future<RequestResponse?> sendDeleteRequest(String endpoint, {Function? onSuccessFunc}) async {
     await Get.closeCurrentSnackbar();
     state = PageStates.busy;
     final response = await _connect.delete(
-      // TODO Burayı sor idForPath sona eklemek mantıklı mı ?
-      _protocolAndIp + endpoint.path + idForPath,
+      endpoint,
       headers: header,
     );
     state = PageStates.loaded;
-    RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode.toString());
+    RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode ?? 404);
     return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
   }
 
-  Future<RequestResponse?> sendUpdateRequest(
-      Endpoints endpoint, Map<String, String>? body, Map<String, String>? header, Function? onSuccessFunc) async {
+  Future<RequestResponse?> sendUpdateRequest(String endpoint, Map<dynamic, dynamic>? body, {Function? onSuccessFunc}) async {
     await Get.closeCurrentSnackbar();
     state = PageStates.busy;
     final response = await _connect.patch(
-      _protocolAndIp + endpoint.path,
+      endpoint,
       body,
       headers: header,
     );
     state = PageStates.loaded;
-    RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode.toString());
+    RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode ?? 404);
     return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
   }
 

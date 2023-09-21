@@ -1,6 +1,9 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
 
+import '../../utils/customColorSelectionHandle.dart';
 import 'customText.dart';
 
 class CustomTextFormField extends StatelessWidget {
@@ -14,7 +17,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      //TODO Cursor altındaki bubble rengi nasıl değiştrilir
+      selectionControls: CustomColorSelectionHandle(color),
       cursorColor: color,
       controller: controller,
       validator: isValidController != null

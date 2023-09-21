@@ -2,6 +2,6 @@
 
 class RequestResponse {
   dynamic body;
-  String status;
+  int status;
   RequestResponse(this.body, this.status);
 }

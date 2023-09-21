@@ -43,7 +43,11 @@ enum Endpoints {
   addSpecialList,
   getSpeciaLists,
   updateSpecialList,
-  deleteSpecialList;
+  deleteSpecialList,
+  getTasksByDate,
+  addTaskToday,
+  deleteTask,
+  updateTaskOrder;
 
   String get path {
     switch (this) {
@@ -67,6 +71,14 @@ enum Endpoints {
         return '/specialList/updateSpecialList/';
       case Endpoints.deleteSpecialList:
         return '/specialList/';
+      case Endpoints.getTasksByDate:
+        return '/task/getTasks/';
+      case Endpoints.addTaskToday:
+        return '/task/addTask/';
+      case Endpoints.deleteTask:
+        return '/task/deleteTask/';
+      case Endpoints.updateTaskOrder:
+        return '/task/updateOrder/';
     }
   }
 }

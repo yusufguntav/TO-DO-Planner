@@ -1,13 +1,14 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/core/widgets/buttons/customButton.dart';
+import 'package:to_do_app/core/widgets/dialogs/areYouSureDialog.dart';
 import 'package:to_do_app/core/widgets/texts/customTextFormField.dart';
 
-import '../../../../../core/variables/colorTable.dart';
 import '../../../../../core/variables/enums.dart';
 import '../../../../../core/variables/standartMeasurementUnits.dart';
 import '../../../../../core/widgets/dialogs/customDialog.dart';
-import '../../../../../core/widgets/texts/customText.dart';
 import '../../planningPageController.dart';
 
 class EditSpecialListFormPage extends GetView<PlanningPageController> {
@@ -20,7 +21,13 @@ class EditSpecialListFormPage extends GetView<PlanningPageController> {
       closeButtonColor: MainPages.planning.getPageColor,
       showCloseButton: true,
       deleteButtonFunction: () {
-        Get.dialog(areYouSureDialog());
+        Get.dialog(AreYourSure(
+          backgroundColor: MainPages.planning.getPageColor,
+          deleteFunc: () async {
+            await Get.closeCurrentSnackbar();
+            await controller.deleteSpecialList(id);
+          },
+        ));
       },
       content: Padding(
         padding: EdgeInsets.all(StandartMeasurementUnits.normalPadding),
@@ -38,36 +45,6 @@ class EditSpecialListFormPage extends GetView<PlanningPageController> {
           ),
         ),
       ),
-    );
-  }
-
-  CustomDialog areYouSureDialog() {
-    return CustomDialog(
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomText.high('Are you sure ?', bold: true),
-          SizedBox(height: StandartMeasurementUnits.normalPadding),
-          CustomText('desc.'),
-        ],
-      ),
-      actions: [
-        CustomButton(
-          backgroundColor: ColorTable.getNegativeColor,
-          buttonText: 'Cancel',
-          onPress: () => Get.back(),
-        ),
-        SizedBox(width: StandartMeasurementUnits.normalPadding),
-        CustomButton(
-          backgroundColor: MainPages.planning.getPageColor,
-          buttonText: 'Delete',
-          onPress: () async {
-            Get.back();
-            await Get.closeCurrentSnackbar();
-            await controller.deleteSpecialList(id);
-          },
-        )
-      ],
     );
   }
 

@@ -7,10 +7,9 @@ import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/planningPage/planningPage.dart';
 import 'package:to_do_app/core/models/category.dart';
 import 'package:to_do_app/core/models/specialList.dart';
-import 'package:to_do_app/core/widgets/dialogs/customSnackbar.dart';
+import 'package:to_do_app/core/utils/utils.dart';
 
 import '../../../core/network/networkModels/requestResponse.dart';
-import '../../../core/services/secure_storage.dart';
 import '../../../core/variables/enums.dart';
 
 enum FormFields {
@@ -23,6 +22,7 @@ enum FormFields {
 }
 
 class PlanningPageController extends GetxController {
+  // TODO Controller gibi yapı kur
   // Edit Page Form Key
   final _editCategoryFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> get editCategoryFormKey => _editCategoryFormKey;
@@ -63,11 +63,11 @@ class PlanningPageController extends GetxController {
   }
 
   // Network services
-  late PlanningPageService _allTaskService;
+  late PlanningPageService _planningService;
 
   @override
   void onInit() async {
-    _allTaskService = Get.find<PlanningPageService>();
+    _planningService = Get.find<PlanningPageService>();
     await addCategoryToVariable();
     await addSpecialListsToVariable();
     super.onInit();
@@ -75,123 +75,118 @@ class PlanningPageController extends GetxController {
 
 // Special List request functions
   Future addSpecialList(String name) async {
-    //TODO Hata kontrolü konulacak
-    await _allTaskService.addSpecialList(
-      name,
-      await SecureStorage().readSecureData('token'),
-      () async {
-        Get.back();
-        await addSpecialListsToVariable();
-        Get.showSnackbar(
-            CustomSnackbar(snackbarText: 'Special List created', backgrundColor: MainPages.planning.getPageColor.withOpacity(.9)).getSnackbar());
-      },
+    errorHandler(
+      tryMethod: () => _planningService.addSpecialList(
+        name,
+        () async {
+          Get.back();
+          await addSpecialListsToVariable();
+        },
+      ),
     );
   }
 
   Future<RequestResponse?> getSpecialListReq() async {
-    //TODO Hata kontrolü konulacak
-    RequestResponse? requestResponse = await _allTaskService.getSpecialList(await SecureStorage().readSecureData('token'));
-    if (requestResponse != null) {
-      if (StatusCodes.successful.checkStatusCode(int.parse(requestResponse.status))) {
-        return requestResponse;
+    errorHandler(tryMethod: () async {
+      RequestResponse? requestResponse = await _planningService.getSpecialList();
+      if (requestResponse != null) {
+        if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
+          return requestResponse;
+        }
       }
-    }
+    });
     return null;
   }
 
   Future addSpecialListsToVariable() async {
-    specialLists.clear();
-    dynamic json = jsonDecode((await getSpecialListReq())!.body);
-    for (var i = 0; i < json.length; i++) {
-      specialLists.add(SpecialListModel(json[i]['_id'], json[i]['name']));
+    if (await getSpecialListReq() != null) {
+      specialLists.clear();
+      dynamic json = jsonDecode((await getSpecialListReq())!.body);
+      for (var i = 0; i < json.length; i++) {
+        specialLists.add(SpecialListModel(id: json[i]['_id'], name: json[i]['name']));
+      }
+      specialLists.refresh();
     }
-    specialLists.refresh();
   }
 
   Future updateSpecialList(String name, String id) async {
-    //TODO Hata kontrolü konulacak
-    await _allTaskService.updateSpecialList(
-      name,
-      id,
-      await SecureStorage().readSecureData('token'),
-      () async {
-        Get.back();
-        await addSpecialListsToVariable();
-        Get.showSnackbar(
-            CustomSnackbar(snackbarText: 'Special List updated', backgrundColor: MainPages.planning.getPageColor.withOpacity(.9)).getSnackbar());
-      },
-    );
-  }
-
-  Future deleteSpecialList(String id) async {
-    //TODO Hata kontrolü konulacak
-    await _allTaskService.deleteSpecialList(await SecureStorage().readSecureData('token'), id, () async {
-      Get.back();
-      await addSpecialListsToVariable();
-      Get.showSnackbar(
-          CustomSnackbar(snackbarText: 'Special List deleted', backgrundColor: MainPages.planning.getPageColor.withOpacity(.9)).getSnackbar());
+    errorHandler(tryMethod: () async {
+      await _planningService.updateSpecialList(
+        name,
+        id,
+        () async {
+          Get.back();
+          await addSpecialListsToVariable();
+        },
+      );
     });
   }
 
-  // Category request functions TODO Kategorilendirme nasıldı vs code içerisinde (dropdown lı olan)
-  Future addCategory(String name, String description) async {
-    //TODO Hata kontrolü konulacak
-    await _allTaskService.addCategory(
-      name,
-      description,
-      await SecureStorage().readSecureData('token'),
-      () async {
+  Future deleteSpecialList(String id) async {
+    errorHandler(tryMethod: () async {
+      await _planningService.deleteSpecialList(id, () async {
         Get.back();
-        await addCategoryToVariable();
-        Get.showSnackbar(
-            CustomSnackbar(snackbarText: 'Category created', backgrundColor: MainPages.planning.getPageColor.withOpacity(.9)).getSnackbar());
-      },
-    );
+        await addSpecialListsToVariable();
+      });
+    });
+  }
+
+  Future addCategory(String name, String description) async {
+    errorHandler(tryMethod: () async {
+      await _planningService.addCategory(
+        name,
+        description,
+        () async {
+          Get.back();
+          await addCategoryToVariable();
+        },
+      );
+    });
   }
 
   Future updateCategory(String name, String id, String description) async {
-    //TODO Hata kontrolü konulacak
-    await _allTaskService.updateCategory(
-      name,
-      id,
-      description,
-      await SecureStorage().readSecureData('token'),
-      () async {
-        Get.back();
-        await addCategoryToVariable();
-        Get.showSnackbar(
-            CustomSnackbar(snackbarText: 'Category updated', backgrundColor: MainPages.planning.getPageColor.withOpacity(.9)).getSnackbar());
-      },
-    );
+    errorHandler(tryMethod: () async {
+      await _planningService.updateCategory(
+        name,
+        id,
+        description,
+        () async {
+          Get.back();
+          await addCategoryToVariable();
+        },
+      );
+    });
   }
 
   Future<RequestResponse?> getCategoryReq() async {
-    //TODO Hata kontrolü konulacak
-    RequestResponse? requestResponse = await _allTaskService.getCategory(await SecureStorage().readSecureData('token'));
-    if (requestResponse != null) {
-      if (StatusCodes.successful.checkStatusCode(int.parse(requestResponse.status))) {
-        return requestResponse;
+    errorHandler(tryMethod: () async {
+      RequestResponse? requestResponse = await _planningService.getCategory();
+      if (requestResponse != null) {
+        if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
+          return requestResponse;
+        }
       }
-    }
+    });
     return null;
   }
 
   Future deleteCategory(String id) async {
-    //TODO Hata kontrolü konulacak
-    await _allTaskService.deleteCategory(await SecureStorage().readSecureData('token'), id, () async {
-      Get.back();
-      await addCategoryToVariable();
-      Get.showSnackbar(
-          CustomSnackbar(snackbarText: 'Category deleted', backgrundColor: MainPages.planning.getPageColor.withOpacity(.9)).getSnackbar());
+    errorHandler(tryMethod: () async {
+      await _planningService.deleteCategory(id, () async {
+        Get.back();
+        await addCategoryToVariable();
+      });
     });
   }
 
   Future addCategoryToVariable() async {
-    categories.clear();
-    dynamic json = jsonDecode((await getCategoryReq())!.body);
-    for (var i = 0; i < json.length; i++) {
-      categories.add(CategoryModel(json[i]['_id'], json[i]['name'], json[i]['description']));
+    if (await getCategoryReq() != null) {
+      categories.clear();
+      dynamic json = jsonDecode((await getCategoryReq())!.body);
+      for (var i = 0; i < json.length; i++) {
+        categories.add(CategoryModel(id: json[i]['_id'], name: json[i]['name'], description: json[i]['description']));
+      }
+      categories.refresh();
     }
-    categories.refresh();
   }
 }

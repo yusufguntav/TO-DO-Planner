@@ -1,3 +1,20 @@
-import 'package:get/get.dart';
+// ignore_for_file: file_names
 
-class TodayPageService extends GetxService {}
+import 'package:get/get.dart';
+import 'package:to_do_app/core/variables/enums.dart';
+
+import '../../../core/network/baseNetworkService.dart';
+import '../../../core/network/networkModels/requestResponse.dart';
+
+class TodayPageService extends GetxService {
+  final _networkService = Get.find<BaseNetworkService>();
+  Future<RequestResponse?> getTasksByDate(String taskDate) async => await _networkService.sendGetRequest(Endpoints.getTasksByDate.path + taskDate);
+
+  Future<RequestResponse?> addTask(String task) async => await _networkService.sendPostRequest(Endpoints.addTaskToday.path, {"task": task});
+
+  Future<RequestResponse?> deleteTasks(String tasks, Function onSuccess) async =>
+      await _networkService.sendDeleteRequest(Endpoints.deleteTask.path + tasks, onSuccessFunc: onSuccess);
+
+  Future<RequestResponse?> updateTaskOrder(List<Map<String, dynamic>> tasks) async =>
+      await _networkService.sendUpdateRequest(Endpoints.updateTaskOrder.path, {"tasks": tasks});
+}

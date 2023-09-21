@@ -1,84 +1,128 @@
 // ignore_for_file: file_names
 
-import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:to_do_app/app/pages/todayPage/todayPageService.dart';
 import 'package:to_do_app/core/models/task.dart';
+import 'package:to_do_app/core/utils/utils.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 
-import '../../../core/widgets/taskCard.dart';
+import '../../../core/network/networkModels/requestResponse.dart';
 
 class TodayPageController extends GetxController {
+  //AddTask Field Controller
+  final TextEditingController _addTaskinputField = TextEditingController();
+  TextEditingController get addTaskinputField => _addTaskinputField;
+
+  //Task List control
+  final RxList<TaskModel> _tasks = <TaskModel>[].obs;
+  List<TaskModel> get tasks => _tasks;
+
+  //Deleted Tasks
+  final RxList<String> _deletedTasks = <String>[].obs;
+  List<String> get deletedTasks => _deletedTasks;
+
+  @override
+  void onClose() async {
+    // delete tasks from Database
+    await deleteTasksFromDB();
+    await updateTasksOrder();
+    super.onClose();
+  }
+
   @override
   void onInit() {
-    contents = List.generate(
-      tasks.length,
-      (index) {
-        return DragAndDropList(
-          canDrag: true,
-          verticalAlignment: CrossAxisAlignment.center,
-          contentsWhenEmpty: const SizedBox(),
-          header: Obx(
-            () => TaskCard(
-              task: tasks[index].value,
-              onTapFunct: changeStatus,
-            ),
-          ),
-          children: <DragAndDropItem>[],
-        );
-      },
-    ).obs;
+    _todayPageService = Get.find<TodayPageService>();
     super.onInit();
   }
 
-  onItemReorder(int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {
-    var movedItem = contents[oldListIndex].children.removeAt(oldItemIndex);
-    contents[newListIndex].children.insert(newItemIndex, movedItem);
-    contents.refresh();
+  @override
+  void onReady() async {
+    await getTasksToVariable();
+    super.onReady();
   }
+
+  // Network services
+  late TodayPageService _todayPageService;
+
+  Future updateTasksOrder() async {
+    errorHandler(tryMethod: () async {
+      List<Map<String, dynamic>> updateTaskOrderList = [];
+      for (TaskModel task in tasks) {
+        updateTaskOrderList.add(task.toJson());
+      }
+      await _todayPageService.updateTaskOrder(updateTaskOrderList);
+    });
+  }
+
+  // Delete task from database
+  Future deleteTasksFromDB() async {
+    if (deletedTasks.isNotEmpty) {
+      String tasks = '';
+      for (var task in deletedTasks) {
+        tasks += '$task,';
+      }
+      await _todayPageService.deleteTasks(tasks, () => Get.back());
+    }
+  }
+
+  Future addTask(String task) async {
+    //TODO Sadece tek sefer dispose da istek atacağız
+    errorHandler(tryMethod: () async => await _todayPageService.addTask(task));
+  }
+
+  Future<RequestResponse?> getTasks() async {
+    errorHandler(tryMethod: () async {
+      RequestResponse? requestResponse = await _todayPageService.getTasksByDate((DateTime.now()).toString().split(' ')[0]);
+      if (requestResponse != null) {
+        if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
+          return requestResponse;
+        }
+      }
+    });
+    return null;
+  }
+
+  Future getTasksToVariable() async {
+    errorHandler(tryMethod: () async {
+      if (await getTasks() != null) {
+        tasks.clear();
+        dynamic json = jsonDecode((await getTasks())!.body)['tasks'];
+        for (var i = 0; i < json.length; i++) {
+          tasks.add(TaskModel.fromJson(json));
+        }
+        _tasks.refresh();
+      }
+    });
+  }
+
+  SuccessStatus getTaskStatus(int successStatus) {
+    switch (successStatus) {
+      case 0:
+        return SuccessStatus.neutral;
+      case 1:
+        return SuccessStatus.successful;
+      case 2:
+        return SuccessStatus.fail;
+      default:
+        return SuccessStatus.neutral;
+    }
+  }
+
+  onItemReorder(int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {}
 
   onListReorder(int oldListIndex, int newListIndex) {
-    var movedList = contents.removeAt(oldListIndex);
-    contents.insert(newListIndex, movedList);
-    contents.refresh();
+    if (oldListIndex != newListIndex) TaskModel.updateTaskOrder(tasks, oldListIndex, newListIndex);
+    var movedList = tasks.removeAt(oldListIndex);
+    tasks.insert(newListIndex, movedList);
+    _tasks.refresh();
   }
-
-  RxList<DragAndDropList> contents = <DragAndDropList>[].obs;
-  RxList<Rx<TaskModel>> tasks = [
-    TaskModel("Alışveriş için dışarı çık. Şemşiyeni unutma!Alışveriş için dışarı çık. Şemşiyeni unutma!Alışveriş için dışarı çık. Şemşiyeni unutma!",
-            SuccessStatus.successful)
-        .obs,
-    TaskModel(
-            "Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur gBaldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!eçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!",
-            SuccessStatus.neutral)
-        .obs,
-    TaskModel("Alışveriş için dışarı çık. Şemşiyeni unutma!", SuccessStatus.fail).obs,
-    TaskModel("Alışveriş için dışarı çık. Şemşiyeni unutma!Alışveriş için dışarı çık. Şemşiyeni unutma!Alışveriş için dışarı çık. Şemşiyeni unutma!",
-            SuccessStatus.successful)
-        .obs,
-    TaskModel(
-            "Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur gBaldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!eçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!",
-            SuccessStatus.neutral)
-        .obs,
-    TaskModel("Alışveriş için dışarı çık. Şemşiyeni unutma!", SuccessStatus.fail).obs,
-    TaskModel("Alışveriş için dışarı çık. Şemşiyeni unutma!Alışveriş için dışarı çık. Şemşiyeni unutma!Alışveriş için dışarı çık. Şemşiyeni unutma!",
-            SuccessStatus.successful)
-        .obs,
-    TaskModel(
-            "Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur gBaldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!eçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!",
-            SuccessStatus.neutral)
-        .obs,
-    TaskModel("Alışveriş için dışarı çık. Şemşiyeni unutma!", SuccessStatus.fail).obs,
-    TaskModel(
-            "Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!Baldur geçidine doğru yola çık. Büyülü asanı unutma!",
-            SuccessStatus.successful)
-        .obs,
-    TaskModel("Alışveriş için dışarı çık. Şemşiyeni unutma!", SuccessStatus.neutral).obs,
-  ].obs;
 
   changeStatus(TaskModel task) {
     task.successStatus = _getNewStatus(task.successStatus ?? SuccessStatus.neutral);
-    tasks.refresh();
+    _tasks.refresh();
   }
 
   _getNewStatus(SuccessStatus status) {

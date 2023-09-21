@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/welcomeScreens/components/signInPage/signInService.dart';
 import 'package:to_do_app/app/routes/pageRoutes.dart';
+import 'package:to_do_app/core/network/baseNetworkService.dart';
 import 'package:to_do_app/core/services/secure_storage.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 
@@ -46,9 +47,10 @@ class SignInPageController extends GetxController {
   login(String email, String password) async {
     RequestResponse? requestResponse = await _signInPageService.login(email, password);
     if (requestResponse != null) {
-      if (StatusCodes.successful.checkStatusCode(int.parse(requestResponse.status))) {
+      if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
         //Token storage
         await SecureStorage().writeSecureData('token', requestResponse.body['token']);
+        BaseNetworkService().header = {"Authorization": "Bearer ${await SecureStorage().readSecureData('token')}"};
         Get.offAndToNamed(PageRoutes.home);
       }
       debugPrint('body: ${requestResponse.body}\n status:${requestResponse.status}');

@@ -8,8 +8,11 @@ import 'package:to_do_app/app/pages/todayPage/todayPageService.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
+import 'package:to_do_app/core/widgets/texts/customText.dart';
 import 'package:to_do_app/core/widgets/texts/title.dart';
 
+import '../../../core/models/task.dart';
+import '../../../core/widgets/taskCard.dart';
 import 'todayPageController.dart';
 
 class TodayPageView extends StatefulWidget {
@@ -71,7 +74,11 @@ class _TodayPageViewState extends State<TodayPageView> {
       child: DecoratedBox(
         decoration: BoxDecoration(shape: BoxShape.circle, color: Get.theme.primaryColor),
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            controller.addTask(controller.addTaskinputField.text);
+            controller.addTaskinputField.text = '';
+            if (Get.focusScope != null) Get.focusScope!.unfocus();
+          },
           child: SizedBox(
             height: Get.height * .08,
             width: keyboardVisibility ? Get.width * .2 : 0,
@@ -82,26 +89,43 @@ class _TodayPageViewState extends State<TodayPageView> {
     );
   }
 
-  Expanded content() {
+  content() {
     return Expanded(
-      child: Obx(
-        () => DragAndDropLists(
-          children: controller.contents,
-          onItemReorder: controller.onItemReorder,
-          onListReorder: controller.onListReorder,
-        ),
-      ),
+      child: Obx(() => DragAndDropLists(
+            contentsWhenEmpty: CustomText('Task can\'t find'),
+            children: List.generate(
+              controller.tasks.length,
+              (index) {
+                return DragAndDropList(
+                  canDrag: true,
+                  verticalAlignment: CrossAxisAlignment.center,
+                  contentsWhenEmpty: const SizedBox(),
+                  header: TaskCard(
+                    task: controller.tasks[index],
+                    onTapFunc: controller.changeStatus,
+                    deleteFunc: (TaskModel taskModel) {
+                      controller.deletedTasks.add(taskModel.id ?? '');
+                      TaskModel.deleteTask(controller.tasks, taskModel);
+                      controller.tasks.remove(taskModel);
+                    },
+                  ),
+                  children: <DragAndDropItem>[],
+                );
+              },
+            ),
+            onItemReorder: controller.onItemReorder,
+            onListReorder: controller.onListReorder,
+          )),
     );
   }
 
   TextField inputTask() {
     return TextField(
+      controller: controller.addTaskinputField,
       decoration: InputDecoration(
         hintText: "I Will...",
         hintStyle: TextStyle(color: ColorTable.getHintTextColor),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(StandartMeasurementUnits.extraHighRadius),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(StandartMeasurementUnits.extraHighRadius)),
       ),
     );
   }

@@ -9,5 +9,5 @@ import '../../../../../core/network/networkModels/requestResponse.dart';
 class SignInService extends GetxService {
   final _networkService = Get.find<BaseNetworkService>();
   Future<RequestResponse?> login(String email, String password) async =>
-      await _networkService.sendPostRequest(Endpoints.signIn, {"email": email, "password": password}, null, null);
+      await _networkService.sendPostRequest(Endpoints.signIn.path, {"email": email, "password": password});
 }

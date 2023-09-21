@@ -55,11 +55,10 @@ class SignUpPageController extends GetxController {
         email,
         password,
         displayName,
-        () => Get.showSnackbar(
-            CustomSnackbar(snackbarText: 'Account created', backgrundColor: MainPages.today.getPageColor.withOpacity(.9), showFromTop: false)
-                .getSnackbar()));
+        () => Get.showSnackbar(CustomSnackbar.getSnackBar(
+            snackbarText: 'Account created', backgrundColor: MainPages.today.getPageColor.withOpacity(.9), showFromTop: false)));
     if (requestResponse != null) {
-      if (StatusCodes.successful.checkStatusCode(int.parse(requestResponse.status))) {
+      if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
         Get.find<WelcomeHomeController>().changeSelectedPageIndex(WelcomePages.signIn);
       }
       debugPrint('body: ${requestResponse.body}\n status:${requestResponse.status}');

@@ -1,14 +1,15 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/planningPage/planningPageController.dart';
-import 'package:to_do_app/core/variables/colorTable.dart';
+import 'package:to_do_app/core/widgets/dialogs/areYouSureDialog.dart';
 import 'package:to_do_app/core/widgets/texts/customTextFormField.dart';
 
 import '../../../../../core/variables/enums.dart';
 import '../../../../../core/variables/standartMeasurementUnits.dart';
 import '../../../../../core/widgets/buttons/customButton.dart';
 import '../../../../../core/widgets/dialogs/customDialog.dart';
-import '../../../../../core/widgets/texts/customText.dart';
 
 class EditCategoryFormDialog extends GetView<PlanningPageController> {
   const EditCategoryFormDialog({super.key, required this.title, required this.description, required this.id});
@@ -19,7 +20,13 @@ class EditCategoryFormDialog extends GetView<PlanningPageController> {
   Widget build(BuildContext context) {
     return CustomDialog(
       deleteButtonFunction: () async {
-        Get.dialog(areYouSureDialog());
+        Get.dialog(AreYourSure(
+          backgroundColor: MainPages.planning.getPageColor,
+          deleteFunc: () async {
+            await Get.closeCurrentSnackbar();
+            await controller.deleteCategory(id);
+          },
+        ));
       },
       closeButtonColor: MainPages.planning.getPageColor,
       showCloseButton: true,
@@ -66,36 +73,6 @@ class EditCategoryFormDialog extends GetView<PlanningPageController> {
               (controller.formControlers[FormFields.editCategoryDescription] ?? TextEditingController()).text);
         }
       },
-    );
-  }
-
-  CustomDialog areYouSureDialog() {
-    return CustomDialog(
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomText.high('Are you sure ?', bold: true),
-          SizedBox(height: StandartMeasurementUnits.normalPadding),
-          CustomText('The category information of tasks belonging to this category will be deleted.'),
-        ],
-      ),
-      actions: [
-        CustomButton(
-          backgroundColor: ColorTable.getNegativeColor,
-          buttonText: 'Cancel',
-          onPress: () => Get.back(),
-        ),
-        SizedBox(width: StandartMeasurementUnits.normalPadding),
-        CustomButton(
-          backgroundColor: MainPages.planning.getPageColor,
-          buttonText: 'Delete',
-          onPress: () async {
-            Get.back();
-            await Get.closeCurrentSnackbar();
-            await controller.deleteCategory(id);
-          },
-        )
-      ],
     );
   }
 }
