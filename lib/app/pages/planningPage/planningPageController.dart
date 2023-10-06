@@ -87,15 +87,15 @@ class PlanningPageController extends GetxController {
   }
 
   Future<RequestResponse?> getSpecialListReq() async {
-    errorHandler(tryMethod: () async {
+    return errorHandler(tryMethod: () async {
       RequestResponse? requestResponse = await _planningService.getSpecialList();
       if (requestResponse != null) {
         if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
           return requestResponse;
         }
       }
+      return null;
     });
-    return null;
   }
 
   Future addSpecialListsToVariable() async {
@@ -159,15 +159,15 @@ class PlanningPageController extends GetxController {
   }
 
   Future<RequestResponse?> getCategoryReq() async {
-    errorHandler(tryMethod: () async {
+    return errorHandler(tryMethod: () async {
       RequestResponse? requestResponse = await _planningService.getCategory();
       if (requestResponse != null) {
         if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
           return requestResponse;
         }
       }
+      return null;
     });
-    return null;
   }
 
   Future deleteCategory(String id) async {

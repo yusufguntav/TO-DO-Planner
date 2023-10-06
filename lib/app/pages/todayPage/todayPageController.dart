@@ -12,6 +12,12 @@ import 'package:to_do_app/core/variables/enums.dart';
 import '../../../core/network/networkModels/requestResponse.dart';
 
 class TodayPageController extends GetxController {
+  //ScrollController for task list
+  final ScrollController _scrollController = ScrollController();
+  ScrollController get scrollController => _scrollController;
+
+  bool addedNewTask = false;
+
   //AddTask Field Controller
   final TextEditingController _addTaskinputField = TextEditingController();
   TextEditingController get addTaskinputField => _addTaskinputField;
@@ -24,16 +30,23 @@ class TodayPageController extends GetxController {
   final RxList<String> _deletedTasks = <String>[].obs;
   List<String> get deletedTasks => _deletedTasks;
 
+  //New Tasks
+  final RxList<TaskModel> _newTasks = <TaskModel>[].obs;
+  List<TaskModel> get newTasks => _newTasks;
+
+  //Refresh Task
+  get refreshTask => _tasks.refresh();
+
   @override
   void onClose() async {
-    // delete tasks from Database
+    // delete, update tasks from Database
     await deleteTasksFromDB();
     await updateTasksOrder();
     super.onClose();
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     _todayPageService = Get.find<TodayPageService>();
     super.onInit();
   }
@@ -47,6 +60,15 @@ class TodayPageController extends GetxController {
   // Network services
   late TodayPageService _todayPageService;
 
+  Future addTask(String task) async {
+    errorHandler(tryMethod: () async {
+      TaskModel newTask = TaskModel.fromJson((await _todayPageService.addTask(task))!.body['task']);
+      TaskModel.addTaskForLocale(tasks, TaskModel(id: newTask.id, task: newTask.task, successStatus: SuccessStatus.neutral));
+      addedNewTask = true;
+      _tasks.refresh();
+    });
+  }
+
   Future updateTasksOrder() async {
     errorHandler(tryMethod: () async {
       List<Map<String, dynamic>> updateTaskOrderList = [];
@@ -59,62 +81,55 @@ class TodayPageController extends GetxController {
 
   // Delete task from database
   Future deleteTasksFromDB() async {
-    if (deletedTasks.isNotEmpty) {
-      String tasks = '';
-      for (var task in deletedTasks) {
-        tasks += '$task,';
-      }
-      await _todayPageService.deleteTasks(tasks, () => Get.back());
-    }
+    errorHandler(
+      tryMethod: () async {
+        if (deletedTasks.isNotEmpty) {
+          String tasks = '';
+          for (var task in deletedTasks) {
+            tasks += '$task,';
+          }
+          await _todayPageService.deleteTasks(tasks, () => Get.back());
+        }
+      },
+    );
   }
 
-  Future addTask(String task) async {
-    //TODO Sadece tek sefer dispose da istek atacağız
-    errorHandler(tryMethod: () async => await _todayPageService.addTask(task));
+  //Delete task
+  deleteTaskFromLocale(TaskModel task) {
+    TaskModel.deleteTaskForLocale(tasks, task);
+    _tasks.refresh();
   }
 
-  Future<RequestResponse?> getTasks() async {
-    errorHandler(tryMethod: () async {
-      RequestResponse? requestResponse = await _todayPageService.getTasksByDate((DateTime.now()).toString().split(' ')[0]);
-      if (requestResponse != null) {
-        if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
-          return requestResponse;
+  Future<RequestResponse?> getTasks({
+    bool showLoad = true,
+  }) async {
+    return await errorHandler(tryMethod: () async {
+      {
+        RequestResponse? requestResponse = await _todayPageService.getTasksByDate((DateTime.now()).toString().split(' ')[0], showLoad);
+        if (requestResponse != null) {
+          if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
+            return requestResponse;
+          }
         }
       }
+      return null;
     });
-    return null;
   }
 
-  Future getTasksToVariable() async {
-    errorHandler(tryMethod: () async {
-      if (await getTasks() != null) {
-        tasks.clear();
-        dynamic json = jsonDecode((await getTasks())!.body)['tasks'];
+  Future getTasksToVariable({showLoad = true}) async {
+    await errorHandler(tryMethod: () async {
+      if (await getTasks(showLoad: showLoad) != null) {
+        dynamic json = jsonDecode((await getTasks(showLoad: showLoad))!.body)['tasks'];
         for (var i = 0; i < json.length; i++) {
-          tasks.add(TaskModel.fromJson(json));
+          tasks.add(TaskModel.fromJson(json[i]));
         }
         _tasks.refresh();
       }
     });
   }
 
-  SuccessStatus getTaskStatus(int successStatus) {
-    switch (successStatus) {
-      case 0:
-        return SuccessStatus.neutral;
-      case 1:
-        return SuccessStatus.successful;
-      case 2:
-        return SuccessStatus.fail;
-      default:
-        return SuccessStatus.neutral;
-    }
-  }
-
-  onItemReorder(int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {}
-
   onListReorder(int oldListIndex, int newListIndex) {
-    if (oldListIndex != newListIndex) TaskModel.updateTaskOrder(tasks, oldListIndex, newListIndex);
+    if (oldListIndex != newListIndex) TaskModel.updateTaskOrderForLocale(tasks, oldListIndex, newListIndex);
     var movedList = tasks.removeAt(oldListIndex);
     tasks.insert(newListIndex, movedList);
     _tasks.refresh();

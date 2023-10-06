@@ -1,17 +1,15 @@
 // ignore_for_file: file_names
 
-import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
+import 'package:reorderables/reorderables.dart';
 import 'package:to_do_app/app/pages/todayPage/todayPageService.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
-import 'package:to_do_app/core/widgets/texts/customText.dart';
 import 'package:to_do_app/core/widgets/texts/title.dart';
 
-import '../../../core/models/task.dart';
 import '../../../core/widgets/taskCard.dart';
 import 'todayPageController.dart';
 
@@ -22,21 +20,33 @@ class TodayPageView extends StatefulWidget {
   State<TodayPageView> createState() => _TodayPageViewState();
 }
 
-class _TodayPageViewState extends State<TodayPageView> {
+class _TodayPageViewState extends State<TodayPageView> with WidgetsBindingObserver {
   late TodayPageController controller;
-
+  AppLifecycleState? _appLifecycleState;
   @override
   void initState() {
+    super.initState();
     Get.put(TodayPageService());
     controller = Get.put(TodayPageController());
-    super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     Get.delete<TodayPageService>();
     Get.delete<TodayPageController>();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    //TODO Çalışır mı dene server açılınca
+    if (_appLifecycleState != AppLifecycleState.resumed) {
+      await controller.deleteTasksFromDB();
+      await controller.updateTasksOrder();
+    }
   }
 
   @override
@@ -75,9 +85,10 @@ class _TodayPageViewState extends State<TodayPageView> {
         decoration: BoxDecoration(shape: BoxShape.circle, color: Get.theme.primaryColor),
         child: InkWell(
           onTap: () {
-            controller.addTask(controller.addTaskinputField.text);
-            controller.addTaskinputField.text = '';
-            if (Get.focusScope != null) Get.focusScope!.unfocus();
+            if (controller.addTaskinputField.text.isNotEmpty) {
+              controller.addTask(controller.addTaskinputField.text).then((value) async => {});
+              controller.addTaskinputField.text = '';
+            }
           },
           child: SizedBox(
             height: Get.height * .08,
@@ -91,31 +102,67 @@ class _TodayPageViewState extends State<TodayPageView> {
 
   content() {
     return Expanded(
-      child: Obx(() => DragAndDropLists(
-            contentsWhenEmpty: CustomText('Task can\'t find'),
-            children: List.generate(
-              controller.tasks.length,
-              (index) {
-                return DragAndDropList(
-                  canDrag: true,
-                  verticalAlignment: CrossAxisAlignment.center,
-                  contentsWhenEmpty: const SizedBox(),
-                  header: TaskCard(
-                    task: controller.tasks[index],
-                    onTapFunc: controller.changeStatus,
-                    deleteFunc: (TaskModel taskModel) {
-                      controller.deletedTasks.add(taskModel.id ?? '');
-                      TaskModel.deleteTask(controller.tasks, taskModel);
-                      controller.tasks.remove(taskModel);
-                    },
+      child: CustomScrollView(
+        controller: controller.scrollController,
+        slivers: [
+          Obx(
+            () => ReorderableSliverList(
+              buildDraggableFeedback: (context, constraints, child) {
+                return Transform(
+                  transform: Matrix4.rotationZ(0),
+                  alignment: FractionalOffset.topLeft,
+                  child: Material(
+                    type: MaterialType.transparency,
+                    elevation: 6.0,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.zero,
+                    child: ConstrainedBox(constraints: constraints, child: child),
                   ),
-                  children: <DragAndDropItem>[],
                 );
               },
+              controller: controller.scrollController,
+              onReorder: (firstPosition, newPosition) {
+                controller.onListReorder(firstPosition, newPosition);
+              },
+              delegate: ReorderableSliverChildBuilderDelegate(
+                childCount: controller.tasks.length + 1,
+                (context, index) => Column(children: [
+                  controller.tasks.isNotEmpty
+                      ? index + 1 == controller.tasks.length + 1
+                          ? const SizedBox()
+                          : TaskCard(
+                              task: controller.tasks[index],
+                              saveFunc: (task, text) {
+                                task.task = text;
+                                controller.refreshTask;
+                              },
+                              onTapFunc: controller.changeStatus,
+                              deleteFunc: (task) {
+                                controller.deletedTasks.add(task.id ?? '');
+                                controller.deleteTaskFromLocale(task);
+                                controller.tasks.remove(task);
+                              },
+                            )
+                      : const SizedBox(),
+                  SizedBox(height: StandartMeasurementUnits.highPadding)
+                ]),
+                semanticIndexCallback: (widget, localIndex) {
+                  debugPrint(localIndex.toString());
+                  if (localIndex != controller.tasks.length - 1 && controller.addedNewTask) {
+                    controller.scrollController.animateTo(
+                      (((Get.height * 0.08) + StandartMeasurementUnits.highPadding) * (controller.tasks.length + 1)),
+                      duration: const Duration(milliseconds: 5),
+                      curve: Curves.easeInOut,
+                    );
+                    controller.addedNewTask = false;
+                  }
+                  return null;
+                },
+              ),
             ),
-            onItemReorder: controller.onItemReorder,
-            onListReorder: controller.onListReorder,
-          )),
+          )
+        ],
+      ),
     );
   }
 

@@ -17,13 +17,39 @@ class TaskModel extends BaseModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = id;
     data['task'] = task;
-    data['successStatus'] = successStatus;
+    data['taskStatus'] = reverseTaskStatus(successStatus ?? SuccessStatus.neutral);
     data['date'] = date;
     data['category'] = category;
     data['nextTaskId'] = nextTaskId;
     data['previousTaskId'] = previousTaskId;
 
     return data;
+  }
+
+  SuccessStatus getTaskStatus(int successStatus) {
+    switch (successStatus) {
+      case 0:
+        return SuccessStatus.neutral;
+      case 1:
+        return SuccessStatus.successful;
+      case 2:
+        return SuccessStatus.fail;
+      default:
+        return SuccessStatus.neutral;
+    }
+  }
+
+  int reverseTaskStatus(SuccessStatus successStatus) {
+    switch (successStatus) {
+      case SuccessStatus.neutral:
+        return 0;
+      case SuccessStatus.successful:
+        return 1;
+      case SuccessStatus.fail:
+        return 2;
+      default:
+        return 0;
+    }
   }
 
   @override
@@ -34,15 +60,23 @@ class TaskModel extends BaseModel {
   TaskModel.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
     task = json['task'];
-    successStatus = json['successStatus'];
+    successStatus = getTaskStatus(json['taskStatus'] ?? 0);
     date = json['date'];
     category = json['category'];
     nextTaskId = json['nextTaskId'];
     previousTaskId = json['previousTaskId'];
   }
 
-  static addTask() {}
-  static deleteTask(List<TaskModel> tasks, TaskModel task) {
+  static addTaskForLocale(List<TaskModel> tasks, TaskModel task) {
+    TaskModel? lastTask = tasks.where((element) => element.nextTaskId == null).firstOrNull;
+    if (lastTask != null) {
+      lastTask.nextTaskId = task.id;
+      task.previousTaskId = lastTask.id;
+    }
+    tasks.add(task);
+  }
+
+  static deleteTaskForLocale(List<TaskModel> tasks, TaskModel task) {
     TaskModel? nextTask = tasks.where((element) => element.previousTaskId == task.id).firstOrNull;
     TaskModel? previousTask = tasks.where((element) => element.nextTaskId == task.id).firstOrNull;
 
@@ -50,7 +84,7 @@ class TaskModel extends BaseModel {
     if (previousTask != null) previousTask.nextTaskId = nextTask?.id;
   }
 
-  static updateTaskOrder(List<TaskModel> tasks, int oldListIndex, int newListIndex) {
+  static updateTaskOrderForLocale(List<TaskModel> tasks, int oldListIndex, int newListIndex) {
     int firstTaskIndex = oldListIndex;
     int secondTaskIndex = newListIndex;
     if (oldListIndex++ == newListIndex || oldListIndex-- == newListIndex) {

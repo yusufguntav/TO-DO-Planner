@@ -48,27 +48,27 @@ class BaseNetworkService extends GetxService {
 
   final _protocolAndIp = 'http://10.0.2.2:3000';
 
-  Future<RequestResponse?> sendPostRequest(String endpoint, Map<String, String> body, {Function? onSuccessFunc}) async {
+  Future<RequestResponse?> sendPostRequest(String endpoint, Map<dynamic, dynamic> body, {Function? onSuccessFunc, bool showLoad = true}) async {
     await Get.closeCurrentSnackbar();
-    state = PageStates.busy;
+    if (showLoad) state = PageStates.busy;
     final response = await _connect.post(
       endpoint,
       body,
       headers: header,
     );
-    state = PageStates.loaded;
+    if (showLoad) state = PageStates.loaded;
     RequestResponse requestResponse = RequestResponse(response.body, response.statusCode ?? 404);
     return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
   }
 
-  Future<RequestResponse?> sendGetRequest(String endpoint, {Function? onSuccessFunc}) async {
+  Future<RequestResponse?> sendGetRequest(String endpoint, {Function? onSuccessFunc, bool showLoad = true}) async {
     await Get.closeCurrentSnackbar();
-    state = PageStates.busy;
+    if (showLoad) state = PageStates.busy;
     final response = await _connect.get(
       endpoint,
       headers: header,
     );
-    state = PageStates.loaded;
+    if (showLoad) state = PageStates.loaded;
     RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode ?? 404);
     return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
   }

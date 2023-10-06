@@ -13,10 +13,11 @@ import 'customLine.dart';
 import 'texts/customText.dart';
 
 class TaskCard extends StatelessWidget {
-  const TaskCard({super.key, required this.task, required this.onTapFunc, required this.deleteFunc});
+  const TaskCard({super.key, required this.task, required this.onTapFunc, required this.deleteFunc, required this.saveFunc});
   final TaskModel task;
   final Function onTapFunc;
-  final Function deleteFunc;
+  final Function(TaskModel, String) saveFunc;
+  final Function(TaskModel) deleteFunc;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +70,8 @@ class TaskCard extends StatelessWidget {
   }
 
   CustomDialog taskEditDialog() {
+    TextEditingController taskController = TextEditingController(text: task.task);
+
     return CustomDialog(
       content: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -77,7 +80,7 @@ class TaskCard extends StatelessWidget {
           Flexible(
             child: TextField(
               maxLines: 30,
-              controller: TextEditingController(text: task.task),
+              controller: taskController,
             ),
           ),
           Row(
@@ -85,7 +88,7 @@ class TaskCard extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => saveFunc(task, taskController.text),
                   child: const Text('Save'),
                 ),
               ),
@@ -98,7 +101,7 @@ class TaskCard extends StatelessWidget {
                       backgroundColor: MainPages.today.getPageColor,
                       deleteFunc: () {
                         Get.back();
-                        return deleteFunc(task);
+                        deleteFunc(task);
                       },
                     ),
                   ),
