@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:to_do_app/app/pages/planningPage/planningPageController.dart';
 import 'package:to_do_app/core/widgets/buttons/customButton.dart';
 import 'package:to_do_app/core/widgets/dialogs/customDialog.dart';
+import 'package:to_do_app/core/widgets/dialogs/dateDialog.dart';
 import 'package:to_do_app/core/widgets/texts/customTextFormField.dart';
 
 import '../../../../../core/variables/enums.dart';
@@ -67,25 +67,18 @@ class AddSpecialListFormPage extends GetView<PlanningPageController> {
     return CustomTextFormField(
       isEnable: false,
       onTap: () {
-        Future.delayed(Duration.zero).then((value) => Get.dialog(Dialog(
-                child: Padding(
-              padding: EdgeInsets.all(StandartMeasurementUnits.extraHighPadding),
-              child: SfDateRangePicker(
-                enablePastDates: false,
-                //TODO Seçili gün renk değiştirme
-                selectionColor: MainPages.planning.getPageColor,
-                todayHighlightColor: MainPages.planning.getPageColor,
-                rangeSelectionColor: MainPages.planning.getPageColor,
-                onCancel: () => Get.back(),
-                onSubmit: (val) {
-                  controller.formControlers[FormFields.addSpecialListEndDate]?.text = val.toString().split(' ')[0];
-                  Get.back();
-                },
-                showActionButtons: true,
-                view: DateRangePickerView.month,
-                monthViewSettings: const DateRangePickerMonthViewSettings(firstDayOfWeek: 1),
-              ),
-            ))));
+        Future.delayed(Duration.zero).then(
+          (value) => Get.dialog(
+            dateDialog(
+              color: MainPages.planning.getPageColor,
+              onCancel: () => Get.back(),
+              onSubmit: (val) {
+                if (val != null) controller.formControlers[FormFields.addSpecialListEndDate]?.text = val.toString().split(' ')[0];
+                Get.back();
+              },
+            ),
+          ),
+        );
       },
       // isValidController: controller.isValidName,
       //TODO Düzenlemeyi unutma

@@ -7,7 +7,6 @@ import 'app/routes/pages.dart';
 import 'core/network/baseNetworkService.dart';
 import 'core/theme/appTheme.dart';
 
-//TODO: Proje sonunda fix all import at
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initApp();

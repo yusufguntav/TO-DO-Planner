@@ -42,7 +42,6 @@ class _TodayPageViewState extends State<TodayPageView> with WidgetsBindingObserv
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
-    //TODO Çalışır mı dene server açılınca
     if (_appLifecycleState != AppLifecycleState.resumed) {
       await controller.deleteTasksFromDB();
       await controller.updateTasksOrder();

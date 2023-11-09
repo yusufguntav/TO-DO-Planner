@@ -17,7 +17,6 @@ class BaseNetworkService extends GetxService {
   final Rx<PageStates> _state = PageStates.loaded.obs;
   PageStates get state => _state.value;
   set state(PageStates val) => _state.value = val;
-  //TODO header ile ilgili bug var düzenlenecek
   Map<String, String>? header;
   @override
   void onInit() async {

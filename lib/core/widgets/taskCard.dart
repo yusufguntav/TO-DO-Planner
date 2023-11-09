@@ -21,7 +21,6 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO Hata var kontrol edilecek
     return Dismissible(
       key: UniqueKey(),
       onDismissed: (_) => deleteFunc(task),
