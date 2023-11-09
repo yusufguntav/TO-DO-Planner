@@ -11,8 +11,6 @@ import 'package:to_do_app/core/widgets/buttons/customButton.dart';
 import 'package:to_do_app/core/widgets/texts/customText.dart';
 import 'package:to_do_app/core/widgets/texts/customTextFormField.dart';
 
-import '../../../../routes/pageRoutes.dart';
-
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
 
@@ -79,13 +77,12 @@ class _SignInPageState extends State<SignInPage> {
   CustomButton signInButton() {
     return CustomButton(
       backgroundColor: MainPages.today.getPageColor,
-      onPress: () {
+      onPress: () async {
         if (controller.getFormKey.currentState!.validate()) {
-          // controller.login(
-          //   (controller.getControllers[SignInFields.email] ?? TextEditingController(text: '')).text,
-          //   (controller.getControllers[SignInFields.password] ?? TextEditingController(text: '')).text,
-          // );
-          Get.offAndToNamed(PageRoutes.home);
+          await controller.login(
+            (controller.getControllers[SignInFields.email] ?? TextEditingController(text: '')).text,
+            (controller.getControllers[SignInFields.password] ?? TextEditingController(text: '')).text,
+          );
         }
       },
       buttonText: 'Sign In',

@@ -18,5 +18,5 @@ class TodayPageService extends GetxService {
       await _networkService.sendUpdateRequest(Endpoints.updateTaskOrder.path, {"tasks": tasks});
 
   Future<RequestResponse?> addTask(String task) async =>
-      await _networkService.sendPostRequest(Endpoints.addTaskToday.path, {"task": task}, showLoad: false);
+      await _networkService.sendPostRequest(Endpoints.addTask.path, {"task": task}, showLoad: false);
 }

@@ -18,6 +18,7 @@ class MenuButtonView extends GetView<MenuButtonController> {
         return !keyboardVisibility
             ? Obx(
                 () => Stack(
+                  fit: StackFit.expand,
                   children: [
                     for (int i = 0; i < controller.menuButtons.length; i++) ...[
                       menuButton(controller.menuButtons[i]),
@@ -33,12 +34,12 @@ class MenuButtonView extends GetView<MenuButtonController> {
   AnimatedPositioned menuButton(MenuButtonModel menutButtonModel) {
     return AnimatedPositioned(
       bottom: controller.centerMenuButton ? menutButtonModel.bottomPosition : StandartMeasurementUnits.ultraPadding,
-      left: controller.centerMenuButton ? menutButtonModel.leftPosition : StandartMeasurementUnits.lowPadding,
+      left: controller.centerMenuButton ? menutButtonModel.leftPosition : StandartMeasurementUnits.ultraPadding,
       duration: const Duration(milliseconds: 250),
       onEnd: () => controller.showOtherMenuButtons = !controller.showOtherMenuButtons,
       child: SizedBox(
-        height: 56,
-        width: 56,
+        height: StandartMeasurementUnits.menuButtonSize,
+        width: StandartMeasurementUnits.menuButtonSize,
         child: FloatingActionButton(
           backgroundColor: menutButtonModel.color,
           heroTag: menutButtonModel.herotag,

@@ -1,4 +1,4 @@
-import 'package:to_do_app/core/models/category.dart';
+import 'package:to_do_app/core/models/routines.dart';
 import 'package:to_do_app/core/utils/abstacts.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 
@@ -7,7 +7,7 @@ class TaskModel extends BaseModel {
   String? task;
   SuccessStatus? successStatus;
   DateTime? date;
-  CategoryModel? category;
+  RoutineModel? category;
   String? nextTaskId;
   String? previousTaskId;
   TaskModel({this.task, this.successStatus, this.category, this.date, this.id, this.nextTaskId, this.previousTaskId});

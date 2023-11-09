@@ -4,13 +4,23 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:to_do_app/app/pages/planningPage/planningPage.dart';
-import 'package:to_do_app/core/models/category.dart';
+import 'package:to_do_app/app/pages/planningPage/components/specialListPage/specialListPage.dart';
+import 'package:to_do_app/app/pages/planningPage/planningPageService.dart';
+import 'package:to_do_app/app/pages/planningPage/planningPageView.dart';
+import 'package:to_do_app/core/models/routines.dart';
 import 'package:to_do_app/core/models/specialList.dart';
 import 'package:to_do_app/core/utils/utils.dart';
 
+import '../../../core/models/task.dart';
 import '../../../core/network/networkModels/requestResponse.dart';
 import '../../../core/variables/enums.dart';
+
+enum FormKeys {
+  editCategory,
+  addCategory,
+  addSpecialList,
+  editSpecialList;
+}
 
 enum FormFields {
   editCategoryName,
@@ -18,26 +28,170 @@ enum FormFields {
   editCategoryDescription,
   addCategoryDescription,
   addSpecialListName,
+  addSpecialListEndDate,
   editSpecialListName,
+  editSpecialListEndDate,
+}
+
+enum PlanningPages {
+  planningPage,
+  specialListPage;
+
+  int get getPageNumber {
+    switch (this) {
+      case PlanningPages.planningPage:
+        return 0;
+      case PlanningPages.specialListPage:
+        return 1;
+    }
+  }
 }
 
 class PlanningPageController extends GetxController {
-  // TODO Controller gibi yapı kur
-  // Edit Page Form Key
-  final _editCategoryFormKey = GlobalKey<FormState>();
-  GlobalKey<FormState> get editCategoryFormKey => _editCategoryFormKey;
+  // Task
+  late SpecialListModel selectedListModel;
+  //ScrollController for task list
+  final ScrollController _scrollController = ScrollController();
+  ScrollController get scrollController => _scrollController;
 
-  // Add Category Form Key
-  final _addCategoryFormKey = GlobalKey<FormState>();
-  GlobalKey<FormState> get addCategoryFormKey => _addCategoryFormKey;
+  bool addedNewTask = false;
 
-  // Add Special List Form Key
-  final _addSpecialListFormKey = GlobalKey<FormState>();
-  GlobalKey<FormState> get addSpecialListFormKey => _addSpecialListFormKey;
+  //AddTask Field Controller
+  final TextEditingController _addTaskinputField = TextEditingController();
+  TextEditingController get addTaskinputField => _addTaskinputField;
 
-  // Edit Special List Form Key
-  final _editSpecialListFormKey = GlobalKey<FormState>();
-  GlobalKey<FormState> get editSpecialListFormKey => _editSpecialListFormKey;
+  //Task List control
+  final RxList<TaskModel> _tasks = <TaskModel>[].obs;
+  List<TaskModel> get tasks => _tasks;
+
+  //Deleted Tasks
+  final RxList<String> _deletedTasks = <String>[].obs;
+  List<String> get deletedTasks => _deletedTasks;
+
+  //New Tasks
+  final RxList<TaskModel> _newTasks = <TaskModel>[].obs;
+  List<TaskModel> get newTasks => _newTasks;
+
+  //Refresh Task
+  get refreshTask => _tasks.refresh();
+
+  final Rx<int> _selectedPage = PlanningPages.planningPage.getPageNumber.obs;
+  final List _pageViews = [
+    const PlanningPageView(),
+    const SpecialListPage(),
+  ];
+
+  Future addTask(String task) async {
+    errorHandler(tryMethod: () async {
+      TaskModel newTask = TaskModel.fromJson((await _planningService.addTask(task, selectedListModel.id ?? ''))!.body['task']);
+      TaskModel.addTaskForLocale(tasks, TaskModel(id: newTask.id, task: newTask.task, successStatus: SuccessStatus.neutral));
+      addedNewTask = true;
+      _tasks.refresh();
+    });
+  }
+
+  updateTasksOrder() async {
+    errorHandler(tryMethod: () async {
+      List<Map<String, dynamic>> updateTaskOrderList = [];
+      for (TaskModel task in tasks) {
+        updateTaskOrderList.add(task.toJson());
+      }
+      await _planningService.updateTaskOrder(updateTaskOrderList, selectedListModel.id ?? '');
+    });
+  }
+
+  // Delete task from database
+  deleteTasksFromDB() async {
+    errorHandler(
+      tryMethod: () async {
+        if (deletedTasks.isNotEmpty) {
+          String tasks = '';
+          for (var task in deletedTasks) {
+            tasks += '$task,';
+          }
+          await _planningService.deleteTasks(tasks, () => Get.back());
+        }
+      },
+    );
+  }
+
+  //Delete task
+  deleteTaskFromLocale(TaskModel task) {
+    TaskModel.deleteTaskForLocale(tasks, task);
+    _tasks.refresh();
+  }
+
+  Future<RequestResponse?> getTasks({
+    bool showLoad = true,
+  }) async {
+    return await errorHandler(tryMethod: () async {
+      {
+        RequestResponse? requestResponse = await _planningService.getTasks(selectedListModel, showLoad);
+        if (requestResponse != null) {
+          if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
+            return requestResponse;
+          }
+        }
+      }
+      return null;
+    });
+  }
+
+  Future getTasksToVariable({showLoad = true}) async {
+    await errorHandler(tryMethod: () async {
+      tasks.clear();
+      if (await getTasks(showLoad: showLoad) != null) {
+        dynamic json = jsonDecode((await getTasks(showLoad: showLoad))!.body)['tasks'];
+        for (var i = 0; i < json.length; i++) {
+          tasks.add(TaskModel.fromJson(json[i]));
+        }
+        _tasks.refresh();
+      }
+    });
+  }
+
+  onListReorder(int oldListIndex, int newListIndex) {
+    if (oldListIndex != newListIndex) TaskModel.updateTaskOrderForLocale(tasks, oldListIndex, newListIndex);
+    var movedList = tasks.removeAt(oldListIndex);
+    tasks.insert(newListIndex, movedList);
+    _tasks.refresh();
+  }
+
+  changeStatus(TaskModel task) {
+    task.successStatus = _getNewStatus(task.successStatus ?? SuccessStatus.neutral);
+    _tasks.refresh();
+  }
+
+  _getNewStatus(SuccessStatus status) {
+    switch (status) {
+      case SuccessStatus.neutral:
+        return SuccessStatus.successful;
+      case SuccessStatus.successful:
+        return SuccessStatus.fail;
+      case SuccessStatus.fail:
+        return SuccessStatus.neutral;
+      default:
+        return SuccessStatus.neutral;
+    }
+  }
+
+  // Change page
+  Widget getPage() {
+    return _pageViews[_selectedPage.value];
+  }
+
+  changeSelectedPageIndex(PlanningPages page) {
+    _selectedPage.value = page.getPageNumber;
+  }
+
+  //Form Keys
+  final Map<FormKeys, GlobalKey<FormState>> _formKeys = {
+    FormKeys.editCategory: GlobalKey<FormState>(),
+    FormKeys.addCategory: GlobalKey<FormState>(),
+    FormKeys.addSpecialList: GlobalKey<FormState>(),
+    FormKeys.editSpecialList: GlobalKey<FormState>(),
+  };
+  Map<FormKeys, GlobalKey<FormState>> get formKeys => _formKeys;
 
   // Form Controllers
   final Map<FormFields, TextEditingController> _formControlers = {
@@ -45,13 +199,15 @@ class PlanningPageController extends GetxController {
     FormFields.editSpecialListName: TextEditingController(),
     FormFields.editCategoryName: TextEditingController(),
     FormFields.editCategoryDescription: TextEditingController(),
+    FormFields.editSpecialListEndDate: TextEditingController(),
     FormFields.addCategoryName: TextEditingController(text: 'TestKategori'),
+    FormFields.addSpecialListEndDate: TextEditingController(),
     FormFields.addCategoryDescription: TextEditingController(text: 'Description'),
   };
   Map<FormFields, TextEditingController> get formControlers => _formControlers;
 
   //Category control
-  final RxList<CategoryModel> categories = <CategoryModel>[].obs;
+  final RxList<RoutineModel> routines = <RoutineModel>[].obs;
 
   //Special List control
   final RxList<SpecialListModel> specialLists = <SpecialListModel>[].obs;
@@ -68,16 +224,16 @@ class PlanningPageController extends GetxController {
   @override
   void onInit() async {
     _planningService = Get.find<PlanningPageService>();
-    await addCategoryToVariable();
     await addSpecialListsToVariable();
     super.onInit();
   }
 
 // Special List request functions
-  Future addSpecialList(String name) async {
+  Future addSpecialList(String name, String endDate) async {
     errorHandler(
       tryMethod: () => _planningService.addSpecialList(
         name,
+        endDate,
         () async {
           Get.back();
           await addSpecialListsToVariable();
@@ -103,17 +259,21 @@ class PlanningPageController extends GetxController {
       specialLists.clear();
       dynamic json = jsonDecode((await getSpecialListReq())!.body);
       for (var i = 0; i < json.length; i++) {
-        specialLists.add(SpecialListModel(id: json[i]['_id'], name: json[i]['name']));
+        specialLists.add(SpecialListModel(
+            id: json[i]['_id'] ?? '',
+            name: json[i]['name'] ?? '',
+            date: json[i]['date'] != null ? formatDate(DateTime.parse(json[i]['date'])) : null));
       }
       specialLists.refresh();
     }
   }
 
-  Future updateSpecialList(String name, String id) async {
+  Future updateSpecialList(String name, String id, String endDate) async {
     errorHandler(tryMethod: () async {
       await _planningService.updateSpecialList(
         name,
         id,
+        endDate,
         () async {
           Get.back();
           await addSpecialListsToVariable();
@@ -129,64 +289,5 @@ class PlanningPageController extends GetxController {
         await addSpecialListsToVariable();
       });
     });
-  }
-
-  Future addCategory(String name, String description) async {
-    errorHandler(tryMethod: () async {
-      await _planningService.addCategory(
-        name,
-        description,
-        () async {
-          Get.back();
-          await addCategoryToVariable();
-        },
-      );
-    });
-  }
-
-  Future updateCategory(String name, String id, String description) async {
-    errorHandler(tryMethod: () async {
-      await _planningService.updateCategory(
-        name,
-        id,
-        description,
-        () async {
-          Get.back();
-          await addCategoryToVariable();
-        },
-      );
-    });
-  }
-
-  Future<RequestResponse?> getCategoryReq() async {
-    return errorHandler(tryMethod: () async {
-      RequestResponse? requestResponse = await _planningService.getCategory();
-      if (requestResponse != null) {
-        if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
-          return requestResponse;
-        }
-      }
-      return null;
-    });
-  }
-
-  Future deleteCategory(String id) async {
-    errorHandler(tryMethod: () async {
-      await _planningService.deleteCategory(id, () async {
-        Get.back();
-        await addCategoryToVariable();
-      });
-    });
-  }
-
-  Future addCategoryToVariable() async {
-    if (await getCategoryReq() != null) {
-      categories.clear();
-      dynamic json = jsonDecode((await getCategoryReq())!.body);
-      for (var i = 0; i < json.length; i++) {
-        categories.add(CategoryModel(id: json[i]['_id'], name: json[i]['name'], description: json[i]['description']));
-      }
-      categories.refresh();
-    }
   }
 }

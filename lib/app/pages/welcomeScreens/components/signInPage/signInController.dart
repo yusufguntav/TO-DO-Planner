@@ -50,7 +50,7 @@ class SignInPageController extends GetxController {
       if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
         //Token storage
         await SecureStorage().writeSecureData('token', requestResponse.body['token']);
-        BaseNetworkService().header = {"Authorization": "Bearer ${await SecureStorage().readSecureData('token')}"};
+        Get.find<BaseNetworkService>().header = {"Authorization": "Bearer ${requestResponse.body['token']}"};
         Get.offAndToNamed(PageRoutes.home);
       }
       debugPrint('body: ${requestResponse.body}\n status:${requestResponse.status}');

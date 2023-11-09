@@ -17,6 +17,7 @@ class CustomDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AlertDialog(
         actionsAlignment: MainAxisAlignment.center,
+        scrollable: true,
         titlePadding: EdgeInsets.zero,
         actions: actions,
         title: (showCloseButton && deleteButtonFunction != null)
@@ -48,8 +49,8 @@ class CustomDialog extends StatelessWidget {
                   )
                 : null,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(StandartMeasurementUnits.lowRadius)),
-        contentPadding: EdgeInsets.fromLTRB(StandartMeasurementUnits.highPadding, StandartMeasurementUnits.normalPadding,
-            StandartMeasurementUnits.highPadding, StandartMeasurementUnits.normalPadding),
+        contentPadding: EdgeInsets.fromLTRB(StandartMeasurementUnits.normalPadding, StandartMeasurementUnits.normalPadding,
+            StandartMeasurementUnits.normalPadding, StandartMeasurementUnits.normalPadding),
         content: content,
       );
 }

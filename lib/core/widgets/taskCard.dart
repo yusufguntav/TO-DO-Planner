@@ -32,7 +32,7 @@ class TaskCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(StandartMeasurementUnits.extraHighRadius),
               onTap: () => Get.dialog(taskEditDialog()),
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: Get.height * .08),
+                constraints: BoxConstraints(maxHeight: StandartMeasurementUnits.taskCardHeight),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                       border: Border.all(color: task.successStatus!.getSuccessStatusColor),
@@ -74,10 +74,9 @@ class TaskCard extends StatelessWidget {
 
     return CustomDialog(
       content: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Flexible(
+          SizedBox(
+            height: Get.height * .5,
             child: TextField(
               maxLines: 30,
               controller: taskController,

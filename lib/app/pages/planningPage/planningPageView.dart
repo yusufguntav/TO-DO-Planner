@@ -2,23 +2,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:to_do_app/app/pages/planningPage/planningPage.dart';
 import 'package:to_do_app/app/pages/planningPage/planningPageController.dart';
-import 'package:to_do_app/app/pages/planningPage/components/categoryFormDialogs/editCategoryFormDialog.dart';
 import 'package:to_do_app/app/pages/planningPage/components/specialListFormDialogs/addSpecialListFormDialog.dart';
 import 'package:to_do_app/app/pages/planningPage/components/specialListFormDialogs/editSpecialListFormDialog.dart';
 import 'package:to_do_app/core/models/specialList.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
-import 'package:to_do_app/core/widgets/buttons/customListTileButton.dart';
+import 'package:to_do_app/core/widgets/buttons/customButtonCard.dart';
 import 'package:to_do_app/core/widgets/customTileButtonGrill.dart';
 import 'package:to_do_app/core/widgets/customLine.dart';
 import 'package:to_do_app/core/widgets/dateCircle.dart';
+import 'package:to_do_app/core/widgets/routineDayCard.dart';
 import 'package:to_do_app/core/widgets/texts/customText.dart';
 import 'package:to_do_app/core/widgets/texts/title.dart';
 
-import '../../../core/models/category.dart';
-import 'components/categoryFormDialogs/addCategoryFormDialog.dart';
+import '../../../core/models/routines.dart';
 
 class PlanningPageView extends StatefulWidget {
   const PlanningPageView({super.key});
@@ -32,16 +30,8 @@ class _PlanningPageViewState extends State<PlanningPageView> {
 
   @override
   void initState() {
-    Get.put(PlanningPageService());
-    controller = Get.put(PlanningPageController());
+    controller = Get.find<PlanningPageController>();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    Get.delete<PlanningPageService>();
-    Get.delete<PlanningPageController>();
-    super.dispose();
   }
 
   @override
@@ -59,9 +49,15 @@ class _PlanningPageViewState extends State<PlanningPageView> {
             SizedBox(height: StandartMeasurementUnits.extraHighPadding),
             Obx(() => CustomTileButtonGrill(customTileButtons: createSpecialListButtons(controller.specialLists.value))),
             SizedBox(height: StandartMeasurementUnits.highPadding),
-            CustomText.high('Categories', textColor: MainPages.planning.getPageColor, bold: true),
+            CustomText.high('Routines', textColor: MainPages.planning.getPageColor, bold: true),
             SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-            Obx(() => CustomTileButtonGrill(customTileButtons: createCategoryButtons(controller.categories.value))),
+            const RoutineDayCard(weekDay: WeekDay.monday),
+            const RoutineDayCard(weekDay: WeekDay.tuesday),
+            const RoutineDayCard(weekDay: WeekDay.wednesday),
+            const RoutineDayCard(weekDay: WeekDay.thursday),
+            const RoutineDayCard(weekDay: WeekDay.friday),
+            const RoutineDayCard(weekDay: WeekDay.saturday),
+            const RoutineDayCard(weekDay: WeekDay.sunday),
             SizedBox(height: StandartMeasurementUnits.extraHighPadding),
             CustomText.high('DBTC!', textColor: MainPages.planning.getPageColor, bold: true),
             dbtcItems(),
@@ -99,36 +95,40 @@ class _PlanningPageViewState extends State<PlanningPageView> {
     );
   }
 
-  List<CustomListTileButton> createCategoryButtons(List<CategoryModel> categories) {
-    List<CustomListTileButton> categoryButtons = [];
+  List<CustomButtonCard> createCategoryButtons(List<RoutineModel> categories) {
+    List<CustomButtonCard> categoryButtons = [];
     for (var category in categories) {
-      categoryButtons.add(CustomListTileButton(
-          borderColor: MainPages.planning.getPageColor,
-          title: category.name,
-          onTapFunction: () =>
-              Get.dialog(EditCategoryFormDialog(title: category.name ?? '', description: category.description ?? '', id: category.id ?? ''))));
+      categoryButtons.add(CustomButtonCard(borderColor: MainPages.planning.getPageColor, title: category.name, onTapFunction: () {}));
     }
     categoryButtons.add(
-      CustomListTileButton(
+      CustomButtonCard(
         borderColor: MainPages.planning.getPageColor,
-        onTapFunction: () {
-          Get.dialog(const AddCategoryFormDialog());
-        },
+        onTapFunction: () {},
       ),
     );
     return categoryButtons;
   }
 
-  List<CustomListTileButton> createSpecialListButtons(List<SpecialListModel> specialLists) {
-    List<CustomListTileButton> specialListButtons = [];
+  List<CustomButtonCard> createSpecialListButtons(List<SpecialListModel> specialLists) {
+    List<CustomButtonCard> specialListButtons = [];
     for (var specialList in specialLists) {
-      specialListButtons.add(CustomListTileButton(
+      specialListButtons.add(
+        CustomButtonCard(
           borderColor: MainPages.planning.getPageColor,
           title: specialList.name,
-          onTapFunction: () => Get.dialog(EditSpecialListFormPage(id: specialList.id ?? '', name: specialList.name ?? ''))));
+          onTapFunction: () {
+            controller.selectedListModel = specialList;
+            controller.changeSelectedPageIndex(PlanningPages.specialListPage);
+          },
+          editButtonFunc: () {
+            controller.formControlers[FormFields.editSpecialListEndDate]!.text = specialList.date ?? '';
+            Get.dialog(EditSpecialListFormPage(specialListModel: specialList));
+          },
+        ),
+      );
     }
     specialListButtons.add(
-      CustomListTileButton(
+      CustomButtonCard(
         borderColor: MainPages.planning.getPageColor,
         onTapFunction: () {
           Get.dialog(const AddSpecialListFormPage());

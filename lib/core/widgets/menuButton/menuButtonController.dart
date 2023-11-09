@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/core/variables/enums.dart';
+import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
 
 import '../../models/menuButton.dart';
 
@@ -10,16 +11,17 @@ class MenuButtonController extends GetxController {
   @override
   void onReady() {
     menuButtons = <MenuButtonModel>[
-      MenuButtonModel('settings', MainPages.settings.getPageNumber, Icons.settings, MainPages.settings.getPageColor, (Get.height + 56) * .5,
-          (Get.width + 56) * .5),
-      MenuButtonModel('calendar', MainPages.calendar.getPageNumber, Icons.weekend, MainPages.calendar.getPageColor, (Get.height - 56 * 3) * .5,
-          (Get.width - 56 * 3) * .5),
-      MenuButtonModel(
-          'dbtc', MainPages.dbtc.getPageNumber, Icons.line_axis, MainPages.dbtc.getPageColor, (Get.height - 56 * 3) * .5, (Get.width + 56) * .5),
-      MenuButtonModel('planning', MainPages.planning.getPageNumber, Icons.task, MainPages.planning.getPageColor, (Get.height + 56) * .5,
-          (Get.width - 56 * 3) * .5),
-      MenuButtonModel(
-          'today', MainPages.today.getPageNumber, Icons.today, MainPages.today.getPageColor, (Get.height - 56) * .5, (Get.width - 56) * .5),
+      //TODO Ortala
+      MenuButtonModel('settings', MainPages.settings.getPageNumber, Icons.settings, MainPages.settings.getPageColor,
+          (Get.height + StandartMeasurementUnits.menuButtonSize) * .5, (Get.width + StandartMeasurementUnits.menuButtonSize) * .5),
+      MenuButtonModel('calendar', MainPages.calendar.getPageNumber, Icons.weekend, MainPages.calendar.getPageColor,
+          (Get.height - StandartMeasurementUnits.menuButtonSize * 3) * .5, (Get.width - StandartMeasurementUnits.menuButtonSize * 3) * .5),
+      MenuButtonModel('dbtc', MainPages.dbtc.getPageNumber, Icons.line_axis, MainPages.dbtc.getPageColor,
+          (Get.height - StandartMeasurementUnits.menuButtonSize * 3) * .5, (Get.width + StandartMeasurementUnits.menuButtonSize) * .5),
+      MenuButtonModel('planning', MainPages.planning.getPageNumber, Icons.task, MainPages.planning.getPageColor,
+          (Get.height + StandartMeasurementUnits.menuButtonSize) * .5, (Get.width - StandartMeasurementUnits.menuButtonSize * 3) * .5),
+      MenuButtonModel('today', MainPages.today.getPageNumber, Icons.today, MainPages.today.getPageColor,
+          (Get.height - StandartMeasurementUnits.menuButtonSize) * .5, (Get.width - StandartMeasurementUnits.menuButtonSize) * .5),
     ];
     super.onReady();
   }

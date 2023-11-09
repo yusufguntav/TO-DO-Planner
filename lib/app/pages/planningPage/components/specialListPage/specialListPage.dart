@@ -1,41 +1,39 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:reorderables/reorderables.dart';
-import 'package:to_do_app/app/pages/todayPage/todayPageController.dart';
-import 'package:to_do_app/core/variables/enums.dart';
+import 'package:to_do_app/app/pages/planningPage/planningPageController.dart';
+import 'package:to_do_app/core/widgets/texts/customTextFormField.dart';
 
-import '../../../core/variables/standartMeasurementUnits.dart';
-import '../../../core/widgets/taskCard.dart';
-import '../../../core/widgets/texts/customTextFormField.dart';
-import '../../../core/widgets/texts/title.dart';
-import 'todayPageService.dart';
+import '../../../../../core/variables/enums.dart';
+import '../../../../../core/variables/standartMeasurementUnits.dart';
+import '../../../../../core/widgets/taskCard.dart';
+import '../../../../../core/widgets/texts/title.dart';
 
-class TodayPageView extends StatefulWidget {
-  const TodayPageView({super.key});
+class SpecialListPage extends StatefulWidget {
+  const SpecialListPage({super.key});
 
   @override
-  State<TodayPageView> createState() => _TodayPageViewState();
+  State<SpecialListPage> createState() => _SpecialListPageState();
 }
 
-class _TodayPageViewState extends State<TodayPageView> with WidgetsBindingObserver {
+class _SpecialListPageState extends State<SpecialListPage> with WidgetsBindingObserver {
   AppLifecycleState? _appLifecycleState;
-  late TodayPageController controller;
+  PlanningPageController controller = Get.find<PlanningPageController>();
   @override
   void initState() {
     super.initState();
-    Get.put(TodayPageService());
-    controller = Get.put(TodayPageController());
+    controller.getTasksToVariable();
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    Get.delete<TodayPageService>();
-    Get.delete<TodayPageController>();
+    Future.delayed(Duration.zero, () async {
+      await controller.updateTasksOrder();
+      await controller.deleteTasksFromDB();
+    });
     super.dispose();
   }
 
@@ -54,10 +52,24 @@ class _TodayPageViewState extends State<TodayPageView> with WidgetsBindingObserv
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(
-          height: StandartMeasurementUnits.highIconSize * 2,
-          child: CustomTitle(titleText: 'TODAY', titleColor: MainPages.today.getPageColor),
-        ),
+        Stack(children: [
+          SizedBox(
+            height: StandartMeasurementUnits.highIconSize * 2,
+            child: CustomTitle(titleText: controller.selectedListModel.name?.toUpperCase() ?? '', titleColor: MainPages.planning.getPageColor),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                backgroundColor: MainPages.planning.getPageColor,
+                child: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  controller.changeSelectedPageIndex(PlanningPages.planningPage);
+                },
+              ),
+            ],
+          ),
+        ]),
         SizedBox(height: StandartMeasurementUnits.highPadding),
         content(),
         inputFieldAndKeyboardControl()
@@ -84,7 +96,7 @@ class _TodayPageViewState extends State<TodayPageView> with WidgetsBindingObserv
   CustomTextFormField inputTask() {
     return CustomTextFormField(
       controller: controller.addTaskinputField,
-      color: MainPages.today.getPageColor,
+      color: MainPages.planning.getPageColor,
       label: "I Will...",
     );
   }
@@ -93,7 +105,7 @@ class _TodayPageViewState extends State<TodayPageView> with WidgetsBindingObserv
     return Visibility(
       visible: keyboardVisibility,
       child: DecoratedBox(
-        decoration: BoxDecoration(shape: BoxShape.circle, color: Get.theme.primaryColor),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: MainPages.planning.getPageColor),
         child: InkWell(
           onTap: () {
             if (controller.addTaskinputField.text.isNotEmpty) {
@@ -155,7 +167,7 @@ class _TodayPageViewState extends State<TodayPageView> with WidgetsBindingObserv
                               },
                             )
                       : const SizedBox(),
-                  SizedBox(height: StandartMeasurementUnits.normalPadding)
+                  SizedBox(height: StandartMeasurementUnits.highPadding)
                 ]),
                 semanticIndexCallback: (widget, localIndex) {
                   debugPrint(localIndex.toString());

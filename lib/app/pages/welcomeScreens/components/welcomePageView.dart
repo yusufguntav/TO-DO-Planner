@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/welcomeScreens/welcomeHomeController.dart';
+import 'package:to_do_app/core/network/baseNetworkService.dart';
 import 'package:to_do_app/core/widgets/buttons/customButton.dart';
 
 import '../../../../core/variables/enums.dart';
@@ -24,6 +25,9 @@ class WelcomPageView extends StatelessWidget {
           buttonText: 'Sign In',
           backgroundColor: MainPages.today.getPageColor,
           onPress: () {
+            print("Get.find<BaseNetworkService>().header.toString() helllloooo");
+
+            print(Get.find<BaseNetworkService>().header.toString());
             controller.changeSelectedPageIndex(WelcomePages.signIn);
           },
         ),

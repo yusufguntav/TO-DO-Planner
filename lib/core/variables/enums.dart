@@ -45,9 +45,11 @@ enum Endpoints {
   updateSpecialList,
   deleteSpecialList,
   getTasksByDate,
-  addTaskToday,
+  getTasksForSpecialList,
+  addTask,
   deleteTask,
-  updateTaskOrder;
+  updateTaskOrder,
+  updateSpecialListTaskOrder;
 
   String get path {
     switch (this) {
@@ -73,29 +75,45 @@ enum Endpoints {
         return '/specialList/';
       case Endpoints.getTasksByDate:
         return '/task/getTasks/';
-      case Endpoints.addTaskToday:
+      case Endpoints.addTask:
         return '/task/addTask/';
       case Endpoints.deleteTask:
         return '/task/deleteTask/';
       case Endpoints.updateTaskOrder:
         return '/task/updateOrder/';
+      case Endpoints.getTasksForSpecialList:
+        return '/task/getTasksForSpecialList/';
+      case Endpoints.updateSpecialListTaskOrder:
+        return 'task/updateSpecialListTaskOrder/';
     }
   }
 }
 
-enum WelcomePages {
-  welcomePage,
-  signIn,
-  signUp;
+enum WeekDay {
+  monday,
+  tuesday,
+  wednesday,
+  thursday,
+  friday,
+  saturday,
+  sunday;
 
-  int get getPageNumber {
+  String get getDayAsString {
     switch (this) {
-      case WelcomePages.welcomePage:
-        return 0;
-      case WelcomePages.signIn:
-        return 1;
-      case WelcomePages.signUp:
-        return 2;
+      case WeekDay.monday:
+        return "Monday";
+      case WeekDay.tuesday:
+        return "Tuesday";
+      case WeekDay.wednesday:
+        return "Wednesday";
+      case WeekDay.thursday:
+        return "Thursday";
+      case WeekDay.friday:
+        return "Friday";
+      case WeekDay.saturday:
+        return "Saturday";
+      case WeekDay.sunday:
+        return "Sunday";
     }
   }
 }

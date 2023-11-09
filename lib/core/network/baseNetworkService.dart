@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:to_do_app/core/utils/utils.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/widgets/buttons/customButton.dart';
@@ -17,11 +18,15 @@ class BaseNetworkService extends GetxService {
   PageStates get state => _state.value;
   set state(PageStates val) => _state.value = val;
   //TODO header ile ilgili bug var düzenlenecek
-  late Map<String, String> header;
+  Map<String, String>? header;
   @override
   void onInit() async {
     _connect.baseUrl = _protocolAndIp;
-    header = {"Authorization": "Bearer ${await SecureStorage().readSecureData('token')}"};
+    errorHandler(tryMethod: () async {
+      header = {"Authorization": "Bearer ${await SecureStorage().readSecureData('token')}"};
+    }, onErr: () {
+      return null;
+    });
     ever(
       _state,
       (PageStates value) {
@@ -46,7 +51,8 @@ class BaseNetworkService extends GetxService {
 
   final GetConnect _connect = GetConnect();
 
-  final _protocolAndIp = 'http://10.0.2.2:3000';
+  final _protocolAndIp = 'http://154.62.109.18:3000';
+  // final _protocolAndIp = 'http://10.0.2.2:3000';
 
   Future<RequestResponse?> sendPostRequest(String endpoint, Map<dynamic, dynamic> body, {Function? onSuccessFunc, bool showLoad = true}) async {
     await Get.closeCurrentSnackbar();

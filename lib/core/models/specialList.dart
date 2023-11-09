@@ -3,5 +3,6 @@
 class SpecialListModel {
   String? id;
   String? name;
-  SpecialListModel({this.id, this.name});
+  String? date;
+  SpecialListModel({this.id, this.name, this.date});
 }

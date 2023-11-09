@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
-import 'package:to_do_app/core/widgets/buttons/customListTileButton.dart';
+import 'package:to_do_app/core/widgets/buttons/customButtonCard.dart';
 
 class CustomTileButtonGrill extends StatelessWidget {
   const CustomTileButtonGrill({super.key, required this.customTileButtons});
-  final List<CustomListTileButton> customTileButtons;
+  final List<CustomButtonCard> customTileButtons;
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -29,4 +29,10 @@ class StandartMeasurementUnits {
   static double get normalIconSize => Get.height * 0.025;
   static double get highIconSize => Get.height * 0.033;
   static double get extraHighIconSize => Get.height * 0.04;
+
+  //Menu Buttons
+  static double get menuButtonSize => Get.height * 0.07;
+
+  //Task card height
+  static double get taskCardHeight => Get.height * 0.07;
 }
