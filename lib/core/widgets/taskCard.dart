@@ -23,7 +23,7 @@ class TaskCard extends StatelessWidget {
   Widget build(BuildContext context) {
     //TODO Hata var kontrol edilecek
     return Dismissible(
-      key: const Key('task'),
+      key: UniqueKey(),
       onDismissed: (_) => deleteFunc(task),
       child: Row(
         children: [
