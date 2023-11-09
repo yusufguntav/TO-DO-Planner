@@ -1,6 +1,6 @@
-import 'package:to_do_app/core/models/routines.dart';
-import 'package:to_do_app/core/utils/abstacts.dart';
-import 'package:to_do_app/core/variables/enums.dart';
+import '../utils/abstacts.dart';
+import '../variables/enums.dart';
+import 'routines.dart';
 
 class TaskModel extends BaseModel {
   String? id;

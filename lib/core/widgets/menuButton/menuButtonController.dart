@@ -11,7 +11,6 @@ class MenuButtonController extends GetxController {
   @override
   void onReady() {
     menuButtons = <MenuButtonModel>[
-      //TODO Ortala
       MenuButtonModel('settings', MainPages.settings.getPageNumber, Icons.settings, MainPages.settings.getPageColor,
           (Get.height + StandartMeasurementUnits.menuButtonSize) * .5, (Get.width + StandartMeasurementUnits.menuButtonSize) * .5),
       MenuButtonModel('calendar', MainPages.calendar.getPageNumber, Icons.weekend, MainPages.calendar.getPageColor,

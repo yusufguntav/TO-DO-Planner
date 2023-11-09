@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_app/core/variables/colorTable.dart';
+
+import 'colorTable.dart';
 
 enum PageStates {
   initial,

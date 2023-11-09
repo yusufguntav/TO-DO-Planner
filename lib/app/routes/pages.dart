@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:to_do_app/app/pages/splashScreen/splashScreenBinding.dart';
-import 'package:to_do_app/app/pages/splashScreen/splashScreenView.dart';
-import 'package:to_do_app/app/pages/welcomeScreens/welcomeHomeBinding.dart';
-import 'package:to_do_app/app/pages/welcomeScreens/welcomeHomeView.dart';
+import '../pages/splashScreen/splashScreenBinding.dart';
+import '../pages/splashScreen/splashScreenView.dart';
+import '../pages/welcomeScreens/welcomeHomeBinding.dart';
+import '../pages/welcomeScreens/welcomeHomeView.dart';
 import '../pages/home/homeBinding.dart';
 import '../pages/home/homeView.dart';
 import 'pageRoutes.dart';

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:to_do_app/app/pages/splashScreen/splashScreenBinding.dart';
-import 'package:to_do_app/core/theme/appTheme.dart';
+
+import 'app/pages/splashScreen/splashScreenBinding.dart';
 import 'app/routes/pageRoutes.dart';
 import 'app/routes/pages.dart';
 import 'core/network/baseNetworkService.dart';
+import 'core/theme/appTheme.dart';
 
 //TODO: Proje sonunda fix all import at
 void main() async {
