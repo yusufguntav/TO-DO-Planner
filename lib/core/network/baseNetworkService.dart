@@ -50,8 +50,8 @@ class BaseNetworkService extends GetxService {
 
   final GetConnect _connect = GetConnect();
 
-  final _protocolAndIp = 'http://154.62.109.18:3000';
-  // final _protocolAndIp = 'http://10.0.2.2:3000';
+  // final _protocolAndIp = 'http://154.62.109.18:3000';
+  final _protocolAndIp = 'http://10.0.2.2:3000';
 
   Future<RequestResponse?> sendPostRequest(String endpoint, Map<dynamic, dynamic> body, {Function? onSuccessFunc, bool showLoad = true}) async {
     await Get.closeCurrentSnackbar();
@@ -137,7 +137,7 @@ class BaseNetworkService extends GetxService {
       Get.dialog(
         AlertDialog(
           title: CustomText('Error'),
-          content: CustomText.high(response.body['error'].toString()),
+          content: CustomText.high((response.body['error'] ?? response.body['message']).toString()),
           actionsAlignment: MainAxisAlignment.center,
           actions: [
             CustomButton(buttonText: 'Ok', onPress: () => Get.back()),

@@ -50,31 +50,34 @@ class _SpecialListPageState extends State<SpecialListPage> with WidgetsBindingOb
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Stack(children: [
-          SizedBox(
-            height: StandartMeasurementUnits.highIconSize * 2,
-            child: CustomTitle(titleText: controller.selectedListModel.name?.toUpperCase() ?? '', titleColor: MainPages.planning.getPageColor),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              FloatingActionButton(
-                backgroundColor: MainPages.planning.getPageColor,
-                child: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  controller.changeSelectedPageIndex(PlanningPages.planningPage);
-                },
-              ),
-            ],
-          ),
-        ]),
-        SizedBox(height: StandartMeasurementUnits.highPadding),
-        content(),
-        inputFieldAndKeyboardControl()
-      ],
+    return WillPopScope(
+      onWillPop: () => controller.changeSelectedPageIndex(PlanningPages.planningPage),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Stack(children: [
+            SizedBox(
+              height: StandartMeasurementUnits.highIconSize * 2,
+              child: CustomTitle(titleText: controller.selectedListModel.name?.toUpperCase() ?? '', titleColor: MainPages.planning.getPageColor),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  backgroundColor: MainPages.planning.getPageColor,
+                  child: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    controller.changeSelectedPageIndex(PlanningPages.planningPage);
+                  },
+                ),
+              ],
+            ),
+          ]),
+          SizedBox(height: StandartMeasurementUnits.highPadding),
+          content(),
+          inputFieldAndKeyboardControl()
+        ],
+      ),
     );
   }
 
