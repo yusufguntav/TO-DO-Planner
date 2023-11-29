@@ -47,7 +47,6 @@ class _SignInPageState extends State<SignInPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                backButton(),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
                 CustomTextFormField(
                   controller: controller.getControllers[SignInFields.email],
@@ -86,18 +85,6 @@ class _SignInPageState extends State<SignInPage> {
         }
       },
       buttonText: 'Sign In',
-    );
-  }
-
-  Row backButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        FloatingActionButton(
-          onPressed: () => Get.find<WelcomeHomeController>().changeSelectedPageIndex(WelcomePages.welcomePage),
-          child: const Icon(Icons.arrow_back),
-        ),
-      ],
     );
   }
 }

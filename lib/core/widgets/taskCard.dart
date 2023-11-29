@@ -39,7 +39,12 @@ class TaskCard extends StatelessWidget {
                   child: Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: StandartMeasurementUnits.lowPadding),
-                      child: CustomText(task.task, centerText: true, textOverflow: TextOverflow.ellipsis),
+                      child: CustomText(
+                        task.task,
+                        centerText: true,
+                        textOverflow: TextOverflow.ellipsis,
+                        lineThrough: task.successStatus == SuccessStatus.successful ? true : false,
+                      ),
                     ),
                   ),
                 ),

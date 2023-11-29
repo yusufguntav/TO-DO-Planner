@@ -31,7 +31,7 @@ class StandartMeasurementUnits {
   static double get extraHighIconSize => Get.height * 0.04;
 
   //Menu Buttons
-  static double get menuButtonSize => Get.height * 0.07;
+  static double get menuButtonSize => Get.height * 0.075;
 
   //Task card height
   static double get taskCardHeight => Get.height * 0.07;

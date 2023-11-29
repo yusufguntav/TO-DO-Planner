@@ -47,7 +47,6 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                backButton(),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
                 CustomTextFormField(
                   isValidController: controller.isValidDisplayName,
@@ -91,18 +90,6 @@ class _SignUpPageState extends State<SignUpPage> {
         }
       },
       buttonText: 'Sign Up',
-    );
-  }
-
-  Row backButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        FloatingActionButton(
-          onPressed: () => Get.find<WelcomeHomeController>().changeSelectedPageIndex(WelcomePages.welcomePage),
-          child: const Icon(Icons.arrow_back),
-        ),
-      ],
     );
   }
 }

@@ -4,28 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:reorderables/reorderables.dart';
-import 'package:to_do_app/app/pages/planningPage/planningPageController.dart';
-import 'package:to_do_app/core/widgets/texts/customTextFormField.dart';
 
 import '../../../../../core/variables/enums.dart';
 import '../../../../../core/variables/standartMeasurementUnits.dart';
 import '../../../../../core/widgets/taskCard.dart';
+import '../../../../../core/widgets/texts/customTextFormField.dart';
 import '../../../../../core/widgets/texts/title.dart';
+import '../../planningPageController.dart';
 
-class SpecialListPage extends StatefulWidget {
-  const SpecialListPage({super.key});
+class RoutinePage extends StatefulWidget {
+  const RoutinePage({super.key});
 
   @override
-  State<SpecialListPage> createState() => _SpecialListPageState();
+  State<RoutinePage> createState() => _RoutinePageState();
 }
 
-class _SpecialListPageState extends State<SpecialListPage> with WidgetsBindingObserver {
+class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
   AppLifecycleState? _appLifecycleState;
   PlanningPageController controller = Get.find<PlanningPageController>();
   @override
   void initState() {
     super.initState();
-    controller.getTasksToVariable();
+    controller.getTasksToVariable(isForRoutine: true);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -35,7 +35,7 @@ class _SpecialListPageState extends State<SpecialListPage> with WidgetsBindingOb
     Future.delayed(Duration.zero, () async {
       await controller.updateTasksOrder();
       await controller.deleteTasksFromDB();
-      controller.selectedListModel = null;
+      controller.selectedRoutine = null;
     });
     super.dispose();
   }
@@ -59,13 +59,12 @@ class _SpecialListPageState extends State<SpecialListPage> with WidgetsBindingOb
           Stack(children: [
             SizedBox(
               height: StandartMeasurementUnits.highIconSize * 2,
-              child: CustomTitle(titleText: controller.selectedListModel?.name?.toUpperCase() ?? '', titleColor: MainPages.planning.getPageColor),
+              child: CustomTitle(titleText: controller.selectedRoutine?.name?.toUpperCase() ?? '', titleColor: MainPages.planning.getPageColor),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 FloatingActionButton(
-                  elevation: 3,
                   backgroundColor: MainPages.planning.getPageColor,
                   child: const Icon(Icons.arrow_back),
                   onPressed: () {

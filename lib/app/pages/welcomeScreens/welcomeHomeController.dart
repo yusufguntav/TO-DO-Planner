@@ -24,7 +24,7 @@ enum WelcomePages {
 }
 
 class WelcomeHomeController extends GetxController {
-  final Rx<int> _selectedPage = WelcomePages.welcomePage.getPageNumber.obs;
+  final Rx<int> selectedPage = WelcomePages.welcomePage.getPageNumber.obs;
   final dynamic _pageViews = [
     const WelcomPageView(),
     const SignInPage(),
@@ -32,10 +32,10 @@ class WelcomeHomeController extends GetxController {
   ];
 
   Widget getPage() {
-    return _pageViews[_selectedPage.value];
+    return _pageViews[selectedPage.value];
   }
 
   changeSelectedPageIndex(WelcomePages page) {
-    _selectedPage.value = page.getPageNumber;
+    selectedPage.value = page.getPageNumber;
   }
 }

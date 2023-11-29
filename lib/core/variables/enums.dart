@@ -47,10 +47,13 @@ enum Endpoints {
   deleteSpecialList,
   getTasksByDate,
   getTasksForSpecialList,
+  getTasksForRoutine,
   addTask,
   deleteTask,
   updateTaskOrder,
-  updateSpecialListTaskOrder;
+  updateSpecialListTaskOrder,
+  createRoutine,
+  getRoutines;
 
   String get path {
     switch (this) {
@@ -82,10 +85,16 @@ enum Endpoints {
         return '/task/deleteTask/';
       case Endpoints.updateTaskOrder:
         return '/task/updateOrder/';
+      case Endpoints.getTasksForRoutine:
+        return '/task/getTasksForRoutine/';
       case Endpoints.getTasksForSpecialList:
         return '/task/getTasksForSpecialList/';
       case Endpoints.updateSpecialListTaskOrder:
-        return 'task/updateSpecialListTaskOrder/';
+        return '/task/updateSpecialListTaskOrder/';
+      case Endpoints.createRoutine:
+        return '/routine/addRoutine/';
+      case Endpoints.getRoutines:
+        return '/routine/getRoutines/';
     }
   }
 }
@@ -97,7 +106,29 @@ enum WeekDay {
   thursday,
   friday,
   saturday,
-  sunday;
+  sunday,
+  daily;
+
+  int get dayNumber {
+    switch (this) {
+      case WeekDay.daily:
+        return 0;
+      case WeekDay.monday:
+        return 1;
+      case WeekDay.tuesday:
+        return 2;
+      case WeekDay.wednesday:
+        return 3;
+      case WeekDay.thursday:
+        return 4;
+      case WeekDay.friday:
+        return 5;
+      case WeekDay.saturday:
+        return 6;
+      case WeekDay.sunday:
+        return 7;
+    }
+  }
 
   String get getDayAsString {
     switch (this) {
@@ -115,6 +146,8 @@ enum WeekDay {
         return "Saturday";
       case WeekDay.sunday:
         return "Sunday";
+      case WeekDay.daily:
+        return "Daily";
     }
   }
 }

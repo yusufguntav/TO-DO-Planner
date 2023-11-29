@@ -41,6 +41,7 @@ class MenuButtonView extends GetView<MenuButtonController> {
         height: StandartMeasurementUnits.menuButtonSize,
         width: StandartMeasurementUnits.menuButtonSize,
         child: FloatingActionButton(
+          elevation: 4,
           backgroundColor: menutButtonModel.color,
           heroTag: menutButtonModel.herotag,
           onPressed: () {

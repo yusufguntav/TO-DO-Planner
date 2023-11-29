@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:to_do_app/app/pages/planningPage/components/routinePage/routinePage.dart';
 import 'package:to_do_app/app/pages/planningPage/components/specialListPage/specialListPage.dart';
 import 'package:to_do_app/app/pages/planningPage/planningPageService.dart';
 import 'package:to_do_app/app/pages/planningPage/planningPageView.dart';
@@ -19,7 +20,8 @@ enum FormKeys {
   editCategory,
   addCategory,
   addSpecialList,
-  editSpecialList;
+  editSpecialList,
+  addRoutine;
 }
 
 enum FormFields {
@@ -31,11 +33,13 @@ enum FormFields {
   addSpecialListEndDate,
   editSpecialListName,
   editSpecialListEndDate,
+  addRoutineName, //TODO Buraya bir göz at
 }
 
 enum PlanningPages {
   planningPage,
-  specialListPage;
+  specialListPage,
+  routinePage;
 
   int get getPageNumber {
     switch (this) {
@@ -43,13 +47,39 @@ enum PlanningPages {
         return 0;
       case PlanningPages.specialListPage:
         return 1;
+      case PlanningPages.routinePage:
+        return 2;
     }
   }
 }
 
 class PlanningPageController extends GetxController {
+  //Weekday select control
+  final List<WeekDay> weekdays = [
+    WeekDay.monday,
+    WeekDay.tuesday,
+    WeekDay.wednesday,
+    WeekDay.thursday,
+    WeekDay.friday,
+    WeekDay.saturday,
+    WeekDay.sunday,
+  ];
+
+  Map<WeekDay, Rx<bool>> weekdaySelectControl = {
+    WeekDay.monday: false.obs,
+    WeekDay.tuesday: false.obs,
+    WeekDay.wednesday: false.obs,
+    WeekDay.thursday: false.obs,
+    WeekDay.friday: false.obs,
+    WeekDay.saturday: false.obs,
+    WeekDay.sunday: false.obs,
+    WeekDay.daily: false.obs,
+  };
+  // Routine
+  RxList<RoutineModel> routines = <RoutineModel>[].obs;
+  RoutineModel? selectedRoutine;
   // Task
-  late SpecialListModel selectedListModel;
+  SpecialListModel? selectedListModel;
   //ScrollController for task list
   final ScrollController _scrollController = ScrollController();
   ScrollController get scrollController => _scrollController;
@@ -79,11 +109,12 @@ class PlanningPageController extends GetxController {
   final List _pageViews = [
     const PlanningPageView(),
     const SpecialListPage(),
+    const RoutinePage(),
   ];
 
   Future addTask(String task) async {
     errorHandler(tryMethod: () async {
-      TaskModel newTask = TaskModel.fromJson((await _planningService.addTask(task, selectedListModel.id ?? ''))!.body['task']);
+      TaskModel newTask = TaskModel.fromJson((await _planningService.addTask(task, selectedListModel, selectedRoutine))?.body['task']);
       TaskModel.addTaskForLocale(tasks, TaskModel(id: newTask.id, task: newTask.task, successStatus: SuccessStatus.neutral));
       addedNewTask = true;
       _tasks.refresh();
@@ -96,7 +127,7 @@ class PlanningPageController extends GetxController {
       for (TaskModel task in tasks) {
         updateTaskOrderList.add(task.toJson());
       }
-      await _planningService.updateTaskOrder(updateTaskOrderList, selectedListModel.id ?? '');
+      await _planningService.updateTaskOrder(updateTaskOrderList, selectedListModel?.id ?? '');
     });
   }
 
@@ -122,26 +153,32 @@ class PlanningPageController extends GetxController {
   }
 
   Future<RequestResponse?> getTasks({
+    bool isForRoutine = false,
     bool showLoad = true,
   }) async {
-    return await errorHandler(tryMethod: () async {
-      {
-        RequestResponse? requestResponse = await _planningService.getTasks(selectedListModel, showLoad);
-        if (requestResponse != null) {
-          if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
-            return requestResponse;
+    return await errorHandler(
+      tryMethod: () async {
+        {
+          RequestResponse? requestResponse =
+              // = isForRoutine
+              // ? await _planningService.getRoutineTasks(selectedRoutine, showLoad)
+              await _planningService.getTasks(selectedListModel, showLoad);
+          if (requestResponse != null) {
+            if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
+              return requestResponse;
+            }
           }
         }
-      }
-      return null;
-    });
+        return null;
+      },
+    );
   }
 
-  Future getTasksToVariable({showLoad = true}) async {
+  Future getTasksToVariable({showLoad = true, isForRoutine = false}) async {
     await errorHandler(tryMethod: () async {
       tasks.clear();
-      if (await getTasks(showLoad: showLoad) != null) {
-        dynamic json = jsonDecode((await getTasks(showLoad: showLoad))!.body)['tasks'];
+      if (await getTasks(showLoad: showLoad, isForRoutine: isForRoutine) != null) {
+        dynamic json = jsonDecode((await getTasks(isForRoutine: isForRoutine, showLoad: showLoad))!.body)['tasks'];
         for (var i = 0; i < json.length; i++) {
           tasks.add(TaskModel.fromJson(json[i]));
         }
@@ -190,6 +227,7 @@ class PlanningPageController extends GetxController {
     FormKeys.addCategory: GlobalKey<FormState>(),
     FormKeys.addSpecialList: GlobalKey<FormState>(),
     FormKeys.editSpecialList: GlobalKey<FormState>(),
+    FormKeys.addRoutine: GlobalKey<FormState>(),
   };
   Map<FormKeys, GlobalKey<FormState>> get formKeys => _formKeys;
 
@@ -203,18 +241,16 @@ class PlanningPageController extends GetxController {
     FormFields.addCategoryName: TextEditingController(text: 'TestKategori'),
     FormFields.addSpecialListEndDate: TextEditingController(),
     FormFields.addCategoryDescription: TextEditingController(text: 'Description'),
+    FormFields.addRoutineName: TextEditingController(),
   };
   Map<FormFields, TextEditingController> get formControlers => _formControlers;
-
-  //Category control
-  final RxList<RoutineModel> routines = <RoutineModel>[].obs;
 
   //Special List control
   final RxList<SpecialListModel> specialLists = <SpecialListModel>[].obs;
 
   isValidName(String? val) {
     if ((val ?? '').isEmpty) {
-      return 'Name field can\'t be empty';
+      return 'This field can\'t be empty';
     }
   }
 
@@ -224,8 +260,52 @@ class PlanningPageController extends GetxController {
   @override
   void onInit() async {
     _planningService = Get.find<PlanningPageService>();
+    await getRoutinesToVariable();
     await addSpecialListsToVariable();
+
     super.onInit();
+  }
+
+//Routine Request Functions
+
+  Future getRoutinesToVariable() async {
+    dynamic routinesFromDB = await getRoutines();
+    if (routinesFromDB != null) {
+      specialLists.clear();
+      dynamic json = jsonDecode((await routinesFromDB).body);
+      for (var i = 0; i < json.length; i++) {
+        routines.add(
+          RoutineModel(id: json[i]['_id'] ?? '', name: json[i]['name'] ?? ''),
+        );
+      }
+      routines.refresh();
+    }
+  }
+
+  Future addRoutine(String name, List<int> days) async {
+    errorHandler(
+      tryMethod: () => _planningService.createRoutine(
+        name,
+        days,
+        () async {
+          Get.back();
+          //TODO
+          // await addSpecialListsToVariable();
+        },
+      ),
+    );
+  }
+
+  Future<RequestResponse?> getRoutines() async {
+    return errorHandler(tryMethod: () async {
+      RequestResponse? requestResponse = await _planningService.getRoutines();
+      if (requestResponse != null) {
+        if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
+          return requestResponse;
+        }
+      }
+      return null;
+    });
   }
 
 // Special List request functions
@@ -255,7 +335,8 @@ class PlanningPageController extends GetxController {
   }
 
   Future addSpecialListsToVariable() async {
-    if (await getSpecialListReq() != null) {
+    dynamic specialListsFromDB = await getSpecialListReq();
+    if (specialListsFromDB != null) {
       specialLists.clear();
       dynamic json = jsonDecode((await getSpecialListReq())!.body);
       for (var i = 0; i < json.length; i++) {

@@ -14,43 +14,57 @@ class CustomButtonCard extends StatelessWidget {
   final Function()? onTapFunction;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: topPadding ?? 0),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(StandartMeasurementUnits.extraHighRadius),
-          border: Border.all(color: borderColor),
-        ),
-        child: SizedBox(
-          height: StandartMeasurementUnits.taskCardHeight,
-          child: Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: InkWell(
-                  borderRadius: editButtonFunc != null
-                      ? const BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20))
-                      : BorderRadius.circular(20),
-                  onTap: onTapFunction,
-                  child: Center(child: title != null ? CustomText(title) : const Icon(Icons.add, color: Colors.black87)),
-                ),
-              ),
-              if (editButtonFunc != null)
+    return Material(
+      elevation: 2,
+      borderRadius: BorderRadius.circular(StandartMeasurementUnits.extraHighRadius),
+      child: Padding(
+        padding: EdgeInsets.only(top: topPadding ?? 0),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(StandartMeasurementUnits.extraHighRadius),
+            border: Border.all(color: borderColor),
+          ),
+          child: SizedBox(
+            height: StandartMeasurementUnits.taskCardHeight,
+            child: Row(
+              children: [
                 Expanded(
-                  child: Center(
-                    child: InkWell(
-                      borderRadius: const BorderRadius.only(bottomRight: Radius.circular(20), topRight: Radius.circular(20)),
-                      onTap: editButtonFunc,
-                      child: Row(
-                        children: [
-                          VerticalDivider(thickness: 1, color: borderColor),
-                          Icon(Icons.edit, color: borderColor),
-                        ],
+                  flex: 2,
+                  child: InkWell(
+                    borderRadius: editButtonFunc != null
+                        ? const BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20))
+                        : BorderRadius.circular(20),
+                    onTap: onTapFunction,
+                    child: Center(
+                        child: title != null
+                            ? Padding(
+                                padding: EdgeInsets.all(StandartMeasurementUnits.lowPadding),
+                                child: CustomText(
+                                  title,
+                                  centerText: true,
+                                  textOverflow: TextOverflow.ellipsis,
+                                ),
+                              )
+                            : const Icon(Icons.add, color: Colors.black87)),
+                  ),
+                ),
+                if (editButtonFunc != null)
+                  Expanded(
+                    child: Center(
+                      child: InkWell(
+                        borderRadius: const BorderRadius.only(bottomRight: Radius.circular(20), topRight: Radius.circular(20)),
+                        onTap: editButtonFunc,
+                        child: Row(
+                          children: [
+                            VerticalDivider(thickness: 1, color: borderColor),
+                            Icon(Icons.edit, color: borderColor),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                )
-            ],
+                  )
+              ],
+            ),
           ),
         ),
       ),
