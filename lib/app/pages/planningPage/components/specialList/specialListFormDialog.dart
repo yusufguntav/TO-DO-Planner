@@ -14,27 +14,32 @@ import '../../../../../core/variables/standartMeasurementUnits.dart';
 import '../../../../../core/widgets/dialogs/customDialog.dart';
 import '../../planningPageController.dart';
 
-class EditSpecialListFormPage extends GetView<PlanningPageController> {
-  const EditSpecialListFormPage({super.key, required this.specialListModel});
-  final SpecialListModel specialListModel;
+class SpecialListFormPage extends GetView<PlanningPageController> {
+  const SpecialListFormPage({super.key, this.specialListModel, this.isEditPage = false});
+  final SpecialListModel? specialListModel;
+  final bool isEditPage;
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
       closeButtonColor: MainPages.planning.getPageColor,
       showCloseButton: true,
-      deleteButtonFunction: () {
-        Get.dialog(AreYourSure(
-          backgroundColor: MainPages.planning.getPageColor,
-          deleteFunc: () async {
-            await Get.closeCurrentSnackbar();
-            await controller.deleteSpecialList(specialListModel.id!);
-          },
-        ));
-      },
+      deleteButtonFunction: isEditPage
+          ? () {
+              Get.dialog(
+                AreYourSure(
+                  backgroundColor: MainPages.planning.getPageColor,
+                  deleteFunc: () async {
+                    await Get.closeCurrentSnackbar();
+                    await controller.deleteSpecialList(specialListModel?.id ?? '');
+                  },
+                ),
+              );
+            }
+          : null,
       content: Padding(
         padding: EdgeInsets.all(StandartMeasurementUnits.normalPadding),
         child: Form(
-          key: controller.formKeys[FormKeys.editSpecialList],
+          key: controller.formKeys[FormKeys.specialList],
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -54,9 +59,10 @@ class EditSpecialListFormPage extends GetView<PlanningPageController> {
 
   CustomTextFormField nameField() {
     return CustomTextFormField(
-      controller: (controller.formControlers[FormFields.editSpecialListName] ?? TextEditingController())..text = specialListModel.name!,
+      controller: (controller.formControlers[FormFields.specialListName] ?? TextEditingController())..text = specialListModel?.name ?? '',
       color: MainPages.planning.getPageColor,
       label: 'Special List Name',
+      isValidController: controller.isValidName,
       required: true,
     );
   }
@@ -64,12 +70,15 @@ class EditSpecialListFormPage extends GetView<PlanningPageController> {
   CustomButton saveButton() {
     return CustomButton(
       onPress: () async {
-        if (controller.formKeys[FormKeys.editSpecialList]!.currentState!.validate()) {
-          await controller.updateSpecialList((controller.formControlers[FormFields.editSpecialListName] ?? TextEditingController()).text,
-              specialListModel.id!, controller.formControlers[FormFields.editSpecialListEndDate]?.text ?? formatDate(DateTime.now()));
+        if (controller.formKeys[FormKeys.specialList]!.currentState!.validate()) {
+          isEditPage
+              ? await controller.updateSpecialList((controller.formControlers[FormFields.specialListName] ?? TextEditingController()).text,
+                  specialListModel?.id ?? '', controller.formControlers[FormFields.specialListEndDate]?.text ?? formatDate(DateTime.now()))
+              : controller.addSpecialList((controller.formControlers[FormFields.specialListName] ?? TextEditingController()).text,
+                  controller.formControlers[FormFields.specialListEndDate]?.text ?? DateTime.now().toString().split(' ')[0]);
         }
       },
-      buttonText: 'Save',
+      buttonText: isEditPage ? 'Save' : 'Add Special List',
       backgroundColor: MainPages.planning.getPageColor,
     );
   }
@@ -84,16 +93,14 @@ class EditSpecialListFormPage extends GetView<PlanningPageController> {
               color: MainPages.planning.getPageColor,
               onCancel: () => Get.back(),
               onSubmit: (val) {
-                if (val != null) controller.formControlers[FormFields.editSpecialListEndDate]?.text = val.toString().split(' ')[0];
+                if (val != null) controller.formControlers[FormFields.specialListEndDate]?.text = val.toString().split(' ')[0];
                 Get.back();
               },
             ),
           ),
         );
       },
-      // isValidController: controller.isValidName,
-      //TODO Düzenlemeyi unutma
-      controller: controller.formControlers[FormFields.editSpecialListEndDate],
+      controller: controller.formControlers[FormFields.specialListEndDate],
       color: MainPages.planning.getPageColor,
       label: 'End Date',
     );

@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/planningPage/components/routinePage/routinePage.dart';
-import 'package:to_do_app/app/pages/planningPage/components/specialListPage/specialListPage.dart';
+import 'package:to_do_app/app/pages/planningPage/components/specialList/specialListPage.dart';
 import 'package:to_do_app/app/pages/planningPage/planningPageService.dart';
 import 'package:to_do_app/app/pages/planningPage/planningPageView.dart';
 import 'package:to_do_app/core/models/routines.dart';
@@ -17,22 +17,13 @@ import '../../../core/network/networkModels/requestResponse.dart';
 import '../../../core/variables/enums.dart';
 
 enum FormKeys {
-  editCategory,
-  addCategory,
-  addSpecialList,
-  editSpecialList,
+  specialList,
   addRoutine;
 }
 
 enum FormFields {
-  editCategoryName,
-  addCategoryName,
-  editCategoryDescription,
-  addCategoryDescription,
-  addSpecialListName,
-  addSpecialListEndDate,
-  editSpecialListName,
-  editSpecialListEndDate,
+  specialListName,
+  specialListEndDate,
   addRoutineName, //TODO Buraya bir göz at
 }
 
@@ -223,24 +214,15 @@ class PlanningPageController extends GetxController {
 
   //Form Keys
   final Map<FormKeys, GlobalKey<FormState>> _formKeys = {
-    FormKeys.editCategory: GlobalKey<FormState>(),
-    FormKeys.addCategory: GlobalKey<FormState>(),
-    FormKeys.addSpecialList: GlobalKey<FormState>(),
-    FormKeys.editSpecialList: GlobalKey<FormState>(),
+    FormKeys.specialList: GlobalKey<FormState>(),
     FormKeys.addRoutine: GlobalKey<FormState>(),
   };
   Map<FormKeys, GlobalKey<FormState>> get formKeys => _formKeys;
 
   // Form Controllers
   final Map<FormFields, TextEditingController> _formControlers = {
-    FormFields.addSpecialListName: TextEditingController(),
-    FormFields.editSpecialListName: TextEditingController(),
-    FormFields.editCategoryName: TextEditingController(),
-    FormFields.editCategoryDescription: TextEditingController(),
-    FormFields.editSpecialListEndDate: TextEditingController(),
-    FormFields.addCategoryName: TextEditingController(text: 'TestKategori'),
-    FormFields.addSpecialListEndDate: TextEditingController(),
-    FormFields.addCategoryDescription: TextEditingController(text: 'Description'),
+    FormFields.specialListName: TextEditingController(),
+    FormFields.specialListEndDate: TextEditingController(),
     FormFields.addRoutineName: TextEditingController(),
   };
   Map<FormFields, TextEditingController> get formControlers => _formControlers;
@@ -271,7 +253,7 @@ class PlanningPageController extends GetxController {
   Future getRoutinesToVariable() async {
     dynamic routinesFromDB = await getRoutines();
     if (routinesFromDB != null) {
-      specialLists.clear();
+      routines.clear();
       dynamic json = jsonDecode((await routinesFromDB).body);
       for (var i = 0; i < json.length; i++) {
         routines.add(

@@ -25,7 +25,7 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    controller.getTasksToVariable(isForRoutine: true);
+    // controller.getTasksToVariable(isForRoutine: true);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -33,8 +33,8 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     Future.delayed(Duration.zero, () async {
-      await controller.updateTasksOrder();
-      await controller.deleteTasksFromDB();
+      // await controller.updateTasksOrder();
+      // await controller.deleteTasksFromDB();
       controller.selectedRoutine = null;
     });
     super.dispose();
@@ -44,8 +44,8 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (_appLifecycleState != AppLifecycleState.resumed) {
-      await controller.deleteTasksFromDB();
-      await controller.updateTasksOrder();
+      // await controller.deleteTasksFromDB();
+      // await controller.updateTasksOrder();
     }
   }
 

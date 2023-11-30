@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:to_do_app/core/variables/colorTable.dart';
+import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
 
 import '../../utils/customColorSelectionHandle.dart';
 import 'customText.dart';
@@ -40,41 +41,41 @@ class CustomTextFormField extends StatelessWidget {
         decoration: InputDecoration(
           label: CustomText(required ? '$label*' : label),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
+            borderRadius: BorderRadius.circular(StandartMeasurementUnits.normalRadius),
             borderSide: BorderSide(
               color: color,
             ),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
+            borderRadius: BorderRadius.circular(StandartMeasurementUnits.normalRadius),
             borderSide: BorderSide(
               color: color,
               width: 2.0,
             ),
           ),
           disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
+            borderRadius: BorderRadius.circular(StandartMeasurementUnits.normalRadius),
             borderSide: BorderSide(
               color: color,
               width: 2.0,
             ),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
+            borderRadius: BorderRadius.circular(StandartMeasurementUnits.normalRadius),
             borderSide: BorderSide(
               color: ColorTable.getNegativeColor,
               width: 2.0,
             ),
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
+            borderRadius: BorderRadius.circular(StandartMeasurementUnits.normalRadius),
             borderSide: BorderSide(
               color: ColorTable.getNegativeColor,
               width: 2.0,
             ),
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
+            borderRadius: BorderRadius.circular(StandartMeasurementUnits.normalRadius),
             borderSide: BorderSide(
               color: color,
               width: 2.0,

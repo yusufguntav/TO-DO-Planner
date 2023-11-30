@@ -32,20 +32,24 @@ class CreateRoutineDialog extends GetView<PlanningPageController> {
                 SizedBox(height: StandartMeasurementUnits.normalPadding),
                 Obx(() => customCheckTile(WeekDay.daily)),
                 Divider(color: MainPages.planning.getPageColor, thickness: 0.7),
-                SizedBox(
-                  height: Get.height * .3,
-                  width: Get.width,
-                  child: ListView.builder(
-                    itemCount: controller.weekdays.length,
-                    itemBuilder: (context, index) => Obx(
-                      () => customCheckTile(controller.weekdays[index]),
-                    ),
-                  ),
-                ),
+                checkBoxes(),
                 addButton(),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  SizedBox checkBoxes() {
+    return SizedBox(
+      height: Get.height * .3,
+      width: Get.width,
+      child: ListView.builder(
+        itemCount: controller.weekdays.length,
+        itemBuilder: (context, index) => Obx(
+          () => customCheckTile(controller.weekdays[index]),
         ),
       ),
     );

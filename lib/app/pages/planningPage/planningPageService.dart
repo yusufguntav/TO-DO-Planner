@@ -1,5 +1,3 @@
-// ignore_for_file: file_names
-
 import 'package:get/get.dart';
 import 'package:to_do_app/core/models/routines.dart';
 import 'package:to_do_app/core/models/specialList.dart';

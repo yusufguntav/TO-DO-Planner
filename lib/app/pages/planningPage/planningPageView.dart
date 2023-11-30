@@ -1,10 +1,7 @@
-// ignore_for_file: file_names, invalid_use_of_protected_member
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/app/pages/planningPage/components/routinePage/createRoutineDialog.dart';
-import 'package:to_do_app/app/pages/planningPage/components/specialListFormDialogs/addSpecialListFormDialog.dart';
-import 'package:to_do_app/app/pages/planningPage/components/specialListFormDialogs/editSpecialListFormDialog.dart';
+import 'package:to_do_app/app/pages/planningPage/components/specialList/specialListFormDialog.dart';
 import 'package:to_do_app/app/pages/planningPage/planningPageController.dart';
 import 'package:to_do_app/core/variables/enums.dart';
 import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
@@ -130,8 +127,8 @@ class _PlanningPageViewState extends State<PlanningPageView> {
             controller.changeSelectedPageIndex(PlanningPages.specialListPage);
           },
           editButtonFunc: () {
-            controller.formControlers[FormFields.editSpecialListEndDate]!.text = specialList.date ?? '';
-            Get.dialog(EditSpecialListFormPage(specialListModel: specialList));
+            controller.formControlers[FormFields.specialListEndDate]!.text = specialList.date ?? '';
+            Get.dialog(SpecialListFormPage(specialListModel: specialList, isEditPage: true));
           },
         ),
       );
@@ -140,7 +137,7 @@ class _PlanningPageViewState extends State<PlanningPageView> {
       CustomButtonCard(
         borderColor: MainPages.planning.getPageColor,
         onTapFunction: () {
-          Get.dialog(const AddSpecialListFormPage());
+          Get.dialog(SpecialListFormPage());
         },
       ),
     );
