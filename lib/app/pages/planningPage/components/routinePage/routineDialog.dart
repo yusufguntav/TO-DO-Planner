@@ -11,8 +11,10 @@ import '../../../../../core/widgets/buttons/customButton.dart';
 import '../../../../../core/widgets/dialogs/customDialog.dart';
 import '../../../../../core/widgets/texts/customTextFormField.dart';
 
-class CreateRoutineDialog extends GetView<PlanningPageController> {
-  const CreateRoutineDialog({super.key});
+class RoutineDialog extends GetView<PlanningPageController> {
+  const RoutineDialog({super.key, this.isEditPage = false});
+  final bool isEditPage;
+
   @override
   Widget build(BuildContext context) {
     return CustomDialog(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:to_do_app/app/pages/planningPage/components/routinePage/createRoutineDialog.dart';
 import 'package:to_do_app/app/pages/planningPage/components/specialList/specialListFormDialog.dart';
 import 'package:to_do_app/app/pages/planningPage/planningPageController.dart';
 import 'package:to_do_app/core/variables/enums.dart';
@@ -11,6 +10,8 @@ import 'package:to_do_app/core/widgets/customTileButtonGrill.dart';
 import 'package:to_do_app/core/widgets/dateCircle.dart';
 import 'package:to_do_app/core/widgets/texts/customText.dart';
 import 'package:to_do_app/core/widgets/texts/title.dart';
+
+import 'components/routinePage/routineDialog.dart';
 
 class PlanningPageView extends StatefulWidget {
   const PlanningPageView({super.key});
@@ -108,7 +109,7 @@ class _PlanningPageViewState extends State<PlanningPageView> {
       CustomButtonCard(
         borderColor: MainPages.planning.getPageColor,
         onTapFunction: () {
-          Get.dialog(const CreateRoutineDialog());
+          Get.dialog(const RoutineDialog());
         },
       ),
     );
@@ -127,8 +128,9 @@ class _PlanningPageViewState extends State<PlanningPageView> {
             controller.changeSelectedPageIndex(PlanningPages.specialListPage);
           },
           editButtonFunc: () {
+            controller.selectedListModel = specialList;
             controller.formControlers[FormFields.specialListEndDate]!.text = specialList.date ?? '';
-            Get.dialog(SpecialListFormPage(specialListModel: specialList, isEditPage: true));
+            Get.dialog(SpecialListFormPage(isEditPage: true));
           },
         ),
       );
