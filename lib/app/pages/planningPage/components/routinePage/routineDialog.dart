@@ -20,6 +20,14 @@ class RoutineDialog extends GetView<PlanningPageController> {
     return CustomDialog(
       closeButtonColor: MainPages.planning.getPageColor,
       showCloseButton: true,
+      closeButtonFunction: () {
+        // Set all weekday value to false
+        controller.weekdaySelectControl.values.forEach((e) => e.value = false);
+
+        // Clear selectedRoutine
+        controller.formControlers[FormFields.addRoutineName]?.clear();
+        controller.selectedRoutine = null;
+      },
       content: Padding(
         padding: EdgeInsets.all(StandartMeasurementUnits.normalPadding),
         child: Form(
@@ -35,6 +43,7 @@ class RoutineDialog extends GetView<PlanningPageController> {
                 Obx(() => customCheckTile(WeekDay.daily)),
                 Divider(color: MainPages.planning.getPageColor, thickness: 0.7),
                 checkBoxes(),
+                //TODO Save button
                 addButton(),
               ],
             ),
@@ -105,7 +114,7 @@ class RoutineDialog extends GetView<PlanningPageController> {
           controller.addRoutine(controller.formControlers[FormFields.addRoutineName]?.text ?? '', selectedDays);
         }
       },
-      buttonText: 'Add Routine',
+      buttonText: isEditPage ? 'Save' : 'Add Routine',
       backgroundColor: MainPages.planning.getPageColor,
     );
   }

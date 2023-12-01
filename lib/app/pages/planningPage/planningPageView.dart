@@ -99,8 +99,9 @@ class _PlanningPageViewState extends State<PlanningPageView> {
             // controller.changeSelectedPageIndex(PlanningPages.specialListPage);
           },
           editButtonFunc: () {
-            // controller.formControlers[FormFields.editSpecialListEndDate]!.text = specialList.date ?? '';
-            // Get.dialog(EditSpecialListFormPage(specialListModel: specialList));
+            controller.selectedRoutine = routine;
+            controller.formControlers[FormFields.addRoutineName]!.text = routine.name ?? '';
+            Get.dialog(RoutineDialog(isEditPage: true));
           },
         ),
       );

@@ -8,10 +8,18 @@ import '../../variables/standartMeasurementUnits.dart';
 
 class CustomDialog extends StatelessWidget {
   const CustomDialog(
-      {super.key, required this.content, this.showCloseButton = false, this.actions, this.closeButtonColor, this.deleteButtonFunction});
+      {super.key,
+      required this.content,
+      this.showCloseButton = false,
+      this.actions,
+      this.closeButtonFunction,
+      this.closeButtonColor,
+      this.deleteButtonFunction});
   final List<Widget>? actions;
   final bool showCloseButton;
   final Function? deleteButtonFunction;
+  final Function? closeButtonFunction;
+
   final Color? closeButtonColor;
   final Widget? content;
   @override
@@ -29,12 +37,15 @@ class CustomDialog extends StatelessWidget {
                     IconButton(
                       color: ColorTable.getNegativeColor,
                       icon: const Icon(Icons.delete),
-                      onPressed: () => deleteButtonFunction!.call(),
+                      onPressed: deleteButtonFunction != null ? deleteButtonFunction!() : null,
                     ),
                     IconButton(
                       color: closeButtonColor ?? ColorTable.getNegativeColor,
                       icon: const Icon(Icons.close),
-                      onPressed: () => Get.back(),
+                      onPressed: () {
+                        if (closeButtonFunction != null) closeButtonFunction!();
+                        Get.back();
+                      },
                     ),
                   ],
                 ))
@@ -44,7 +55,10 @@ class CustomDialog extends StatelessWidget {
                     child: IconButton(
                       color: closeButtonColor ?? ColorTable.getNegativeColor,
                       icon: const Icon(Icons.close),
-                      onPressed: () => Get.back(),
+                      onPressed: () {
+                        if (closeButtonFunction != null) closeButtonFunction!();
+                        Get.back();
+                      },
                     ),
                   )
                 : null,

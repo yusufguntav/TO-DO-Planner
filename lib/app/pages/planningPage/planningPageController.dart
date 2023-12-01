@@ -68,7 +68,21 @@ class PlanningPageController extends GetxController {
   };
   // Routine
   RxList<RoutineModel> routines = <RoutineModel>[].obs;
-  RoutineModel? selectedRoutine;
+
+  RoutineModel? _selectedRoutine;
+  RoutineModel? get selectedRoutine => _selectedRoutine;
+
+  set selectedRoutine(RoutineModel? routine) {
+    _selectedRoutine = routine;
+
+    // Set all selected day to true
+    if (_selectedRoutine != null) {
+      for (var selectedDay in _selectedRoutine!.selectedDays!) {
+        weekdaySelectControl[selectedDay]!.value = true;
+      }
+    }
+  }
+
   // Task
   SpecialListModel? selectedListModel;
   //ScrollController for task list
@@ -103,9 +117,10 @@ class PlanningPageController extends GetxController {
     const RoutinePage(),
   ];
 
+  //Task funcitons
   Future addTask(String task) async {
     errorHandler(tryMethod: () async {
-      TaskModel newTask = TaskModel.fromJson((await _planningService.addTask(task, selectedListModel, selectedRoutine))?.body['task']);
+      TaskModel newTask = TaskModel.fromJson((await _planningService.addTask(task, selectedListModel, _selectedRoutine))?.body['task']);
       TaskModel.addTaskForLocale(tasks, TaskModel(id: newTask.id, task: newTask.task, successStatus: SuccessStatus.neutral));
       addedNewTask = true;
       _tasks.refresh();
@@ -248,7 +263,29 @@ class PlanningPageController extends GetxController {
     super.onInit();
   }
 
-//Routine Request Functions
+  //Routine Request Functions
+  WeekDay _getWeekDayFromNumber(int dayNumber) {
+    switch (dayNumber) {
+      case 0:
+        return WeekDay.daily;
+      case 1:
+        return WeekDay.monday;
+      case 2:
+        return WeekDay.tuesday;
+      case 3:
+        return WeekDay.wednesday;
+      case 4:
+        return WeekDay.thursday;
+      case 5:
+        return WeekDay.friday;
+      case 6:
+        return WeekDay.saturday;
+      case 7:
+        return WeekDay.sunday;
+      default:
+        return WeekDay.daily;
+    }
+  }
 
   Future getRoutinesToVariable() async {
     dynamic routinesFromDB = await getRoutines();
@@ -256,8 +293,13 @@ class PlanningPageController extends GetxController {
       routines.clear();
       dynamic json = jsonDecode((await routinesFromDB).body);
       for (var i = 0; i < json.length; i++) {
+        dynamic selectedDays = json[i]['selectedDays'].map((selectedDay) => selectedDay['dayNumber']);
+        List<WeekDay> days = [];
+        for (var selectedDay in selectedDays) {
+          days.add(_getWeekDayFromNumber(int.parse(selectedDay)));
+        }
         routines.add(
-          RoutineModel(id: json[i]['_id'] ?? '', name: json[i]['name'] ?? ''),
+          RoutineModel(id: json[i]['_id'] ?? '', name: json[i]['name'] ?? '', selectedDays: days),
         );
       }
       routines.refresh();
@@ -271,8 +313,7 @@ class PlanningPageController extends GetxController {
         days,
         () async {
           Get.back();
-          //TODO
-          // await addSpecialListsToVariable();
+          await getRoutinesToVariable();
         },
       ),
     );
@@ -290,7 +331,7 @@ class PlanningPageController extends GetxController {
     });
   }
 
-// Special List request functions
+  // Special List request functions
   Future addSpecialList(String name, String endDate) async {
     errorHandler(
       tryMethod: () => _planningService.addSpecialList(

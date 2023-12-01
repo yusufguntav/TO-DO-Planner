@@ -31,7 +31,7 @@ class BaseNetworkService extends GetxService {
       (PageStates value) {
         switch (value) {
           case PageStates.busy:
-            Get.dialog(const CircularProgressWhileProcess(), barrierColor: Colors.white.withOpacity(0.6));
+            Get.dialog(const CircularProgressWhileProcess(), barrierColor: Colors.white.withOpacity(0.6), barrierDismissible: false);
             break;
           case PageStates.loaded:
             if (Get.isOverlaysOpen) Get.back();
