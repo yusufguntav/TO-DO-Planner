@@ -54,6 +54,7 @@ class PlanningPageController extends GetxController {
     WeekDay.friday,
     WeekDay.saturday,
     WeekDay.sunday,
+    WeekDay.daily,
   ];
 
   Map<WeekDay, Rx<bool>> weekdaySelectControl = {
@@ -71,6 +72,9 @@ class PlanningPageController extends GetxController {
 
   RoutineModel? _selectedRoutine;
   RoutineModel? get selectedRoutine => _selectedRoutine;
+
+  List<WeekDay> newDays = [];
+  List<WeekDay> removedDays = [];
 
   set selectedRoutine(RoutineModel? routine) {
     _selectedRoutine = routine;
@@ -287,6 +291,25 @@ class PlanningPageController extends GetxController {
     }
   }
 
+  Future updateRoutine(
+    String name,
+    String routineId,
+    List<int> removedDays,
+    List<int> newDays,
+  ) async {
+    errorHandler(tryMethod: () async {
+      await _planningService.updateRoutine(
+        name,
+        routineId,
+        removedDays,
+        newDays,
+        () async {
+          await getRoutinesToVariable();
+        },
+      );
+    });
+  }
+
   Future getRoutinesToVariable() async {
     dynamic routinesFromDB = await getRoutines();
     if (routinesFromDB != null) {
@@ -329,6 +352,24 @@ class PlanningPageController extends GetxController {
       }
       return null;
     });
+  }
+
+  Future deleteRoutine(String id) async {
+    errorHandler(tryMethod: () async {
+      await _planningService.deleteRoutine(id, () async {
+        Get.back();
+        await getRoutinesToVariable();
+      });
+    });
+  }
+
+  clearSelects() {
+    // Set all weekday value to false
+    weekdaySelectControl.values.forEach((e) => e.value = false);
+
+    // Clear selectedRoutine
+    formControlers[FormFields.addRoutineName]?.clear();
+    selectedRoutine = null;
   }
 
   // Special List request functions

@@ -101,6 +101,12 @@ class _PlanningPageViewState extends State<PlanningPageView> {
           editButtonFunc: () {
             controller.selectedRoutine = routine;
             controller.formControlers[FormFields.addRoutineName]!.text = routine.name ?? '';
+            // If selectedDay contain daily check all checkbox
+            if ((routine.selectedDays?.map((e) => e.dayNumber) ?? []).contains(WeekDay.daily.dayNumber)) {
+              for (var i = 0; i < controller.weekdays.length - 1; i++) {
+                controller.weekdaySelectControl[controller.weekdays[i]]?.value = true;
+              }
+            }
             Get.dialog(RoutineDialog(isEditPage: true));
           },
         ),

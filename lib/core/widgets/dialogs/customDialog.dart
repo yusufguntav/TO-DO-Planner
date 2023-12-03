@@ -37,7 +37,9 @@ class CustomDialog extends StatelessWidget {
                     IconButton(
                       color: ColorTable.getNegativeColor,
                       icon: const Icon(Icons.delete),
-                      onPressed: deleteButtonFunction != null ? deleteButtonFunction!() : null,
+                      onPressed: () {
+                        if (deleteButtonFunction != null) deleteButtonFunction!();
+                      },
                     ),
                     IconButton(
                       color: closeButtonColor ?? ColorTable.getNegativeColor,

@@ -53,7 +53,9 @@ enum Endpoints {
   updateTaskOrder,
   updateSpecialListTaskOrder,
   createRoutine,
-  getRoutines;
+  getRoutines,
+  updateRoutine,
+  deleteRoutine;
 
   String get path {
     switch (this) {
@@ -95,6 +97,10 @@ enum Endpoints {
         return '/routine/addRoutine/';
       case Endpoints.getRoutines:
         return '/routine/getRoutines/';
+      case Endpoints.updateRoutine:
+        return '/routine/updateRoutine/';
+      case Endpoints.deleteRoutine:
+        return '/routine/';
     }
   }
 }

@@ -10,6 +10,14 @@ class PlanningPageService extends GetxService {
   final _networkService = Get.find<BaseNetworkService>();
   // Requests for routine
 
+  Future<RequestResponse?> deleteRoutine(String routineId, Function onSuccess) async =>
+      await _networkService.sendDeleteRequest(Endpoints.deleteRoutine.path + routineId, onSuccessFunc: onSuccess);
+
+  Future<RequestResponse?> updateRoutine(String name, String routineId, List<int> deletedDays, List<int> newDays, Function onSuccessFunc) async =>
+      await _networkService.sendUpdateRequest(
+          Endpoints.updateRoutine.path, {'name': name, 'routineId': routineId, 'removedDays': deletedDays, 'newDays': newDays},
+          onSuccessFunc: onSuccessFunc);
+
   Future<RequestResponse?> getRoutines() async => await _networkService.sendGetRequest(Endpoints.getRoutines.path);
 
   Future<RequestResponse?> createRoutine(String routineName, List<int> days, Function onSuccessFunc) async =>

@@ -8,6 +8,7 @@ import 'package:to_do_app/core/widgets/texts/customText.dart';
 import '../../../../../core/variables/enums.dart';
 import '../../../../../core/variables/standartMeasurementUnits.dart';
 import '../../../../../core/widgets/buttons/customButton.dart';
+import '../../../../../core/widgets/dialogs/areYouSureDialog.dart';
 import '../../../../../core/widgets/dialogs/customDialog.dart';
 import '../../../../../core/widgets/texts/customTextFormField.dart';
 
@@ -20,14 +21,20 @@ class RoutineDialog extends GetView<PlanningPageController> {
     return CustomDialog(
       closeButtonColor: MainPages.planning.getPageColor,
       showCloseButton: true,
-      closeButtonFunction: () {
-        // Set all weekday value to false
-        controller.weekdaySelectControl.values.forEach((e) => e.value = false);
-
-        // Clear selectedRoutine
-        controller.formControlers[FormFields.addRoutineName]?.clear();
-        controller.selectedRoutine = null;
-      },
+      deleteButtonFunction: isEditPage
+          ? () {
+              Get.dialog(
+                AreYourSure(
+                  backgroundColor: MainPages.planning.getPageColor,
+                  deleteFunc: () {
+                    controller.deleteRoutine(controller.selectedRoutine?.id ?? '');
+                    controller.clearSelects();
+                  },
+                ),
+              );
+            }
+          : null,
+      closeButtonFunction: () => controller.clearSelects(),
       content: Padding(
         padding: EdgeInsets.all(StandartMeasurementUnits.normalPadding),
         child: Form(
@@ -43,7 +50,6 @@ class RoutineDialog extends GetView<PlanningPageController> {
                 Obx(() => customCheckTile(WeekDay.daily)),
                 Divider(color: MainPages.planning.getPageColor, thickness: 0.7),
                 checkBoxes(),
-                //TODO Save button
                 addButton(),
               ],
             ),
@@ -58,7 +64,7 @@ class RoutineDialog extends GetView<PlanningPageController> {
       height: Get.height * .3,
       width: Get.width,
       child: ListView.builder(
-        itemCount: controller.weekdays.length,
+        itemCount: controller.weekdays.length - 1,
         itemBuilder: (context, index) => Obx(
           () => customCheckTile(controller.weekdays[index]),
         ),
@@ -79,15 +85,15 @@ class RoutineDialog extends GetView<PlanningPageController> {
 
         // Change other checkbox if clicked daily checkbox
         if (weekDay == WeekDay.daily) {
-          for (var i = 0; i < controller.weekdays.length; i++) {
+          for (var i = 0; i < controller.weekdays.length - 1; i++) {
             controller.weekdaySelectControl[controller.weekdays[i]]?.value = val ?? false;
           }
         }
 
         // Change daily checkbox if all other checkbox is same
-        for (var i = 0; i < controller.weekdays.length; i++) {
+        for (var i = 0; i < controller.weekdays.length - 1; i++) {
           if (controller.weekdaySelectControl[controller.weekdays[i]]?.value == false) break;
-          if (i == controller.weekdays.length - 1) controller.weekdaySelectControl[WeekDay.daily]?.value = true;
+          if (i == controller.weekdays.length - 2) controller.weekdaySelectControl[WeekDay.daily]?.value = true;
         }
       },
       title: CustomText(weekDay.getDayAsString),
@@ -101,7 +107,7 @@ class RoutineDialog extends GetView<PlanningPageController> {
         List<int> selectedDays = [];
         // If not selected daily, scan all days
         if ((controller.weekdaySelectControl[WeekDay.daily]?.value ?? false) == false) {
-          for (var i = 0; i < controller.weekdays.length; i++) {
+          for (var i = 0; i < controller.weekdays.length - 1; i++) {
             if (controller.weekdaySelectControl[controller.weekdays[i]]?.value ?? false) selectedDays.add(controller.weekdays[i].dayNumber);
           }
         }
@@ -110,8 +116,30 @@ class RoutineDialog extends GetView<PlanningPageController> {
           selectedDays.add(WeekDay.daily.dayNumber);
         }
 
+        List<int> newSelectedDays = [];
+        List<int> unselectedDays = [];
+        if (isEditPage) {
+          // Get unselected days to variable
+          controller.selectedRoutine?.selectedDays?.forEach((element) {
+            if (!selectedDays.contains(element.dayNumber)) unselectedDays.add(element.dayNumber);
+          });
+
+          // Get new days
+          selectedDays.forEach((element) {
+            if (!(controller.selectedRoutine?.selectedDays?.map((e) => e.dayNumber) ?? []).contains(element)) newSelectedDays.add(element);
+          });
+        }
+
         if (controller.formKeys[FormKeys.addRoutine]!.currentState!.validate()) {
-          controller.addRoutine(controller.formControlers[FormFields.addRoutineName]?.text ?? '', selectedDays);
+          isEditPage
+              ?
+              //Save function
+              controller.updateRoutine(controller.formControlers[FormFields.addRoutineName]?.text ?? '', controller.selectedRoutine?.id ?? '',
+                  unselectedDays, newSelectedDays)
+              : () {
+                  controller.addRoutine(controller.formControlers[FormFields.addRoutineName]?.text ?? '', selectedDays);
+                  controller.clearSelects();
+                };
         }
       },
       buttonText: isEditPage ? 'Save' : 'Add Routine',
