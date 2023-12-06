@@ -27,8 +27,8 @@ class PlanningPageService extends GetxService {
   //     await _networkService.sendGetRequest(Endpoints.getTasksForRoutine.path + (routine?.day?.dayNumber ?? 0).toString(), showLoad: showLoad);
 
   // Requests for tasks
-  Future<RequestResponse?> getTasks(SpecialListModel? listModel, bool showLoad) async =>
-      await _networkService.sendGetRequest(Endpoints.getTasksForSpecialList.path + (listModel?.id ?? ''), showLoad: showLoad);
+  Future<RequestResponse?> getTasks(SpecialListModel? listModel, RoutineModel? routine, bool showLoad) async =>
+      await _networkService.sendGetRequest(Endpoints.getTasks.path + (listModel?.id ?? routine?.id ?? ''), showLoad: showLoad);
 
   Future<RequestResponse?> deleteTasks(String tasks, Function onSuccess) async =>
       await _networkService.sendDeleteRequest(Endpoints.deleteTask.path + tasks, onSuccessFunc: onSuccess);

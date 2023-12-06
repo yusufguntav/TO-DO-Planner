@@ -95,8 +95,7 @@ class _PlanningPageViewState extends State<PlanningPageView> {
           title: routine.name,
           onTapFunction: () {
             controller.selectedRoutine = routine;
-            //TODO
-            // controller.changeSelectedPageIndex(PlanningPages.specialListPage);
+            controller.changeSelectedPageIndex(PlanningPages.routinePage);
           },
           editButtonFunc: () {
             controller.selectedRoutine = routine;

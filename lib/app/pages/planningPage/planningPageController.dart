@@ -163,16 +163,12 @@ class PlanningPageController extends GetxController {
   }
 
   Future<RequestResponse?> getTasks({
-    bool isForRoutine = false,
     bool showLoad = true,
   }) async {
     return await errorHandler(
       tryMethod: () async {
         {
-          RequestResponse? requestResponse =
-              // = isForRoutine
-              // ? await _planningService.getRoutineTasks(selectedRoutine, showLoad)
-              await _planningService.getTasks(selectedListModel, showLoad);
+          RequestResponse? requestResponse = await _planningService.getTasks(selectedListModel, selectedRoutine, showLoad);
           if (requestResponse != null) {
             if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
               return requestResponse;
@@ -184,11 +180,13 @@ class PlanningPageController extends GetxController {
     );
   }
 
-  Future getTasksToVariable({showLoad = true, isForRoutine = false}) async {
+  Future getTasksToVariable({
+    showLoad = true,
+  }) async {
     await errorHandler(tryMethod: () async {
       tasks.clear();
-      if (await getTasks(showLoad: showLoad, isForRoutine: isForRoutine) != null) {
-        dynamic json = jsonDecode((await getTasks(isForRoutine: isForRoutine, showLoad: showLoad))!.body)['tasks'];
+      if (await getTasks(showLoad: showLoad) != null) {
+        dynamic json = jsonDecode((await getTasks(showLoad: showLoad))!.body)['tasks'];
         for (var i = 0; i < json.length; i++) {
           tasks.add(TaskModel.fromJson(json[i]));
         }

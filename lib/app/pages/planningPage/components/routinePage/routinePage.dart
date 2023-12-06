@@ -22,7 +22,7 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // controller.getTasksToVariable(isForRoutine: true);
+    controller.getTasksToVariable();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -56,24 +56,26 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Stack(children: [
-                SizedBox(
-                  height: StandartMeasurementUnits.highIconSize * 2,
-                  child: CustomTitle(titleText: controller.selectedRoutine?.name?.toUpperCase() ?? '', titleColor: MainPages.planning.getPageColor),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    FloatingActionButton(
-                      backgroundColor: MainPages.planning.getPageColor,
-                      child: const Icon(Icons.arrow_back),
-                      onPressed: () {
-                        controller.changeSelectedPageIndex(PlanningPages.planningPage);
-                      },
-                    ),
-                  ],
-                ),
-              ]),
+              Stack(
+                children: [
+                  SizedBox(
+                    height: StandartMeasurementUnits.highIconSize * 2,
+                    child: CustomTitle(titleText: controller.selectedRoutine?.name?.toUpperCase() ?? '', titleColor: MainPages.planning.getPageColor),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      FloatingActionButton(
+                        backgroundColor: MainPages.planning.getPageColor,
+                        child: const Icon(Icons.arrow_back),
+                        onPressed: () {
+                          controller.changeSelectedPageIndex(PlanningPages.planningPage);
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
               SizedBox(height: StandartMeasurementUnits.highPadding),
             ],
           ),
