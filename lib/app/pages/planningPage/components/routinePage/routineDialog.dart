@@ -131,15 +131,15 @@ class RoutineDialog extends GetView<PlanningPageController> {
         }
 
         if (controller.formKeys[FormKeys.addRoutine]!.currentState!.validate()) {
-          isEditPage
-              ?
-              //Save function
-              controller.updateRoutine(controller.formControlers[FormFields.addRoutineName]?.text ?? '', controller.selectedRoutine?.id ?? '',
-                  unselectedDays, newSelectedDays)
-              : () {
-                  controller.addRoutine(controller.formControlers[FormFields.addRoutineName]?.text ?? '', selectedDays);
-                  controller.clearSelects();
-                };
+          //Save Routine
+          if (isEditPage) {
+            controller.updateRoutine(controller.formControlers[FormFields.addRoutineName]?.text ?? '', controller.selectedRoutine?.id ?? '',
+                unselectedDays, newSelectedDays);
+            return;
+          }
+          //Add Routine
+          controller.addRoutine(controller.formControlers[FormFields.addRoutineName]?.text ?? '', selectedDays);
+          controller.clearSelects();
         }
       },
       buttonText: isEditPage ? 'Save' : 'Add Routine',
