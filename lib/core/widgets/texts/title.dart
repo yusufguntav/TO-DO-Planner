@@ -16,7 +16,7 @@ class CustomTitle extends StatelessWidget {
         titleText,
         textColor: titleColor ?? ColorTable.getTitleColor,
         bold: true,
-        letterSpacing: StandartMeasurementUnits.extraLowPadding,
+        letterSpacing: StandartMeasurementUnits.extraLowPadding * .5,
       ),
     );
   }

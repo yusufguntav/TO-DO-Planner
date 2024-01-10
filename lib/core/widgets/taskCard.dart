@@ -13,8 +13,9 @@ import 'customLine.dart';
 import 'texts/customText.dart';
 
 class TaskCard extends StatelessWidget {
-  const TaskCard({super.key, required this.task, required this.onTapFunc, required this.deleteFunc, required this.saveFunc});
+  const TaskCard({super.key, required this.task, required this.onTapFunc, required this.deleteFunc, required this.saveFunc, this.size});
   final TaskModel task;
+  final double? size;
   final Function onTapFunc;
   final Function(TaskModel, String) saveFunc;
   final Function(TaskModel) deleteFunc;
@@ -31,7 +32,7 @@ class TaskCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(StandartMeasurementUnits.extraHighRadius),
               onTap: () => Get.dialog(taskEditDialog()),
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: StandartMeasurementUnits.taskCardHeight),
+                constraints: BoxConstraints(maxHeight: size ?? StandartMeasurementUnits.taskCardHighHeight),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                       border: Border.all(color: task.successStatus!.getSuccessStatusColor),

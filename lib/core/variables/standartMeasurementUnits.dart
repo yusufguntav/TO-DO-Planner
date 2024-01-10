@@ -35,4 +35,5 @@ class StandartMeasurementUnits {
 
   //Task card height
   static double get taskCardHeight => Get.height * 0.07;
+  static double get taskCardHighHeight => Get.height * 0.09;
 }

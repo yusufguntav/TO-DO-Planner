@@ -66,6 +66,7 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       FloatingActionButton(
+                        elevation: 2,
                         backgroundColor: MainPages.planning.getPageColor,
                         child: const Icon(Icons.arrow_back),
                         onPressed: () {

@@ -9,7 +9,6 @@ import '../../../core/variables/enums.dart';
 class PlanningPageService extends GetxService {
   final _networkService = Get.find<BaseNetworkService>();
   // Requests for routine
-
   Future<RequestResponse?> deleteRoutine(String routineId, Function onSuccess) async =>
       await _networkService.sendDeleteRequest(Endpoints.deleteRoutine.path + routineId, onSuccessFunc: onSuccess);
 
@@ -23,12 +22,12 @@ class PlanningPageService extends GetxService {
   Future<RequestResponse?> createRoutine(String routineName, List<int> days, Function onSuccessFunc) async =>
       await _networkService.sendPostRequest(Endpoints.createRoutine.path, {"name": routineName, "days": days}, onSuccessFunc: onSuccessFunc);
 
-  // Future<RequestResponse?> getRoutineTasks(RoutineModel? routine, bool showLoad) async =>
-  //     await _networkService.sendGetRequest(Endpoints.getTasksForRoutine.path + (routine?.day?.dayNumber ?? 0).toString(), showLoad: showLoad);
-
   // Requests for tasks
-  Future<RequestResponse?> getTasks(SpecialListModel? listModel, RoutineModel? routine, bool showLoad) async =>
-      await _networkService.sendGetRequest(Endpoints.getTasks.path + (listModel?.id ?? routine?.id ?? ''), showLoad: showLoad);
+  Future<RequestResponse?> getTasksForSpecialList(SpecialListModel? listModel, bool showLoad) async =>
+      await _networkService.sendGetRequest(Endpoints.getTasksForSpecialList.path + (listModel?.id ?? ''), showLoad: showLoad);
+
+  Future<RequestResponse?> getTasksForRoutine(RoutineModel? routine, bool showLoad) async =>
+      await _networkService.sendGetRequest(Endpoints.getTasksForRoutine.path + (routine?.id ?? ''), showLoad: showLoad);
 
   Future<RequestResponse?> deleteTasks(String tasks, Function onSuccess) async =>
       await _networkService.sendDeleteRequest(Endpoints.deleteTask.path + tasks, onSuccessFunc: onSuccess);

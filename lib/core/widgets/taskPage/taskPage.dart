@@ -40,6 +40,7 @@ class TaskPage extends StatelessWidget {
     return Column(
       children: [
         content,
+        SizedBox(height: StandartMeasurementUnits.extraLowPadding),
         tasksList(),
         inputFieldAndKeyboardControl(),
       ],
@@ -48,11 +49,12 @@ class TaskPage extends StatelessWidget {
 
   SizedBox inputFieldAndKeyboardControl() {
     return SizedBox(
+      width: Get.width - (StandartMeasurementUnits.normalPadding + (StandartMeasurementUnits.menuButtonSize * .5)),
       height: Get.height * .12,
       child: KeyboardVisibilityBuilder(
         builder: (context, keyboardVisibility) => Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+          children: [ 
             SizedBox(width: keyboardVisibility ? 0 : Get.width * .2),
             Expanded(child: inputTask()),
             addTaskButton(keyboardVisibility),
@@ -76,6 +78,7 @@ class TaskPage extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(shape: BoxShape.circle, color: color),
         child: InkWell(
+          customBorder: CircleBorder(),
           onTap: () {
             if (addTaskinputField.text.isNotEmpty) {
               (addTaskFunction ?? () {}).call();
@@ -123,6 +126,7 @@ class TaskPage extends StatelessWidget {
                       ? index + 1 == tasks.length + 1
                           ? const SizedBox()
                           : TaskCard(
+                              size: StandartMeasurementUnits.taskCardHeight,
                               task: tasks[index],
                               saveFunc: saveFunc,
                               onTapFunc: onTapFunc,
@@ -135,7 +139,7 @@ class TaskPage extends StatelessWidget {
                   if (localIndex != tasks.length - 1 && addedNewTask) {
                     scrollController.animateTo(
                       (((Get.height * 0.08) + StandartMeasurementUnits.highPadding) * (tasks.length + 1)),
-                      duration: const Duration(milliseconds: 5),
+                      duration: const Duration(milliseconds: 600),
                       curve: Curves.easeInOut,
                     );
                     addedNewTask = false;

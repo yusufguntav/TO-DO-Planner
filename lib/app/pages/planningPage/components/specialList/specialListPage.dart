@@ -63,7 +63,7 @@ class _SpecialListPageState extends State<SpecialListPage> with WidgetsBindingOb
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     FloatingActionButton(
-                      elevation: 3,
+                      elevation: 2,
                       backgroundColor: MainPages.planning.getPageColor,
                       child: const Icon(Icons.arrow_back),
                       onPressed: () {

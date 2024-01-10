@@ -45,7 +45,9 @@ enum Endpoints {
   getSpeciaLists,
   updateSpecialList,
   deleteSpecialList,
-  getTasks,
+  getTasksByDate,
+  getTasksForSpecialList,
+  getTasksForRoutine,
   addTask,
   deleteTask,
   updateTaskOrder,
@@ -77,14 +79,18 @@ enum Endpoints {
         return '/specialList/updateSpecialList/';
       case Endpoints.deleteSpecialList:
         return '/specialList/';
-      case Endpoints.getTasks:
-        return 'tasks/getTasks/';
+      case Endpoints.getTasksByDate:
+        return '/task/getTasks/';
       case Endpoints.addTask:
         return '/task/addTask/';
       case Endpoints.deleteTask:
         return '/task/deleteTask/';
       case Endpoints.updateTaskOrder:
         return '/task/updateOrder/';
+      case Endpoints.getTasksForRoutine:
+        return '/task/getTasksForRoutine/';
+      case Endpoints.getTasksForSpecialList:
+        return '/task/getTasksForSpecialList/';
       case Endpoints.updateSpecialListTaskOrder:
         return '/task/updateSpecialListTaskOrder/';
       case Endpoints.createRoutine:
