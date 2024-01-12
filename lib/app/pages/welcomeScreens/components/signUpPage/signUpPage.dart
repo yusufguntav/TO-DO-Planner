@@ -38,10 +38,12 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => Get.find<WelcomeHomeController>().changeSelectedPageIndex(WelcomePages.welcomePage),
+      onWillPop: () => Get.find<WelcomeHomeController>()
+          .changeSelectedPageIndex(WelcomePages.welcomePage),
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: StandartMeasurementUnits.highPadding),
+          padding: EdgeInsets.symmetric(
+              horizontal: StandartMeasurementUnits.highPadding),
           child: Form(
             key: controller.getFormKey,
             child: Column(
@@ -50,7 +52,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
                 CustomTextFormField(
                   isValidController: controller.isValidDisplayName,
-                  controller: controller.getControllers[SignUpFields.displayName],
+                  controller:
+                      controller.getControllers[SignUpFields.displayName],
                   color: MainPages.today.getPageColor,
                   label: 'Display Name',
                 ),
@@ -62,11 +65,27 @@ class _SignUpPageState extends State<SignUpPage> {
                   label: 'E-mail',
                 ),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-                CustomTextFormField(
-                  controller: controller.getControllers[SignUpFields.password],
-                  isValidController: controller.isValidPassword,
-                  color: MainPages.today.getPageColor,
-                  label: 'Password',
+                Obx(
+                  () => Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextFormField(
+                          obscureText: controller.showPassword,
+                          controller:
+                              controller.getControllers[SignUpFields.password],
+                          isValidController: controller.isValidPassword,
+                          color: MainPages.today.getPageColor,
+                          label: 'Password',
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => controller.showHidePassword(),
+                        icon: controller.showPassword
+                            ? Icon(Icons.visibility_off)
+                            : Icon(Icons.visibility),
+                      )
+                    ],
+                  ),
                 ),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
                 signUpButton(),
@@ -84,9 +103,15 @@ class _SignUpPageState extends State<SignUpPage> {
       onPress: () {
         if (controller.getFormKey.currentState!.validate()) {
           controller.signUp(
-              (controller.getControllers[SignUpFields.email] ?? TextEditingController(text: '')).text,
-              (controller.getControllers[SignUpFields.password] ?? TextEditingController(text: '')).text,
-              (controller.getControllers[SignUpFields.displayName] ?? TextEditingController(text: '')).text);
+              (controller.getControllers[SignUpFields.email] ??
+                      TextEditingController(text: ''))
+                  .text,
+              (controller.getControllers[SignUpFields.password] ??
+                      TextEditingController(text: ''))
+                  .text,
+              (controller.getControllers[SignUpFields.displayName] ??
+                      TextEditingController(text: ''))
+                  .text);
         }
       },
       buttonText: 'Sign Up',

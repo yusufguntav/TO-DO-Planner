@@ -38,10 +38,12 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => Get.find<WelcomeHomeController>().changeSelectedPageIndex(WelcomePages.welcomePage),
+      onWillPop: () => Get.find<WelcomeHomeController>()
+          .changeSelectedPageIndex(WelcomePages.welcomePage),
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: StandartMeasurementUnits.highPadding),
+          padding: EdgeInsets.symmetric(
+              horizontal: StandartMeasurementUnits.highPadding),
           child: Form(
             key: controller.getFormKey,
             child: Column(
@@ -55,12 +57,25 @@ class _SignInPageState extends State<SignInPage> {
                   label: 'E-mail',
                 ),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
-                CustomTextFormField(
-                  controller: controller.getControllers[SignInFields.password],
-                  isValidController: controller.isValidPassword,
-                  color: MainPages.today.getPageColor,
-                  label: 'Password',
-                ),
+                Obx(() => Row(
+                      children: [
+                        Expanded(
+                          child: CustomTextFormField(
+                            obscureText: controller.showPassword,
+                            controller: controller
+                                .getControllers[SignInFields.password],
+                            isValidController: controller.isValidPassword,
+                            color: MainPages.today.getPageColor,
+                            label: 'Password',
+                          ),
+                        ),
+                        IconButton(
+                            onPressed: () => controller.showHidePassword(),
+                            icon: controller.showPassword
+                                ? Icon(Icons.visibility_off)
+                                : Icon(Icons.visibility))
+                      ],
+                    )),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
                 signInButton(),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),
@@ -79,8 +94,12 @@ class _SignInPageState extends State<SignInPage> {
       onPress: () async {
         if (controller.getFormKey.currentState!.validate()) {
           await controller.login(
-            (controller.getControllers[SignInFields.email] ?? TextEditingController(text: '')).text,
-            (controller.getControllers[SignInFields.password] ?? TextEditingController(text: '')).text,
+            (controller.getControllers[SignInFields.email] ??
+                    TextEditingController(text: ''))
+                .text,
+            (controller.getControllers[SignInFields.password] ??
+                    TextEditingController(text: ''))
+                .text,
           );
         }
       },

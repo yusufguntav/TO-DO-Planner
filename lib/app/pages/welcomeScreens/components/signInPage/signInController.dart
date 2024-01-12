@@ -20,6 +20,14 @@ class SignInPageController extends GetxController {
   final _formKey = GlobalKey<FormState>();
   GlobalKey<FormState> get getFormKey => _formKey;
 
+  // Show password
+  final RxBool _showPassword = true.obs;
+  bool get showPassword => _showPassword.value;
+
+  showHidePassword() {
+    _showPassword.value = !_showPassword.value;
+  }
+
   // Validation control
   isValidPassword(String? val) {
     if ((val ?? '').length < 6) {
@@ -28,7 +36,9 @@ class SignInPageController extends GetxController {
   }
 
   isValidEmail(String? val) {
-    final bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(val ?? '');
+    final bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(val ?? '');
     if (!emailValid) {
       return 'Invalid email';
     }
@@ -39,21 +49,27 @@ class SignInPageController extends GetxController {
     SignInFields.email: TextEditingController(text: 'test@gmail.com'),
     SignInFields.password: TextEditingController(text: '123456'),
   };
-  Map<SignInFields, TextEditingController> get getControllers => _controllerList;
+  Map<SignInFields, TextEditingController> get getControllers =>
+      _controllerList;
 
   // Network services
   final _signInPageService = Get.find<SignInService>();
 
   login(String email, String password) async {
-    RequestResponse? requestResponse = await _signInPageService.login(email, password);
+    RequestResponse? requestResponse =
+        await _signInPageService.login(email, password);
     if (requestResponse != null) {
       if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
         //Token storage
-        await SecureStorage().writeSecureData('token', requestResponse.body['token']);
-        Get.find<BaseNetworkService>().header = {"Authorization": "Bearer ${requestResponse.body['token']}"};
+        await SecureStorage()
+            .writeSecureData('token', requestResponse.body['token']);
+        Get.find<BaseNetworkService>().header = {
+          "Authorization": "Bearer ${requestResponse.body['token']}"
+        };
         Get.offAndToNamed(PageRoutes.home);
       }
-      debugPrint('body: ${requestResponse.body}\n status:${requestResponse.status}');
+      debugPrint(
+          'body: ${requestResponse.body}\n status:${requestResponse.status}');
     }
   }
 }
