@@ -7,6 +7,10 @@ import '../variables/colorTable.dart';
 
 class AppTheme {
   static ThemeData light = ThemeData(
+    useMaterial3: false,
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      shape: CircleBorder(),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(color: ColorTable.primaryColor),
@@ -22,7 +26,8 @@ class AppTheme {
       primary: ColorTable.primaryColor,
       secondary: ColorTable.accentColor, // Your accent color
     ),
-    iconTheme: IconThemeData(color: ColorTable.primaryColor), //Default Icon Color
+    iconTheme:
+        IconThemeData(color: ColorTable.primaryColor), //Default Icon Color
     scaffoldBackgroundColor: const Color(0xFFF6F6F6),
     appBarTheme: const AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -46,7 +51,8 @@ class AppTheme {
       secondary: ColorTable.accentColor, // Your accent color
     ),
 
-    iconTheme: IconThemeData(color: ColorTable.primaryColor), //Default Icon Color
+    iconTheme:
+        IconThemeData(color: ColorTable.primaryColor), //Default Icon Color
     scaffoldBackgroundColor: ColorTable.darkModeBg,
     appBarTheme: const AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.light,

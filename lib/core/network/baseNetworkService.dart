@@ -1,5 +1,7 @@
 // ignore_for_file: file_names
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_app/core/utils/utils.dart';
@@ -22,7 +24,10 @@ class BaseNetworkService extends GetxService {
   void onInit() async {
     _connect.baseUrl = _protocolAndIp;
     errorHandler(tryMethod: () async {
-      header = {"Authorization": "Bearer ${await SecureStorage().readSecureData('token')}"};
+      header = {
+        "Authorization":
+            "Bearer ${await SecureStorage().readSecureData('token')}"
+      };
     }, onErr: () {
       return null;
     });
@@ -31,7 +36,9 @@ class BaseNetworkService extends GetxService {
       (PageStates value) {
         switch (value) {
           case PageStates.busy:
-            Get.dialog(const CircularProgressWhileProcess(), barrierColor: Colors.white.withOpacity(0.6), barrierDismissible: false);
+            Get.dialog(const CircularProgressWhileProcess(),
+                barrierColor: Colors.white.withOpacity(0.6),
+                barrierDismissible: false);
             break;
           case PageStates.loaded:
             if (Get.isOverlaysOpen) Get.back();
@@ -50,10 +57,13 @@ class BaseNetworkService extends GetxService {
 
   final GetConnect _connect = GetConnect();
 
-  final _protocolAndIp = 'http://154.62.109.18:3000';
-  // final _protocolAndIp = 'http://10.0.2.2:3000';
+  // final _protocolAndIp = 'http://154.62.109.18:3000';
+  final _protocolAndIp =
+      Platform.isIOS ? 'http://localhost:3000' : 'http://10.0.2.2:3000';
 
-  Future<RequestResponse?> sendPostRequest(String endpoint, Map<dynamic, dynamic> body, {Function? onSuccessFunc, bool showLoad = true}) async {
+  Future<RequestResponse?> sendPostRequest(
+      String endpoint, Map<dynamic, dynamic> body,
+      {Function? onSuccessFunc, bool showLoad = true}) async {
     await Get.closeCurrentSnackbar();
     if (showLoad) state = PageStates.busy;
     final response = await _connect.post(
@@ -62,11 +72,14 @@ class BaseNetworkService extends GetxService {
       headers: header,
     );
     if (showLoad) state = PageStates.loaded;
-    RequestResponse requestResponse = RequestResponse(response.body, response.statusCode ?? 404);
-    return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
+    RequestResponse requestResponse =
+        RequestResponse(response.body, response.statusCode ?? 404);
+    return errorControlAndOnSuccessFunc(
+        response, requestResponse, onSuccessFunc);
   }
 
-  Future<RequestResponse?> sendGetRequest(String endpoint, {Function? onSuccessFunc, bool showLoad = true}) async {
+  Future<RequestResponse?> sendGetRequest(String endpoint,
+      {Function? onSuccessFunc, bool showLoad = true}) async {
     await Get.closeCurrentSnackbar();
     if (showLoad) state = PageStates.busy;
     final response = await _connect.get(
@@ -74,11 +87,14 @@ class BaseNetworkService extends GetxService {
       headers: header,
     );
     if (showLoad) state = PageStates.loaded;
-    RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode ?? 404);
-    return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
+    RequestResponse requestResponse =
+        RequestResponse(response.bodyString, response.statusCode ?? 404);
+    return errorControlAndOnSuccessFunc(
+        response, requestResponse, onSuccessFunc);
   }
 
-  Future<RequestResponse?> sendDeleteRequest(String endpoint, {Function? onSuccessFunc}) async {
+  Future<RequestResponse?> sendDeleteRequest(String endpoint,
+      {Function? onSuccessFunc}) async {
     await Get.closeCurrentSnackbar();
     state = PageStates.busy;
     final response = await _connect.delete(
@@ -86,11 +102,15 @@ class BaseNetworkService extends GetxService {
       headers: header,
     );
     state = PageStates.loaded;
-    RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode ?? 404);
-    return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
+    RequestResponse requestResponse =
+        RequestResponse(response.bodyString, response.statusCode ?? 404);
+    return errorControlAndOnSuccessFunc(
+        response, requestResponse, onSuccessFunc);
   }
 
-  Future<RequestResponse?> sendUpdateRequest(String endpoint, Map<dynamic, dynamic>? body, {Function? onSuccessFunc}) async {
+  Future<RequestResponse?> sendUpdateRequest(
+      String endpoint, Map<dynamic, dynamic>? body,
+      {Function? onSuccessFunc}) async {
     await Get.closeCurrentSnackbar();
     state = PageStates.busy;
     final response = await _connect.patch(
@@ -99,8 +119,10 @@ class BaseNetworkService extends GetxService {
       headers: header,
     );
     state = PageStates.loaded;
-    RequestResponse requestResponse = RequestResponse(response.bodyString, response.statusCode ?? 404);
-    return errorControlAndOnSuccessFunc(response, requestResponse, onSuccessFunc);
+    RequestResponse requestResponse =
+        RequestResponse(response.bodyString, response.statusCode ?? 404);
+    return errorControlAndOnSuccessFunc(
+        response, requestResponse, onSuccessFunc);
   }
 
   AlertDialog unexpectedErrorDialog() {
@@ -111,10 +133,15 @@ class BaseNetworkService extends GetxService {
         text: TextSpan(
           children: <TextSpan>[
             TextSpan(
-                text: 'Unexpected error! please contact with us. For contact please click here ', style: TextStyle(color: ColorTable.getTextColor)),
+                text:
+                    'Unexpected error! please contact with us. For contact please click here ',
+                style: TextStyle(color: ColorTable.getTextColor)),
             TextSpan(
               text: 'click here',
-              style: TextStyle(fontWeight: FontWeight.bold, color: ColorTable.getTextColor, decoration: TextDecoration.underline),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: ColorTable.getTextColor,
+                  decoration: TextDecoration.underline),
             ),
           ],
         ),
@@ -126,7 +153,8 @@ class BaseNetworkService extends GetxService {
     );
   }
 
-  RequestResponse? errorControlAndOnSuccessFunc(Response response, RequestResponse requestResponse, Function? onSuccessFunc) {
+  RequestResponse? errorControlAndOnSuccessFunc(Response response,
+      RequestResponse requestResponse, Function? onSuccessFunc) {
     // Error control
     if (response.statusCode == null) {
       Get.dialog(
@@ -137,7 +165,8 @@ class BaseNetworkService extends GetxService {
       Get.dialog(
         AlertDialog(
           title: CustomText('Error'),
-          content: CustomText.high((response.body['error'] ?? response.body['message']).toString()),
+          content: CustomText.high(
+              (response.body['error'] ?? response.body['message']).toString()),
           actionsAlignment: MainAxisAlignment.center,
           actions: [
             CustomButton(buttonText: 'Ok', onPress: () => Get.back()),

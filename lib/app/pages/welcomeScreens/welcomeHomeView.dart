@@ -16,7 +16,10 @@ class WelcomeHome extends GetView<WelcomeHomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      floatingActionButton: Obx(() => Get.find<WelcomeHomeController>().selectedPage.value != 0 ? backButton() : const SizedBox()),
+      floatingActionButton: Obx(() =>
+          Get.find<WelcomeHomeController>().selectedPage.value != 0
+              ? backButton()
+              : const SizedBox()),
       body: SafeArea(
         child: Center(
           child: Stack(
@@ -34,11 +37,13 @@ class WelcomeHome extends GetView<WelcomeHomeController> {
 
   Padding backButton() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: StandartMeasurementUnits.normalPadding),
+      padding: EdgeInsets.symmetric(
+          vertical: StandartMeasurementUnits.normalPadding),
       child: FloatingActionButton(
         elevation: 4,
         backgroundColor: Colors.white,
-        onPressed: () => Get.find<WelcomeHomeController>().changeSelectedPageIndex(WelcomePages.welcomePage),
+        onPressed: () => Get.find<WelcomeHomeController>()
+            .changeSelectedPageIndex(WelcomePages.welcomePage),
         child: Icon(
           Icons.arrow_back_ios,
           color: Get.theme.primaryColor,

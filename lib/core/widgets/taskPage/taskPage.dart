@@ -49,12 +49,14 @@ class TaskPage extends StatelessWidget {
 
   SizedBox inputFieldAndKeyboardControl() {
     return SizedBox(
-      width: Get.width - (StandartMeasurementUnits.normalPadding + (StandartMeasurementUnits.menuButtonSize * .5)),
+      width: Get.width -
+          (StandartMeasurementUnits.normalPadding +
+              (StandartMeasurementUnits.menuButtonSize * .5)),
       height: Get.height * .12,
       child: KeyboardVisibilityBuilder(
         builder: (context, keyboardVisibility) => Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [ 
+          children: [
             SizedBox(width: keyboardVisibility ? 0 : Get.width * .2),
             Expanded(child: inputTask()),
             addTaskButton(keyboardVisibility),
@@ -98,6 +100,7 @@ class TaskPage extends StatelessWidget {
   tasksList() {
     return Expanded(
       child: CustomScrollView(
+        physics: ClampingScrollPhysics(),
         controller: scrollController,
         slivers: [
           Obx(
@@ -111,7 +114,8 @@ class TaskPage extends StatelessWidget {
                     elevation: 6.0,
                     color: Colors.white,
                     borderRadius: BorderRadius.zero,
-                    child: ConstrainedBox(constraints: constraints, child: child),
+                    child:
+                        ConstrainedBox(constraints: constraints, child: child),
                   ),
                 );
               },
@@ -138,9 +142,11 @@ class TaskPage extends StatelessWidget {
                 semanticIndexCallback: (widget, localIndex) {
                   if (localIndex != tasks.length - 1 && addedNewTask) {
                     scrollController.animateTo(
-                      (((Get.height * 0.08) + StandartMeasurementUnits.highPadding) * (tasks.length + 1)),
+                      (((Get.height * 0.08) +
+                              StandartMeasurementUnits.highPadding) *
+                          (tasks.length + 1)),
                       duration: const Duration(milliseconds: 600),
-                      curve: Curves.easeInOut,
+                      curve: Curves.easeIn,
                     );
                     addedNewTask = false;
                   }

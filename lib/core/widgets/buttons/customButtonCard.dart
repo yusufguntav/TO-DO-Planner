@@ -1,12 +1,19 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:to_do_app/core/variables/colorTable.dart';
 import 'package:to_do_app/core/variables/standartMeasurementUnits.dart';
 
 import '../texts/customText.dart';
 
 class CustomButtonCard extends StatelessWidget {
-  const CustomButtonCard({super.key, required this.borderColor, this.title, this.topPadding, this.onTapFunction, this.editButtonFunc});
+  const CustomButtonCard(
+      {super.key,
+      required this.borderColor,
+      this.title,
+      this.topPadding,
+      this.onTapFunction,
+      this.editButtonFunc});
   final Color borderColor;
   final String? title;
   final Function()? editButtonFunc;
@@ -15,8 +22,10 @@ class CustomButtonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: ColorTable.defaultButtonColor,
       elevation: 5,
-      borderRadius: BorderRadius.circular(StandartMeasurementUnits.normalRadius),
+      borderRadius:
+          BorderRadius.circular(StandartMeasurementUnits.normalRadius),
       child: Padding(
         padding: EdgeInsets.only(top: topPadding ?? 0),
         child: SizedBox(
@@ -28,14 +37,18 @@ class CustomButtonCard extends StatelessWidget {
                 child: InkWell(
                   borderRadius: editButtonFunc != null
                       ? BorderRadius.only(
-                          topLeft: Radius.circular(StandartMeasurementUnits.normalRadius),
-                          bottomLeft: Radius.circular(StandartMeasurementUnits.normalRadius))
-                      : BorderRadius.circular(StandartMeasurementUnits.normalRadius),
+                          topLeft: Radius.circular(
+                              StandartMeasurementUnits.normalRadius),
+                          bottomLeft: Radius.circular(
+                              StandartMeasurementUnits.normalRadius))
+                      : BorderRadius.circular(
+                          StandartMeasurementUnits.normalRadius),
                   onTap: onTapFunction,
                   child: Center(
                       child: title != null
                           ? Padding(
-                              padding: EdgeInsets.all(StandartMeasurementUnits.lowPadding),
+                              padding: EdgeInsets.all(
+                                  StandartMeasurementUnits.lowPadding),
                               child: CustomText(
                                 title,
                                 centerText: true,
@@ -50,8 +63,10 @@ class CustomButtonCard extends StatelessWidget {
                   child: Center(
                     child: InkWell(
                       borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(StandartMeasurementUnits.normalRadius),
-                          topRight: Radius.circular(StandartMeasurementUnits.normalRadius)),
+                          bottomRight: Radius.circular(
+                              StandartMeasurementUnits.normalRadius),
+                          topRight: Radius.circular(
+                              StandartMeasurementUnits.normalRadius)),
                       onTap: editButtonFunc,
                       child: Row(
                         children: [
