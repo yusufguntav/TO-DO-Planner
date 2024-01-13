@@ -124,8 +124,15 @@ class PlanningPageController extends GetxController {
   //Task funcitons
   Future addTask(String task) async {
     errorHandler(tryMethod: () async {
-      TaskModel newTask = TaskModel.fromJson((await _planningService.addTask(task, selectedListModel, _selectedRoutine))?.body['task']);
-      TaskModel.addTaskForLocale(tasks, TaskModel(id: newTask.id, task: newTask.task, successStatus: SuccessStatus.neutral));
+      TaskModel newTask = TaskModel.fromJson((await _planningService.addTask(
+              task, selectedListModel, _selectedRoutine))
+          ?.body['task']);
+      TaskModel.addTaskForLocale(
+          tasks,
+          TaskModel(
+              id: newTask.id,
+              task: newTask.task,
+              successStatus: SuccessStatus.neutral));
       addedNewTask = true;
       _tasks.refresh();
     });
@@ -137,7 +144,8 @@ class PlanningPageController extends GetxController {
       for (TaskModel task in tasks) {
         updateTaskOrderList.add(task.toJson());
       }
-      await _planningService.updateTaskOrder(updateTaskOrderList, selectedListModel?.id ?? '');
+
+      await _planningService.updateTaskOrder(updateTaskOrderList);
     });
   }
 
@@ -170,10 +178,13 @@ class PlanningPageController extends GetxController {
       tryMethod: () async {
         {
           RequestResponse? requestResponse = isForRoutine
-              ? await _planningService.getTasksForRoutine(selectedRoutine, showLoad)
-              : await _planningService.getTasksForSpecialList(selectedListModel, showLoad);
+              ? await _planningService.getTasksForRoutine(
+                  selectedRoutine, showLoad)
+              : await _planningService.getTasksForSpecialList(
+                  selectedListModel, showLoad);
           if (requestResponse != null) {
-            if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
+            if (StatusCodes.successful
+                .checkStatusCode(requestResponse.status)) {
               return requestResponse;
             }
           }
@@ -189,7 +200,8 @@ class PlanningPageController extends GetxController {
   }) async {
     await errorHandler(tryMethod: () async {
       tasks.clear();
-      dynamic response = await getTasks(showLoad: showLoad, isForRoutine: isForRoutine);
+      dynamic response =
+          await getTasks(showLoad: showLoad, isForRoutine: isForRoutine);
       if (response != null) {
         dynamic json = jsonDecode((response.body))['tasks'];
         for (var i = 0; i < json.length; i++) {
@@ -201,14 +213,16 @@ class PlanningPageController extends GetxController {
   }
 
   onListReorder(int oldListIndex, int newListIndex) {
-    if (oldListIndex != newListIndex) TaskModel.updateTaskOrderForLocale(tasks, oldListIndex, newListIndex);
+    if (oldListIndex != newListIndex)
+      TaskModel.updateTaskOrderForLocale(tasks, oldListIndex, newListIndex);
     var movedList = tasks.removeAt(oldListIndex);
     tasks.insert(newListIndex, movedList);
     _tasks.refresh();
   }
 
   changeStatus(TaskModel task) {
-    task.successStatus = _getNewStatus(task.successStatus ?? SuccessStatus.neutral);
+    task.successStatus =
+        _getNewStatus(task.successStatus ?? SuccessStatus.neutral);
     _tasks.refresh();
   }
 
@@ -319,13 +333,17 @@ class PlanningPageController extends GetxController {
       routines.clear();
       dynamic json = jsonDecode((await routinesFromDB).body);
       for (var i = 0; i < json.length; i++) {
-        dynamic selectedDays = json[i]['selectedDays'].map((selectedDay) => selectedDay['dayNumber']);
+        dynamic selectedDays = json[i]['selectedDays']
+            .map((selectedDay) => selectedDay['dayNumber']);
         List<WeekDay> days = [];
         for (var selectedDay in selectedDays) {
           days.add(_getWeekDayFromNumber(int.parse(selectedDay)));
         }
         routines.add(
-          RoutineModel(id: json[i]['_id'] ?? '', name: json[i]['name'] ?? '', selectedDays: days),
+          RoutineModel(
+              id: json[i]['_id'] ?? '',
+              name: json[i]['name'] ?? '',
+              selectedDays: days),
         );
       }
       routines.refresh();
@@ -376,7 +394,7 @@ class PlanningPageController extends GetxController {
   }
 
   // Special List request functions
-  Future addSpecialList(String name, String endDate) async {
+  Future addSpecialList(String name, String? endDate) async {
     errorHandler(
       tryMethod: () => _planningService.addSpecialList(
         name,
@@ -391,7 +409,8 @@ class PlanningPageController extends GetxController {
 
   Future<RequestResponse?> getSpecialListReq() async {
     return errorHandler(tryMethod: () async {
-      RequestResponse? requestResponse = await _planningService.getSpecialList();
+      RequestResponse? requestResponse =
+          await _planningService.getSpecialList();
       if (requestResponse != null) {
         if (StatusCodes.successful.checkStatusCode(requestResponse.status)) {
           return requestResponse;
@@ -410,13 +429,15 @@ class PlanningPageController extends GetxController {
         specialLists.add(SpecialListModel(
             id: json[i]['_id'] ?? '',
             name: json[i]['name'] ?? '',
-            date: json[i]['date'] != null ? formatDate(DateTime.parse(json[i]['date'])) : null));
+            date: json[i]['date'] != null
+                ? formatDate(DateTime.parse(json[i]['date']))
+                : null));
       }
       specialLists.refresh();
     }
   }
 
-  Future updateSpecialList(String name, String id, String endDate) async {
+  Future updateSpecialList(String name, String id, String? endDate) async {
     errorHandler(tryMethod: () async {
       await _planningService.updateSpecialList(
         name,

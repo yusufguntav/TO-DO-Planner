@@ -22,7 +22,7 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    controller.getTasksToVariable();
+    controller.getTasksToVariable(isForRoutine: true);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -30,7 +30,7 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     Future.delayed(Duration.zero, () async {
-      // await controller.updateTasksOrder();
+      await controller.updateTasksOrder();
       // await controller.deleteTasksFromDB();
       controller.selectedRoutine = null;
     });
