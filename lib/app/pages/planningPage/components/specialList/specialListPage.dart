@@ -14,7 +14,8 @@ class SpecialListPage extends StatefulWidget {
   State<SpecialListPage> createState() => _SpecialListPageState();
 }
 
-class _SpecialListPageState extends State<SpecialListPage> with WidgetsBindingObserver {
+class _SpecialListPageState extends State<SpecialListPage>
+    with WidgetsBindingObserver {
   AppLifecycleState? _appLifecycleState;
   PlanningPageController controller = Get.find<PlanningPageController>();
   @override
@@ -46,8 +47,10 @@ class _SpecialListPageState extends State<SpecialListPage> with WidgetsBindingOb
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () => controller.changeSelectedPageIndex(PlanningPages.planningPage),
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (_) =>
+            controller.changeSelectedPageIndex(PlanningPages.planningPage),
         child: TaskPage(
           scrollController: controller.scrollController,
           tasks: controller.tasks,
@@ -57,7 +60,11 @@ class _SpecialListPageState extends State<SpecialListPage> with WidgetsBindingOb
               Stack(children: [
                 SizedBox(
                   height: StandartMeasurementUnits.highIconSize * 2,
-                  child: CustomTitle(titleText: controller.selectedListModel?.name?.toUpperCase() ?? '', titleColor: MainPages.planning.getPageColor),
+                  child: CustomTitle(
+                      titleText:
+                          controller.selectedListModel?.name?.toUpperCase() ??
+                              '',
+                      titleColor: MainPages.planning.getPageColor),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -67,7 +74,8 @@ class _SpecialListPageState extends State<SpecialListPage> with WidgetsBindingOb
                       backgroundColor: MainPages.planning.getPageColor,
                       child: const Icon(Icons.arrow_back),
                       onPressed: () {
-                        controller.changeSelectedPageIndex(PlanningPages.planningPage);
+                        controller.changeSelectedPageIndex(
+                            PlanningPages.planningPage);
                       },
                     ),
                   ],

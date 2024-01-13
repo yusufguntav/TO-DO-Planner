@@ -37,8 +37,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => Get.find<WelcomeHomeController>()
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (_) => Get.find<WelcomeHomeController>()
           .changeSelectedPageIndex(WelcomePages.welcomePage),
       child: SingleChildScrollView(
         child: Padding(
@@ -81,8 +82,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       IconButton(
                         onPressed: () => controller.showHidePassword(),
                         icon: controller.showPassword
-                            ? Icon(Icons.visibility_off)
-                            : Icon(Icons.visibility),
+                            ? Icon(Icons.visibility)
+                            : Icon(Icons.visibility_off),
                       )
                     ],
                   ),

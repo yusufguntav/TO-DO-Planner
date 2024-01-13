@@ -48,8 +48,10 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () => controller.changeSelectedPageIndex(PlanningPages.planningPage),
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (_) =>
+            controller.changeSelectedPageIndex(PlanningPages.planningPage),
         child: TaskPage(
           scrollController: controller.scrollController,
           tasks: controller.tasks,
@@ -60,7 +62,11 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
                 children: [
                   SizedBox(
                     height: StandartMeasurementUnits.highIconSize * 2,
-                    child: CustomTitle(titleText: controller.selectedRoutine?.name?.toUpperCase() ?? '', titleColor: MainPages.planning.getPageColor),
+                    child: CustomTitle(
+                        titleText:
+                            controller.selectedRoutine?.name?.toUpperCase() ??
+                                '',
+                        titleColor: MainPages.planning.getPageColor),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -70,7 +76,8 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
                         backgroundColor: MainPages.planning.getPageColor,
                         child: const Icon(Icons.arrow_back),
                         onPressed: () {
-                          controller.changeSelectedPageIndex(PlanningPages.planningPage);
+                          controller.changeSelectedPageIndex(
+                              PlanningPages.planningPage);
                         },
                       ),
                     ],

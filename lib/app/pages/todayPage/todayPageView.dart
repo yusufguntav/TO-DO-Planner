@@ -17,7 +17,8 @@ class TodayPageView extends StatefulWidget {
   State<TodayPageView> createState() => _TodayPageViewState();
 }
 
-class _TodayPageViewState extends State<TodayPageView> with WidgetsBindingObserver {
+class _TodayPageViewState extends State<TodayPageView>
+    with WidgetsBindingObserver {
   AppLifecycleState? _appLifecycleState;
   late TodayPageController controller;
   @override
@@ -54,7 +55,8 @@ class _TodayPageViewState extends State<TodayPageView> with WidgetsBindingObserv
         children: [
           SizedBox(
             height: StandartMeasurementUnits.highIconSize * 2,
-            child: CustomTitle(titleText: 'TODAY', titleColor: MainPages.today.getPageColor),
+            child: CustomTitle(
+                titleText: 'TODAY', titleColor: MainPages.today.getPageColor),
           ),
           SizedBox(height: StandartMeasurementUnits.highPadding),
         ],

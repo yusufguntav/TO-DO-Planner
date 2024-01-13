@@ -37,8 +37,9 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => Get.find<WelcomeHomeController>()
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (_) => Get.find<WelcomeHomeController>()
           .changeSelectedPageIndex(WelcomePages.welcomePage),
       child: SingleChildScrollView(
         child: Padding(
@@ -72,8 +73,8 @@ class _SignInPageState extends State<SignInPage> {
                         IconButton(
                             onPressed: () => controller.showHidePassword(),
                             icon: controller.showPassword
-                                ? Icon(Icons.visibility_off)
-                                : Icon(Icons.visibility))
+                                ? Icon(Icons.visibility)
+                                : Icon(Icons.visibility_off))
                       ],
                     )),
                 SizedBox(height: StandartMeasurementUnits.extraHighPadding),

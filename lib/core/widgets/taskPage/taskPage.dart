@@ -132,6 +132,7 @@ class TaskPage extends StatelessWidget {
                           : TaskCard(
                               size: StandartMeasurementUnits.taskCardHeight,
                               task: tasks[index],
+                              color: color,
                               saveFunc: saveFunc,
                               onTapFunc: onTapFunc,
                               deleteFunc: deleteFunc,
