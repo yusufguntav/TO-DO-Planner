@@ -66,6 +66,7 @@ class SignInPageController extends GetxController {
         Get.find<BaseNetworkService>().header = {
           "Authorization": "Bearer ${requestResponse.body['token']}"
         };
+        await _signInPageService.checkRoutine();
         Get.offAndToNamed(PageRoutes.home);
       }
       debugPrint(

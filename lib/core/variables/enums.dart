@@ -55,7 +55,8 @@ enum Endpoints {
   createRoutine,
   getRoutines,
   updateRoutine,
-  deleteRoutine;
+  deleteRoutine,
+  checkRoutine;
 
   String get path {
     switch (this) {
@@ -101,6 +102,8 @@ enum Endpoints {
         return '/routine/updateRoutine/';
       case Endpoints.deleteRoutine:
         return '/routine/';
+      case Endpoints.checkRoutine:
+        return '/routine/checkRoutine/';
     }
   }
 }

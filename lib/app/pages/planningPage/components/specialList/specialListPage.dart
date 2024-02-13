@@ -29,8 +29,9 @@ class _SpecialListPageState extends State<SpecialListPage>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     Future.delayed(Duration.zero, () async {
-      await controller.updateTasksOrder();
       await controller.deleteTasksFromDB();
+      await controller.updateTasksOrder();
+
       controller.selectedListModel = null;
     });
     super.dispose();

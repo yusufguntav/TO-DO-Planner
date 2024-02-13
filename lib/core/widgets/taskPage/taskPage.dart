@@ -10,6 +10,7 @@ import '../../variables/standartMeasurementUnits.dart';
 import '../taskCard.dart';
 import '../texts/customTextFormField.dart';
 
+//TODO güncelleme, silme, sıralama, ekleme işlemlerini sadece değişiklik olduğunda yap
 class TaskPage extends StatelessWidget {
   TaskPage({
     super.key,
@@ -23,7 +24,9 @@ class TaskPage extends StatelessWidget {
     required this.deleteFunc,
     required this.onTapFunc,
     required this.addTaskFunction,
+    this.isRoutinePage = false,
   });
+  final isRoutinePage;
   final Widget content;
   final Color color;
   final TextEditingController addTaskinputField;
@@ -130,6 +133,7 @@ class TaskPage extends StatelessWidget {
                       ? index + 1 == tasks.length + 1
                           ? const SizedBox()
                           : TaskCard(
+                              isRoutine: isRoutinePage,
                               size: StandartMeasurementUnits.taskCardHeight,
                               task: tasks[index],
                               color: color,

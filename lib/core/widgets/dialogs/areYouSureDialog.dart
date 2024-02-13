@@ -10,7 +10,8 @@ import '../texts/customText.dart';
 import 'customDialog.dart';
 
 class AreYourSure extends StatelessWidget {
-  const AreYourSure({super.key, required this.backgroundColor, required this.deleteFunc});
+  const AreYourSure(
+      {super.key, required this.backgroundColor, required this.deleteFunc});
   final Function deleteFunc;
   final Color backgroundColor;
   @override
@@ -21,7 +22,7 @@ class AreYourSure extends StatelessWidget {
         children: [
           CustomText.high('Are you sure ?', bold: true),
           SizedBox(height: StandartMeasurementUnits.normalPadding),
-          CustomText('desc.'),
+          CustomText('This action cannot be undone.'),
         ],
       ),
       actions: [

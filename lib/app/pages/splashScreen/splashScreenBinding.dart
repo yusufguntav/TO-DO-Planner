@@ -7,5 +7,6 @@ class SplashScreenBinding implements Bindings {
   @override
   void dependencies() {
     Get.put(SplashScreenController());
+    // Get.lazyPut(() => SplashScreenService());
   }
 }

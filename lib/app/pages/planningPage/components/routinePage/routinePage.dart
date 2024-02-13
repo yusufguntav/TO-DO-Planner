@@ -30,9 +30,9 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     Future.delayed(Duration.zero, () async {
+      await controller.deleteTasksFromDB();
       await controller.updateTasksOrder();
-      // await controller.deleteTasksFromDB();
-      controller.selectedRoutine = null;
+      controller.clearSelects();
     });
     super.dispose();
   }
@@ -41,8 +41,9 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (_appLifecycleState != AppLifecycleState.resumed) {
-      // await controller.deleteTasksFromDB();
-      // await controller.updateTasksOrder();
+      await controller.deleteTasksFromDB();
+      await controller.updateTasksOrder();
+      controller.clearSelects();
     }
   }
 
@@ -53,6 +54,7 @@ class _RoutinePageState extends State<RoutinePage> with WidgetsBindingObserver {
         onPopInvoked: (_) =>
             controller.changeSelectedPageIndex(PlanningPages.planningPage),
         child: TaskPage(
+          isRoutinePage: true,
           scrollController: controller.scrollController,
           tasks: controller.tasks,
           content: Column(

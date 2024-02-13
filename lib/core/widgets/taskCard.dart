@@ -21,7 +21,9 @@ class TaskCard extends StatelessWidget {
       required this.deleteFunc,
       required this.saveFunc,
       required this.color,
+      this.isRoutine = false,
       this.size});
+  final bool isRoutine;
   final TaskModel task;
   final double? size;
   final Color color;
@@ -70,29 +72,34 @@ class TaskCard extends StatelessWidget {
               ),
             ),
           ),
-          CustomLine(
-              successStatus: task.successStatus,
-              lineBoxHeight: Get.height * .08,
-              lineBoxWidth: Get.width * .08),
-          InkWell(
-            customBorder: const CircleBorder(),
-            onTap: () => onTapFunc(task),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: task.successStatus == SuccessStatus.neutral
-                    ? null
-                    : task.successStatus!.getSuccessStatusColor,
-                border: Border.all(
-                    color: task.successStatus!.getSuccessStatusColor),
-              ),
-              child: SizedBox(
-                height: Get.height * .08,
-                width: Get.width * .12,
-                child: Icon(task.successStatus!.getIcon, color: Colors.white),
-              ),
-            ),
-          ),
+          !isRoutine
+              ? CustomLine(
+                  successStatus: task.successStatus,
+                  lineBoxHeight: Get.height * .08,
+                  lineBoxWidth: Get.width * .08)
+              : SizedBox(),
+          !isRoutine
+              ? InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: () => onTapFunc(task),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: task.successStatus == SuccessStatus.neutral
+                          ? null
+                          : task.successStatus!.getSuccessStatusColor,
+                      border: Border.all(
+                          color: task.successStatus!.getSuccessStatusColor),
+                    ),
+                    child: SizedBox(
+                      height: Get.height * .08,
+                      width: Get.width * .12,
+                      child: Icon(task.successStatus!.getIcon,
+                          color: Colors.white),
+                    ),
+                  ),
+                )
+              : SizedBox(),
         ],
       ),
     );
